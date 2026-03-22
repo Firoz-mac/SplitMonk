@@ -17,7 +17,7 @@ const LandingPage = () => {
 
     const [active, setActive] = useState('Home');
 
-    const {theme, setTheme}=useAppContext();
+    const {theme, setTheme, navigate}=useAppContext();
 
     const menuValues = ["Home", "Services", "Features", "About"];
 
@@ -125,7 +125,7 @@ const LandingPage = () => {
                         <button onClick={()=> setTheme('dark')} className={`p-1 ${theme === 'dark'? 'bg-white/10 border border-[var(--border)]': ''}  rounded-full cursor-pointer`}><FiMoon /></button>
                     </div>
                     
-                    <button
+                    <button onClick={()=>navigate('/signup')}
                         className='px-4 py-1.5 text-sm md:text-base text-black rounded-lg bg-linear-to-br from-blue-400 to-blue-600 
                         cursor-pointer shadow-md hover:shadow-[0_0_25px_rgba(59,130,246,0.7)] hover:brightness-110 transition-all 
                         duration-300'>
