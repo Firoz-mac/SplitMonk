@@ -15,9 +15,6 @@ export const AppContextProvider = ({children})=>{
         } else {
             root.classList.remove('light');
         }
-
-        console.log(theme)
-
     }, [theme]);
 
     const value ={navigate, theme, setTheme};

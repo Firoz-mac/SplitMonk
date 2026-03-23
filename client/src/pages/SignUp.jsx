@@ -1,13 +1,46 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { assets } from '../assets/assets';
-import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useAppContext } from '../context/AppContext';
 
 const SignUp = () => {
 
     const [passShow, setPassShow] = useState(false);
     const [confPassShow, setConfPassShow] = useState(false);
     const [pageValue, setPageValue] = useState('Login');
+
+    const {navigate} = useAppContext();
+
+    const [formData, setFormData] = useState({
+        email: '',
+        userName: '',
+        password: '',
+        confirmPassword: '',
+    });
+
+    const handleInputChange=(e)=>{
+        const {name, value} = e.target;
+
+        setFormData(prev=>({
+            ...prev,
+            [name]: value
+        }))
+    };
+
+    const handleSubmit=(e)=>{
+        e.preventDefault();
+        if(pageValue === 'Signup'){
+            if(formData.password === formData.confirmPassword){
+                console.log(formData);
+                navigate('/otp');
+            }else{
+                toast.error("Passwords are not matching");
+            }
+        }else{
+            console.log(formData);
+        }
+    };
 
     return (
         <div className='w-full flex flex-col h-screen bg-[var(--bg-primary)] text-[var(--text)] items-center justify-center px-5'>
@@ -19,12 +52,16 @@ const SignUp = () => {
                     <h3 className='text-2xl font-bold'>{pageValue === 'Login' ? "Welcome back" : "Create Account"}</h3>
                     <span className='text-sm'>{pageValue === 'Login' ? "Enter your credentials to access the ledger." : "Join the next generation of financial management."}</span>
                 </div>
-                <form className='flex flex-col gap-3'>
+                <form onSubmit={handleSubmit} className='flex flex-col gap-3'>
                     <div className="max-w-sm w-full">
                         <div>
                             <input
                                 type='email'
+                                name='email'
                                 placeholder="Email"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                required
                                 className="w-full py-2.5 sm:py-3 px-4 pr-10 rounded-lg 
                                     bg-[var(--bg-card)] border border-[var(--border)] 
                                     text-[var(--text)] placeholder:text-[var(--text-dull)] 
@@ -33,11 +70,37 @@ const SignUp = () => {
                         </div>
                     </div>
 
+                    {pageValue === 'Signup' ?
+
+                    <div className="max-w-sm w-full">
+                        <div>
+                            <input
+                                type='text'
+                                name='userName'
+                                value={formData.userName}
+                                placeholder="User Name"
+                                onChange={handleInputChange}
+                                required
+                                className="w-full py-2.5 sm:py-3 px-4 pr-10 rounded-lg 
+                                    bg-[var(--bg-card)] border border-[var(--border)] 
+                                    text-[var(--text)] placeholder:text-[var(--text-dull)] 
+                                    focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                            />
+                        </div>
+                    </div>
+                    : null
+
+                    }
+
                     <div className="max-w-sm w-full">
                         <div className="relative">
                             <input
                                 type={passShow ? "text" : "password"}
                                 placeholder="Password"
+                                name='password'
+                                value={formData.password}
+                                onChange={handleInputChange}
+                                required
                                 className="w-full py-2.5 sm:py-3 px-4 pr-10 rounded-lg 
                                     bg-[var(--bg-card)] border border-[var(--border)] 
                                     text-[var(--text)] placeholder:text-[var(--text-dull)] 
@@ -54,12 +117,16 @@ const SignUp = () => {
                         </div>
                     </div>
                     {pageValue === 'Signup' ?
-
+                    
                         <div className="max-w-sm w-full">
                             <div className="relative">
                                 <input
                                     type={confPassShow ? "text" : "password"}
                                     placeholder="Confirm Password"
+                                    name='confirmPassword'
+                                    value={formData.confirmPassword}
+                                    onChange={handleInputChange}
+                                    required
                                     className="w-full py-2.5 sm:py-3 px-4 pr-10 rounded-lg 
                                         bg-[var(--bg-card)] border border-[var(--border)] 
                                         text-[var(--text)] placeholder:text-[var(--text-dull)] 
@@ -79,8 +146,12 @@ const SignUp = () => {
                         : null
 
                     }
+                    <button type='submit' className='bg-linear-to-br rounded-lg
+                     from-blue-400 to-blue-600 py-2 text-black cursor-pointer
+                      hover:brightness-110 transition-all'>
+                        {pageValue}
+                    </button>
 
-                    <button className='bg-linear-to-br rounded-lg from-blue-400 to-blue-600 py-2 text-black cursor-pointer hover:brightness-110 transition-all'>Login</button>
                 </form>
                 <div className='flex text-sm gap-1 justify-center'>
                     {pageValue === 'Login'?
