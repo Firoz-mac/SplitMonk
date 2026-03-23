@@ -251,7 +251,6 @@ const LandingPage = () => {
                                 <h3 className="font-medium text-sm mb-4">Splitzy</h3>
                                 <ul className="space-y-3 text-sm text-[var(--text)]">
                                     <li><a href="#" className="hover:text-[var(--text-dull)]">About</a></li>
-                                    <li><a href="#" className="hover:text-[var(--text-dull)]">Vision</a></li>
                                     <li><a href="#" className="hover:text-[var(--text-dull)]">Privacy policy</a></li>
                                     <li><a href="#" className="hover:text-[var(--text-dull)]">Contact Us</a></li>
                                 </ul>
@@ -261,9 +260,9 @@ const LandingPage = () => {
                             <div>
                                 <h3 className="font-medium text-sm mb-4">Account</h3>
                                 <ul className="space-y-3 text-sm text-[var(--text)]">
-                                    <li><a href="#" className="hover:text-[var(--text-dull)]">Login</a></li>
-                                    <li><a href="#" className="hover:text-[var(--text-dull)]">Sign up</a></li>
-                                    <li><a href="#" className="hover:text-[var(--text-dull)]">Reset password</a></li>
+                                    <li><a href="/signup" className="hover:text-[var(--text-dull)]">Login</a></li>
+                                    <li><a href="/signup" className="hover:text-[var(--text-dull)]">Sign up</a></li>
+                                    <li><a href="/forgotpassword" className="hover:text-[var(--text-dull)]">Reset password</a></li>
                                 </ul>
                             </div>
                         </div>

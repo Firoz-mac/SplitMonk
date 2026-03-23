@@ -1,9 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useAppContext } from './../context/AppContext';
 
 const OtpSection = () => {
     const [otp, setOtp] = useState(["", "", "", ""]);
     const inputRef = useRef([]);
     const [time, setTime]= useState(54);
+
+    const {navigate} = useAppContext();
 
     const handleChange = (value, index)=>{
         if (!/^[0-9]?$/.test(value)) return;
@@ -43,6 +46,8 @@ const OtpSection = () => {
 
     const handleSubmit=()=>{
         console.log(otp);
+        navigate('/home');
+
     }
 
     const handleResend = ()=>{
