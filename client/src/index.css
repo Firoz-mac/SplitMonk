@@ -9,7 +9,7 @@
   --primary: #1D4ED8;
   --text: #FFFFFF;
   --text-dull:  rgba(255,255,255,0.7);
-  --bg-card: #19191C;
+  --bg-card: #19191C; 
   --bg-card-hover: #1F1F22;
   --bg-icon: #242833;
   --bg-icon-hover: #89ACFF;
@@ -34,4 +34,8 @@
   --bg-primary: #FFFFFF;
   --bg-secondary: #F1F1F3;
   --border: #E5E7EB;
+}
+
+.no-scrollbar::-webkit-scrollbar{
+  display: none;
 }
