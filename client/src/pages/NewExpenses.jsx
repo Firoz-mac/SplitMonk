@@ -27,7 +27,7 @@ const NewExpenses = () => {
         <div className='flex flex-col w-full gap-2 max-h-75 overflow-scroll no-scrollbar'>
             <div className='flex items-center justify-between w-full'>
                 <span className='text-sm'>Recent</span>
-                <span className='text-sm cursor-pointer text-[var(--text)] hover:text-[var(--text-dull)]'>View all</span>
+                <span onClick={()=>navigate('/expense-list')} className='text-sm cursor-pointer text-[var(--text)] hover:text-[var(--text-dull)]'>View all</span>
             </div>
             <div className='flex flex-col p-4 bg-[var(--bg-card)] rounded-lg'>
                 <span>Birthday Party</span>

@@ -3,8 +3,11 @@ import AdsCard from '../components/AdsCard'
 import RecentList from '../components/RecentList'
 import SplitCard from '../components/SplitCard'
 import TotalExpenses from '../components/TotalExpenses'
+import { useAppContext } from '../context/AppContext'
 
 const Home = () => {
+
+  const {navigate}=useAppContext();
 
   return (
     <div className='w-full flex flex-col gap-3'>
@@ -28,13 +31,28 @@ const Home = () => {
       <AdsCard/>
       <div className='bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] p-5 rounded-lg flex flex-col'>
         <div className='flex justify-between'>
-          <span>Recent Splits</span>
-          <span className='cursor-pointer text-[var(--text)] hover:text-[var(--text-dull)]'>View all</span>
+          <span className='text-sm'>Recent Splits</span>
+          <span onClick={()=>navigate('/splits')} className='text-sm cursor-pointer text-[var(--text)] hover:text-[var(--text-dull)]'>View all</span>
         </div>
         <div className='flex py-3 gap-4 overflow-x-scroll no-scrollbar'>
-          <SplitCard/>
-          <SplitCard/>
-          <SplitCard/>
+          <div className='min-w-[220px]'>
+            <SplitCard/>
+          </div>
+          <div className='min-w-[220px]'>
+            <SplitCard/>
+          </div>
+          <div className='min-w-[220px]'>
+            <SplitCard/>
+          </div>
+          <div className='min-w-[220px]'>
+            <SplitCard/>
+          </div>
+          <div className='min-w-[220px]'>
+            <SplitCard/>
+          </div>
+          <div className='min-w-[220px]'>
+            <SplitCard/>
+          </div>
         </div>
       </div>
       <TotalExpenses/>

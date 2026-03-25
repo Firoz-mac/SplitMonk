@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { assets } from '../assets/assets'
 import { MdOutlineModeEdit } from "react-icons/md";
 import { LiaUserSolid } from "react-icons/lia";
@@ -6,6 +6,7 @@ import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { MdLockOutline } from "react-icons/md";
 
 const Profile = () => {
+    const profileInputRef= useRef(null);
     return (
         <div className='w-full flex justify-center items-center'>
             <div className='w-md flex flex-col gap-3'>
@@ -15,10 +16,11 @@ const Profile = () => {
                             <img className='w-full h-full object-cover' src={assets.p1} alt="" />
                         </div>
 
-                        <div className='absolute bottom-0 right-0 w-6 h-6 rounded-full bg-blue-500 text-white 
+                        <div onClick={()=>profileInputRef.current.click()} className='absolute bottom-0 right-0 w-6 h-6 rounded-full bg-blue-500 text-white 
                                 flex items-center justify-center text-sm cursor-pointer'>
                             <MdOutlineModeEdit />
                         </div>
+                        <input ref={profileInputRef} className='hidden' type="file" />
                     </div>
                 </div>
                 <span>Account Settings</span>

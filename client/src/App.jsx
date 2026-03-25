@@ -13,6 +13,8 @@ import SplitAmount from './pages/NewSplit/SplitAmount';
 import NewExpenses from './pages/NewExpenses';
 import Profile from './pages/Profile';
 import Notifications from './pages/Notifications';
+import TotalExpList from './pages/TotalExpList';
+import Splits from './pages/Splits';
 
 function App() {
 
@@ -32,6 +34,8 @@ function App() {
           <Route path='/addExpense' element={<NewExpenses/>}/>
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/notifications' element={<Notifications/>}/>
+          <Route path='/expense-list' element={<TotalExpList/>}/>
+          <Route path='/splits' element={<Splits/>}/>
         </Route>
       </Routes>
     </div>

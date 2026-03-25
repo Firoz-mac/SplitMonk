@@ -5,35 +5,47 @@
   font-family: "Outfit", sans-serif;
 }
 
-:root {
-  --primary: #1D4ED8;
-  --text: #FFFFFF;
-  --text-dull:  rgba(255,255,255,0.7);
-  --bg-card: #19191C; 
-  --bg-card-hover: #1F1F22;
-  --bg-icon: #242833;
-  --bg-icon-hover: #89ACFF;
-  --icon-color: #89ACFF;
-  --icon-hover-color: #002B6A;
-  --bg-primary: #000000;
-  --bg-secondary: #131315;
-  --border: rgba(255, 255, 255, 0.2);
+ :root {
+  --primary: #3B82F6;
 
+  --text: #F9FAFB;
+  --text-dull: rgba(255,255,255,0.65);
+
+  --bg-primary: #0B0B0C;
+  --bg-secondary: #111113;
+
+  --bg-card: #18181B;
+  --bg-card-hover: #1F1F23;
+
+  --bg-icon: #23232A;
+  --bg-icon-hover: #3B82F6;
+
+  --icon-color: #93C5FD;
+  --icon-hover-color: #0B0B0C;
+
+  --border: rgba(255, 255, 255, 0.12);
 }
 
+
 .light {
-  --primary: #1D4ED8;
-  --text: #0F172A;
-  --text-dull: #64748B; 
-  --bg-card: #FFFFFF;
-  --bg-card-hover: #F8FAFC;
-  --bg-icon: #E2E8F0;
-  --bg-icon-hover: #1D4ED8;
-  --icon-color: #1D4ED8;
+  --primary: #3B82F6;
+
+  --text: #0B1220;
+  --text-dull: #6B7280;
+
+  --bg-primary: #F5F7FB;       /* page background */
+  --bg-secondary: #EEF2F7;
+
+  --bg-card: #FFFFFF;          /* cards */
+  --bg-card-hover: #F9FAFB;
+
+  --bg-icon: #E5EAF2;
+  --bg-icon-hover: #3B82F6;
+
+  --icon-color: #3B82F6;
   --icon-hover-color: #FFFFFF;
-  --bg-primary: #FFFFFF;
-  --bg-secondary: #F1F1F3;
-  --border: #E5E7EB;
+
+  --border: #E6EAF0;
 }
 
 .no-scrollbar::-webkit-scrollbar{

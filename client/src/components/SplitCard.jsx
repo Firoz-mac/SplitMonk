@@ -7,7 +7,7 @@ const SplitCard = () => {
   ]
   return (
     <div className='
-      min-w-[220px] rounded-2xl p-5 text-white
+      w-full rounded-2xl p-5 text-white
       bg-gradient-to-br from-[#3B82F6] via-[#2563EB] to-[#1D4ED8]
       shadow-[0_10px_30px_rgba(0,0,0,0.4)]
       hover:scale-[1.02] transition-all duration-300

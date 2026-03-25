@@ -41,7 +41,7 @@ const MainLayout = () => {
                     <button onClick={()=>navigate('/notifications')} className='text-2xl bg-[var(--bg-icon)] hover:bg-[var(--bg-icon-hover)] p-2 rounded-lg cursor-pointer'>
                         <IoNotificationsOutline  className='text-[var(--icon-color)] hover:text-[var(--icon-hover-color)]'/>
                     </button>
-                    <div className='bg-[var(--bg-icon)] rounded-full w-10 h-10 cursor-pointer overflow-hidden'>
+                    <div onClick={()=>navigate('/profile')} className='bg-[var(--bg-icon)] rounded-full w-10 h-10 cursor-pointer overflow-hidden'>
                         <img className='w-full h-full object-cover' src={assets.p1} alt="" />
                     </div>
                 </div>
