@@ -8,8 +8,11 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { assets } from '../assets/assets';
 import MenuIcon from '../components/MenuIcon';
 import { Outlet } from 'react-router-dom';
+import { useAppContext } from '../context/AppContext';
 
 const MainLayout = () => {
+
+    const {navigate} = useAppContext();
 
     const menuItems = [
         { icon: <MdOutlineAdd />, path: "/addExpense" },
@@ -35,7 +38,7 @@ const MainLayout = () => {
 
             <div className='flex-1 flex flex-col p-4 overflow-hidden'>
                 <div className='w-full flex gap-2 justify-end pb-4'>
-                    <button className='text-2xl bg-[var(--bg-icon)] hover:bg-[var(--bg-icon-hover)] p-2 rounded-lg cursor-pointer'>
+                    <button onClick={()=>navigate('/notifications')} className='text-2xl bg-[var(--bg-icon)] hover:bg-[var(--bg-icon-hover)] p-2 rounded-lg cursor-pointer'>
                         <IoNotificationsOutline  className='text-[var(--icon-color)] hover:text-[var(--icon-hover-color)]'/>
                     </button>
                     <div className='bg-[var(--bg-icon)] rounded-full w-10 h-10 cursor-pointer overflow-hidden'>
@@ -47,7 +50,8 @@ const MainLayout = () => {
                 </div>
             </div>
 
-            <div className='md:hidden flex fixed bottom-0 left-0 w-full bg-[var(--bg-secondary)] justify-around items-center py-3 border-t border-gray-800'>
+            <div className='md:hidden flex fixed bottom-0 left-0 w-full bg-[var(--bg-secondary)] 
+            justify-around items-center py-3 border-t border-gray-800 z-50'>
                 {
                     menuItems.map((item, index) => (
                         <MenuIcon key={index} icon={item.icon} path={item.path} />

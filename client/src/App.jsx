@@ -10,6 +10,9 @@ import MainLayout from './pages/MainLayout';
 import NewSplit from './pages/NewSplit/NewSplit';
 import ChoosePeoples from './pages/NewSplit/ChoosePeoples';
 import SplitAmount from './pages/NewSplit/SplitAmount';
+import NewExpenses from './pages/NewExpenses';
+import Profile from './pages/Profile';
+import Notifications from './pages/Notifications';
 
 function App() {
 
@@ -26,6 +29,9 @@ function App() {
           <Route path='/split' element={<NewSplit/>}/>
           <Route path='/choose' element={<ChoosePeoples/>}/>
           <Route path='/split-amount' element={<SplitAmount/>}/>
+          <Route path='/addExpense' element={<NewExpenses/>}/>
+          <Route path='/profile' element={<Profile/>}/>
+          <Route path='/notifications' element={<Notifications/>}/>
         </Route>
       </Routes>
     </div>
