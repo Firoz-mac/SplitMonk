@@ -26,7 +26,7 @@ const NewSplit = () => {
                     bg-[var(--bg-card-hover)] 
                     text-[var(--text)]
                     flex items-center justify-center
-                '>4</div>
+                '>3</div>
             </div>
 
             <div>

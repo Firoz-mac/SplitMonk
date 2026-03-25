@@ -9,6 +9,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import MainLayout from './pages/MainLayout';
 import NewSplit from './pages/NewSplit/NewSplit';
 import ChoosePeoples from './pages/NewSplit/ChoosePeoples';
+import SplitAmount from './pages/NewSplit/SplitAmount';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path='/home' element={<Home/>}/>
           <Route path='/split' element={<NewSplit/>}/>
           <Route path='/choose' element={<ChoosePeoples/>}/>
+          <Route path='/split-amount' element={<SplitAmount/>}/>
         </Route>
       </Routes>
     </div>
