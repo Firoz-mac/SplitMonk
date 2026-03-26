@@ -21,7 +21,7 @@
   --bg-icon-hover: #3B82F6;
 
   --icon-color: #93C5FD;
-  --icon-hover-color: #0B0B0C;
+  --icon-hover-color: #93c4fd57;
 
   --border: rgba(255, 255, 255, 0.12);
 }
@@ -43,7 +43,7 @@
   --bg-icon-hover: #3B82F6;
 
   --icon-color: #3B82F6;
-  --icon-hover-color: #FFFFFF;
+  --icon-hover-color: #d6d6d6;
 
   --border: #E6EAF0;
 }

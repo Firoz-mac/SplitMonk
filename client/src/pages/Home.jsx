@@ -9,12 +9,20 @@ const Home = () => {
 
   const {navigate}=useAppContext();
 
+  const date = new Date();
+
+  const formattedDate = date.toLocaleDateString('en-Us', {
+    weekday: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
   return (
     <div className='w-full flex flex-col gap-3'>
       <div className='bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] p-5 rounded-lg flex flex-col gap-5'>
         <div>
           <h3 className='text-3xl font-medium'>Hi Mac</h3>
-          <span>Tuesday, 12, 2026</span>
+          <span>{formattedDate}</span>
         </div>
         <div className='flex gap-8'>
           <div>
