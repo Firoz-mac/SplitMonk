@@ -15,7 +15,7 @@ const allowedOrigins=['http://localhost:5173']
 //middleware config
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({origin: allowedOrigins, Credential:true}));
+app.use(cors({origin: allowedOrigins, credentials:true}));
 
 app.get('/',(req,res)=>{
     res.send('api is working');

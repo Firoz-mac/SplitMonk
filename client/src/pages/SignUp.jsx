@@ -10,7 +10,7 @@ const SignUp = () => {
     const [confPassShow, setConfPassShow] = useState(false);
     const [pageValue, setPageValue] = useState('Login');
 
-    const {navigate} = useAppContext();
+    const {navigate, axios, setUser} = useAppContext();
 
     const [formData, setFormData] = useState({
         email: '',
@@ -28,17 +28,37 @@ const SignUp = () => {
         }))
     };
 
-    const handleSubmit=(e)=>{
+    const handleSubmit= async (e)=>{
         e.preventDefault();
         if(pageValue === 'Signup'){
             if(formData.password === formData.confirmPassword){
-                console.log(formData);
-                navigate('/otp');
+                const {data} = await axios.post(`/api/user/register`, {
+                    email: formData.email,
+                    password: formData.password,
+                    userName: formData.userName
+                });
+                if(data.success){
+                    navigate('/home');
+                    setUser(data.user);
+                }else{
+                    toast.error(data.message);
+                }
             }else{
                 toast.error("Passwords are not matching");
             }
         }else{
-            console.log(formData);
+            
+            const {data} = await axios.post(`/api/user/login`, {
+                email: formData.email,
+                password: formData.password
+            });
+            
+            if(data.success){
+                navigate('/home');
+                setUser(data.user);
+            }else{
+                toast.error(data.message);
+            }
         }
     };
 
