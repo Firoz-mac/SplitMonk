@@ -30,35 +30,38 @@ const SignUp = () => {
 
     const handleSubmit= async (e)=>{
         e.preventDefault();
-        if(pageValue === 'Signup'){
-            if(formData.password === formData.confirmPassword){
-                const {data} = await axios.post(`/api/user/register`, {
+        try {
+            if(pageValue === 'Signup' && formData.password != formData.confirmPassword){
+                return toast.error("Passwords are not matching");
+            }
+
+            const apiUrl = pageValue === 'Signup' ? "/api/user/register" : "/api/user/login";
+
+            const payload = pageValue === "Signup" ? 
+                {
                     email: formData.email,
                     password: formData.password,
                     userName: formData.userName
-                });
-                if(data.success){
-                    navigate('/home');
-                    setUser(data.user);
-                }else{
-                    toast.error(data.message);
                 }
-            }else{
-                toast.error("Passwords are not matching");
-            }
-        }else{
-            
-            const {data} = await axios.post(`/api/user/login`, {
-                email: formData.email,
-                password: formData.password
-            });
-            
-            if(data.success){
-                navigate('/home');
-                setUser(data.user);
-            }else{
-                toast.error(data.message);
-            }
+                :
+                {
+                    email: formData.email,
+                    password: formData.password,
+                };
+
+                const {data} = await axios.post(apiUrl, payload);
+
+                if(data?.success){
+                    setUser(data.user);
+                    navigate("/home");
+                }else{
+                    toast.error(data?.message || "Something went wrong");
+                }
+        } catch (error) {
+            console.error(error);
+            toast.error(
+                error?.response?.data?.message || "Server error, try again later"
+            );
         }
     };
 
