@@ -143,7 +143,7 @@ const LandingPage = () => {
                 <h1 className='text-4xl sm:text-5xl md:text-7xl text-center leading-[1.1] md:leading-tight font-semibold'>Split smart, <br />Live easy.</h1>
                 <p className='mx-auto text-center text-xs sm:text-sm md:text-base text-[var(--text-dull)] max-w-[42ch] leading-relaxed'>Experience next-generation finance with powerful insights, automation and real-time control.</p>
                 <div className='flex flex-col md:flex-row gap-3 mt-2'>
-                    <button className='flex items-center justify-center gap-2 px-5 py-2 bg-linear-to-br rounded-lg text-black from-blue-400 to-blue-600 cursor-pointer shadow-md hover:shadow-[0_0_25px_rgba(59,130,246,0.7)] hover:brightness-110 transition-all 
+                    <button onClick={()=>navigate('/signup')} className='flex items-center justify-center gap-2 px-5 py-2 bg-linear-to-br rounded-lg text-black from-blue-400 to-blue-600 cursor-pointer shadow-md hover:shadow-[0_0_25px_rgba(59,130,246,0.7)] hover:brightness-110 transition-all 
                     duration-300'>
                         Start Free Trial
                         <MdArrowOutward />

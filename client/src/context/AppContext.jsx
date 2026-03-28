@@ -13,7 +13,8 @@ export const AppContextProvider = ({children})=>{
     const navigate = useNavigate();
     const [theme, setTheme] = useState('dark');
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const [expenses, setExpenses] = useState([]);
 
     useEffect(()=>{
         console.log(user)
@@ -30,13 +31,24 @@ export const AppContextProvider = ({children})=>{
 
     const isUserAuth = async ()=>{
         try {
-            const {data} = await axios.get('/api/user/is-auth')
+            const {data} = await axios.get('/api/user/is-auth');
             if(data.success){
                 setUser(data.user)
-                navigate('home')
+                navigate('/home')
             }
         } catch (error) {
             setUser(null);
+        }
+    }
+
+    const getExpenses = async ()=>{
+        try {
+            const {data} = await axios.get('/api/expense/get');
+            if(data.success){
+                setExpenses(data.expenses);
+            }
+        } catch (error) {
+            console.log(error.message)
         }
     }
 
@@ -55,10 +67,12 @@ export const AppContextProvider = ({children})=>{
     }
 
     useEffect(()=>{
-        isUserAuth()
+        isUserAuth();
+        getExpenses();
     },[])
 
-    const value ={navigate, theme, setTheme, axios, user, setUser, handleLogout, isUserAuth, loading, setLoading};
+    const value ={navigate, theme, setTheme, axios, user, setUser, 
+        handleLogout, isUserAuth, loading, setLoading, expenses, setExpenses};
     
     return <AppContext.Provider value={value}>
         {children}
