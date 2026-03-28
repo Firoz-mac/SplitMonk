@@ -4,10 +4,13 @@ import 'dotenv/config';
 import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
 import userRouter from './routes/userRoutes.js';
+import connectCloudinary from './config/cloudinary.js';
 
 const app=express();
 const port = 4000;
+
 await connectDB();
+await connectCloudinary()
 
 //allow origins
 const allowedOrigins=['http://localhost:5173']

@@ -1,11 +1,12 @@
 import React from 'react'
 import { useAppContext } from '../context/AppContext'
 
-const MenuIcon = ({icon, active, path}) => {
+const MenuIcon = ({icon, active, path, onClick}) => {
 
   const {navigate} = useAppContext()
 
   const handleClick = ()=>{
+    if(onClick) return onClick();
     navigate(path);
   }
   

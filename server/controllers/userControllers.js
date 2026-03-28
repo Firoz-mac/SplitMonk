@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
+import {v2 as cloudinary} from 'cloudinary';
 
 //register user : /api/user/register
 export const register = async (req, res)=>{
@@ -117,5 +118,91 @@ export const login = async (req, res)=>{
             message: error.message
         })
         
+    }
+}
+
+//user auth : /api/user/is-auth
+export const isAuth = async (req, res)=>{
+    try {
+        const userId=req.userId;
+        const user= await User.findById(userId).select('-password');
+
+        return res.status(200).json({
+            success : true, 
+            user
+        });
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+}
+
+//update profile image : /api/user/update-profile
+export const updateProfile = async (req,res)=>{
+    try {
+        const userId = req.userId;
+
+        let profileImgUrl;
+
+        if(!req.file){
+            return res.status(400).json({
+                success: false,
+                message: 'No image file provided',
+            })
+        }
+
+        const user = await User.findById(userId);
+
+        if(user.profileImg){
+            const publicId = user.profileImg.split("/").pop().split(".")[0];
+            await cloudinary.uploader.destroy(`profile_images/${publicId}`);
+        }
+
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            resource_type: 'image'
+        })
+
+        user.profileImg = result.secure_url;
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Profile image updated successfully",
+            user,
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Server error",
+        })
+    }
+}
+
+//logout user : /api/user/logout
+export const logout = async (req,res)=>{
+    try {
+        res.clearCookie('userToken', {
+            httpOnly: true,
+            secure : process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict'
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: 'Logged Out Successfully'
+        });
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
     }
 }

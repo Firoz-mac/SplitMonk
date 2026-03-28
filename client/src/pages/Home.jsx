@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AdsCard from '../components/AdsCard'
 import RecentList from '../components/RecentList'
 import SplitCard from '../components/SplitCard'
@@ -7,7 +7,7 @@ import { useAppContext } from '../context/AppContext'
 
 const Home = () => {
 
-  const {navigate}=useAppContext();
+  const {navigate, user}=useAppContext();
 
   const date = new Date();
 
@@ -21,7 +21,7 @@ const Home = () => {
     <div className='w-full flex flex-col gap-3'>
       <div className='bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] p-5 rounded-lg flex flex-col gap-5'>
         <div>
-          <h3 className='text-3xl font-medium'>Hi Mac</h3>
+          <h3 className='text-3xl font-medium'>Hi {user ? user.userName : ""}</h3>
           <span>{formattedDate}</span>
         </div>
         <div className='flex gap-8'>

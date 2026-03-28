@@ -9,10 +9,11 @@ import { assets } from '../assets/assets';
 import MenuIcon from '../components/MenuIcon';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
+import AppLoader from '../components/AppLoader';
 
 const MainLayout = () => {
 
-    const {navigate} = useAppContext();
+    const {navigate, user, handleLogout, loading} = useAppContext();
     const location = useLocation();
 
     const menuItems = [
@@ -21,6 +22,10 @@ const MainLayout = () => {
         { icon: <BsDatabaseAdd />, path: "/split" },
         { icon: <LiaUserSolid />, path: "/profile" },
     ];
+
+    if(loading){
+        return <AppLoader/>
+    }
 
     return (
         <div className='flex h-screen bg-[var(--bg-primary)] text-[var(--text)]'>
@@ -34,7 +39,7 @@ const MainLayout = () => {
                     }
 
                 </div>
-                <MenuIcon icon={<RiLogoutCircleRLine />} />
+                <MenuIcon icon={<RiLogoutCircleRLine />} onClick={()=>handleLogout()} />
             </div>
 
             <div className='flex-1 flex flex-col p-4 overflow-hidden'>
@@ -45,7 +50,7 @@ const MainLayout = () => {
                     </button>
                     <div onClick={()=>navigate('/profile')} className='bg-[var(--bg-icon)] rounded-full w-10 h-10 
                     cursor-pointer overflow-hidden'>
-                        <img className='w-full h-full object-cover' src={assets.p1} alt="" />
+                        <img className='w-full h-full object-cover' src={user && user.profileImg? user.profileImg : assets.profileImg1} alt="" />
                     </div>
                 </div>
                 <div className='flex-1 overflow-y-scroll no-scrollbar pb-15'>
