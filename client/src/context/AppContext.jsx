@@ -13,7 +13,7 @@ export const AppContextProvider = ({children})=>{
     const navigate = useNavigate();
     const [theme, setTheme] = useState('dark');
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
 
     useEffect(()=>{
         console.log(user)
@@ -33,11 +33,10 @@ export const AppContextProvider = ({children})=>{
             const {data} = await axios.get('/api/user/is-auth')
             if(data.success){
                 setUser(data.user)
+                navigate('home')
             }
         } catch (error) {
             setUser(null);
-        }finally{
-            setLoading(false);
         }
     }
 
@@ -58,9 +57,8 @@ export const AppContextProvider = ({children})=>{
     useEffect(()=>{
         isUserAuth()
     },[])
-    
 
-    const value ={navigate, theme, setTheme, axios, user, setUser, handleLogout, loading};
+    const value ={navigate, theme, setTheme, axios, user, setUser, handleLogout, isUserAuth, loading, setLoading};
     
     return <AppContext.Provider value={value}>
         {children}

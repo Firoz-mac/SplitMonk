@@ -37,7 +37,7 @@ export const register = async (req, res)=>{
 
         const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '7d'})
 
-        res.cookie('token', token, {
+        res.cookie('splitzyToken', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
@@ -99,7 +99,7 @@ export const login = async (req, res)=>{
         //creating token
         const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '7d'})
 
-        res.cookie('userToken', token, {
+        res.cookie('splitzyToken', token, {
             httpOnly: true, 
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
@@ -187,7 +187,7 @@ export const updateProfile = async (req,res)=>{
 //logout user : /api/user/logout
 export const logout = async (req,res)=>{
     try {
-        res.clearCookie('userToken', {
+        res.clearCookie('splitzyToken', {
             httpOnly: true,
             secure : process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict'

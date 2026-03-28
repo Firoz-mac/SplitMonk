@@ -10,7 +10,7 @@ const SignUp = () => {
     const [confPassShow, setConfPassShow] = useState(false);
     const [pageValue, setPageValue] = useState('Login');
 
-    const {navigate, axios, setUser} = useAppContext();
+    const {navigate, axios, setUser, isUserAuth} = useAppContext();
 
     const [formData, setFormData] = useState({
         email: '',
@@ -31,7 +31,7 @@ const SignUp = () => {
     const handleSubmit= async (e)=>{
         e.preventDefault();
         try {
-            if(pageValue === 'Signup' && formData.password != formData.confirmPassword){
+            if(pageValue === 'Signup' && formData.password !== formData.confirmPassword){
                 return toast.error("Passwords are not matching");
             }
 
@@ -54,6 +54,7 @@ const SignUp = () => {
                 if(data?.success){
                     setUser(data.user);
                     navigate("/home");
+                    isUserAuth();
                 }else{
                     toast.error(data?.message || "Something went wrong");
                 }

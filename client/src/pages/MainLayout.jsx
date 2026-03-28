@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { MdOutlineAdd } from "react-icons/md";
 import { GoHome } from "react-icons/go";
 import { LiaUserSolid } from "react-icons/lia";
@@ -9,11 +9,10 @@ import { assets } from '../assets/assets';
 import MenuIcon from '../components/MenuIcon';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import AppLoader from '../components/AppLoader';
 
 const MainLayout = () => {
 
-    const {navigate, user, handleLogout, loading} = useAppContext();
+    const {navigate, user, handleLogout} = useAppContext();
     const location = useLocation();
 
     const menuItems = [
@@ -23,9 +22,6 @@ const MainLayout = () => {
         { icon: <LiaUserSolid />, path: "/profile" },
     ];
 
-    if(loading){
-        return <AppLoader/>
-    }
 
     return (
         <div className='flex h-screen bg-[var(--bg-primary)] text-[var(--text)]'>

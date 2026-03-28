@@ -15,6 +15,7 @@ import Profile from './pages/Profile';
 import Notifications from './pages/Notifications';
 import TotalExpList from './pages/TotalExpList';
 import Splits from './pages/Splits';
+import { useAppContext } from './context/AppContext';
 
 function App() {
 
@@ -22,7 +23,7 @@ function App() {
     <div>
       <ToastContainer />
       <Routes>
-        <Route path='/' element={<LandingPage/>}/>
+        <Route path='/' element={ <LandingPage/>}/>
         <Route path='/signup' element={<SignUp/>}/>
         <Route path='/otp' element={<OtpSection/>}/>
         <Route path='/forgotpassword' element={<ForgotPassword/>}/>
