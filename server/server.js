@@ -7,6 +7,7 @@ import userRouter from './routes/userRoutes.js';
 import connectCloudinary from './config/cloudinary.js';
 import expensesRouter from './routes/expensesRoutes.js';
 import searchRouter from './routes/searchRoutes.js';
+import splitRouter from './routes/splitRoutes.js';
 
 const app=express();
 const port = 4000;
@@ -29,6 +30,7 @@ app.get('/',(req,res)=>{
 app.use('/api/user', userRouter);
 app.use('/api/expense', expensesRouter);
 app.use('/api/search', searchRouter);
+app.use('/api/split', splitRouter);
 
 app.listen(port, ()=>{
     console.log(`Server is running on http://localhost:${port}`)

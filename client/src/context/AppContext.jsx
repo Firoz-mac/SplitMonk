@@ -15,10 +15,20 @@ export const AppContextProvider = ({children})=>{
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
     const [expenses, setExpenses] = useState([]);
+    const [newSplitData, setNewSplitData] = useState({
+        title: '',
+        amount: '',
+        splitType: 'equal',
+        participants: []
+    });
 
     useEffect(()=>{
         console.log(user)
-    }, [user])
+    }, [user]);
+
+    useEffect(()=>{
+        console.log(newSplitData)
+    },[newSplitData])
 
     useEffect(() => {
         const root = document.documentElement;
@@ -72,7 +82,8 @@ export const AppContextProvider = ({children})=>{
     },[])
 
     const value ={navigate, theme, setTheme, axios, user, setUser, 
-        handleLogout, isUserAuth, loading, setLoading, expenses, setExpenses};
+        handleLogout, isUserAuth, loading, setLoading, expenses, 
+        setExpenses, newSplitData, setNewSplitData};
     
     return <AppContext.Provider value={value}>
         {children}

@@ -6,27 +6,31 @@ const Search = () => {
 
     const {navigate, axios} = useAppContext();
     const [results, setResults] = useState([]);
+    const [query, setQuery] = useState('');
 
-    const handleChange = async (e)=>{
-        const value = e.target.value;
+    useEffect(()=>{
+        const delay = setTimeout(async ()=>{
+            if(!query.trim()){
+                setResults([]);
+                return;
+            }
 
-        if (!value.trim()){
-            setResults([]);
-            return;
-        }
+            try {
+                const {data} = await axios.get('/api/search/get', {params:{query}});
+                setResults(data.data);
+            } catch (error) {
+                console.log(error.message);
+            }
+        }, 400);
 
-        try {
-            const {data} = await axios.get('/api/search/get', {params:{query:value}});
-            setResults(data.data);
-        } catch (error) {
-            console.log(error.message);
-        }
-    }
+        return ()=> clearTimeout(delay);
+
+    },[query]);
 
     return (
         <div className='w-full h-full flex flex-col'>
             <div className="max-w-sm w-full flex flex-col h-full gap-1">
-                <input onChange={handleChange} type="text" placeholder='Search...' className='w-full p-3 
+                <input onChange={(e)=>setQuery(e.target.value)} value={query} type="text" placeholder='Search...' className='w-full p-3 
                     rounded-lg border border-gray-500 focus:outline-none'/>
                 <div className='flex-1 flex flex-col py-2 overflow-scroll no-scrollbar gap-1'>
                     {results.map((item, index)=>(

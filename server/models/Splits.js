@@ -30,10 +30,23 @@ const splitSchema = new mongoose.Schema({
                 type: Number,
                 required:true
             },
-            status:{
+            paid:{
                 type: Boolean,
                 default: false
             }
+        }
+    ],
+    settlements:[
+        {
+            from:{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'users'
+            },
+            to:{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'users'
+            },
+            amount: Number
         }
     ]
 },{timestamps:true});

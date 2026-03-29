@@ -1,16 +1,77 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaArrowLeft } from "react-icons/fa6";
 import { assets } from '../../assets/assets';
 import { useAppContext } from '../../context/AppContext';
+import { toast } from 'react-toastify';
 
 const SplitAmount = () => {
-    const {navigate}=useAppContext();
+    const {navigate, newSplitData, setNewSplitData, axios, user}=useAppContext();
 
     const [splitValue, setSplitValue] = useState('equal');
+    const [splitAmounts, setSplitAmounts] = useState([]);
+    const [balance, setBalance] = useState(newSplitData.amount);
 
-    const handleSubmit=()=>{
-        navigate('/home');
+    useEffect(()=>{
+        if(splitValue === 'equal'){
+            const participants = newSplitData.participants.length + 1;
+            const perHead=newSplitData.amount/participants;
+
+            const amounts = newSplitData.participants.map(()=>perHead);
+            setSplitAmounts(amounts);
+        }else{
+            const amounts = newSplitData.participants.map(()=> 0);
+            setSplitAmounts(amounts);
+            setBalance(newSplitData.amount);
+        }
+    },[splitValue, newSplitData]);
+
+    const handleCustomAmountChange = (index, value)=>{
+        const updated = [...splitAmounts];
+        updated[index] = Number(value) || 0 ;
+        setSplitAmounts(updated);
+
+        const total = updated.reduce((acc, curr)=> acc+curr, 0);
+        setBalance(newSplitData.amount - total);
     }
+
+    const handleSubmit=async ()=>{
+        const updatedParticipants = newSplitData.participants.map((user, index)=>(
+            {
+                ...user,
+                amount: splitAmounts[index] || 0
+            }
+        ));
+
+        const finalData = {
+            ...newSplitData,
+            amount: Number(newSplitData.amount),
+            createdBy: user?._id,
+            participants: updatedParticipants
+        }
+
+        try {
+            const {data} = await axios.post('/api/split/add', finalData);
+
+            if(data.success){
+                toast.success('Split Created');
+                setNewSplitData(
+                    {
+                        title: '',
+                        amount: '',
+                        splitType: 'equal',
+                        participants: []
+                    }
+                )
+                navigate('/home');
+            }
+
+        } catch (error) {
+            console.log(error.message);
+            toast.error('Failed to create split');
+        }
+
+    }
+
     return (
         <div className='w-full max-w-md flex flex-col gap-5'>
             <FaArrowLeft onClick={() => navigate(-1)} className='text-xl text-[var(--text)] hover:text-[var(--text-dull)] cursor-pointer' />
@@ -51,23 +112,30 @@ const SplitAmount = () => {
                 <button onClick={()=>setSplitValue('custom')} className={`px-5 py-1 ${splitValue === 'custom' ? "bg-[var(--primary)]" : "bg-[var(--text-dull)] text-black"} rounded-lg cursor-pointer`}>Custom</button>
             </div>
 
+            {splitValue === 'custom' ?
+                <span>Balance: ₹ {balance}</span> : null
+            }
+
             <div className='bg-[var(--bg-card)] max-h-59 flex flex-col gap-1 p-3 overflow-scroll no-scrollbar rounded-lg'>
-                <div className='flex items-center gap-3 p-1 cursor-pointer'>
 
-                    <div className='w-11 h-11 rounded-full overflow-hidden flex-shrink-0'>
-                        <img className='w-full h-full object-cover' src={assets.p1} alt="" />
+                {newSplitData.participants.map((item, index)=>(
+                    <div key={index} className='flex items-center gap-3 p-1 cursor-pointer'>
+
+                        <div className='w-11 h-11 rounded-full overflow-hidden flex-shrink-0'>
+                            <img className='w-full h-full object-cover' src={item.profileImg || assets.profileImg1} alt="" />
+                        </div>
+
+                        <div className='flex justify-between items-center w-full'>
+                            <span className='text-sm truncate'>{item.userName}</span>
+                            { splitValue === 'equal' ?
+                                <span className='text-sm font-medium whitespace-nowrap'>₹ {splitAmounts[index]?.toFixed(2)}</span>
+                                :
+                                <input onChange={(e)=>handleCustomAmountChange(index, e.target.value)} className='focus:outline-none' type="text" placeholder='Amount' />
+                            }
+                        </div>
+
                     </div>
-
-                    <div className='flex justify-between items-center w-full'>
-                        <span className='text-sm truncate'>Mac</span>
-                        { splitValue === 'equal' ?
-                            <span className='text-sm font-medium whitespace-nowrap'>₹100</span>
-                            :
-                            <input className='focus:outline-none' type="text" placeholder='Amount' />
-                        }
-                    </div>
-
-                </div>
+                ))}
 
             </div>
             <button onClick={handleSubmit} className='w-full py-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600

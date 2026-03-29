@@ -1,13 +1,27 @@
 import React from 'react'
 import { useAppContext } from '../../context/AppContext'
+import { toast } from 'react-toastify';
 
 const NewSplit = () => {
 
-    const {navigate} = useAppContext();
+    const {navigate, newSplitData, setNewSplitData} = useAppContext();
 
-    const handleClick=()=>{
-        navigate('/choose')
+    const handleChange=(e)=>{
+        setNewSplitData(prev=>({
+            ...prev,
+            [e.target.name]: e.target.value
+        }));
     }
+
+    const handleClick=(e)=>{
+        if(!newSplitData.title || !newSplitData.amount){
+            toast.error('Please fill all the fields');
+            return;
+        }else{
+            navigate('/choose');
+        }
+    }
+
     return (
         <div className='w-full max-w-md flex flex-col gap-5'>
 
@@ -44,6 +58,9 @@ const NewSplit = () => {
                 <input
                     type='text'
                     placeholder="e.g. Birthday Party"
+                    name='title'
+                    value={newSplitData.title}
+                    onChange={handleChange}
                     className="
                         w-full py-3 px-4 rounded-xl
                         bg-[var(--bg-card)] border border-[var(--border)]
@@ -61,6 +78,9 @@ const NewSplit = () => {
 
                     <input
                         type='number'
+                        name='amount'
+                        value={newSplitData.amount}
+                        onChange={handleChange}
                         placeholder="0.00"
                         className="
                             w-full py-3 pl-8 pr-4 rounded-xl
