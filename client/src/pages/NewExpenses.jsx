@@ -62,7 +62,7 @@ const NewExpenses = () => {
                     <span className='text-sm'>Recent</span>
                     <span onClick={()=>navigate('/expense-list')} className='text-sm cursor-pointer text-[var(--text)] hover:text-[var(--text-dull)]'>View all</span>
                 </div>
-                {expenses?.map((item, index)=>(
+                {expenses?.slice(0, 3).map((item, index)=>(
                     <div key={index} className='flex flex-col p-4 bg-[var(--bg-card)] rounded-lg'>
                         <span>{item.title}</span>
                         <span>₹{item.amount}</span>
