@@ -16,6 +16,7 @@ import Notifications from './pages/Notifications';
 import TotalExpList from './pages/TotalExpList';
 import Splits from './pages/Splits';
 import { useAppContext } from './context/AppContext';
+import Search from './pages/Search';
 
 function App() {
 
@@ -37,6 +38,7 @@ function App() {
           <Route path='/notifications' element={<Notifications/>}/>
           <Route path='/expense-list' element={<TotalExpList/>}/>
           <Route path='/splits' element={<Splits/>}/>
+          <Route path='/search' element={<Search/>}/>
         </Route>
       </Routes>
     </div>
