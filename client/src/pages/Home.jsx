@@ -7,7 +7,7 @@ import { useAppContext } from '../context/AppContext'
 
 const Home = () => {
 
-  const {navigate, user}=useAppContext();
+  const {navigate, user, splits, setSplits, getSplits, newSplitData}=useAppContext();
 
   const date = new Date();
 
@@ -16,6 +16,14 @@ const Home = () => {
     day: "numeric",
     year: "numeric",
   });
+
+  useEffect(()=>{
+    console.log(splits);
+  },[splits])
+
+  useEffect(()=>{
+    getSplits();
+  },[newSplitData]);
 
   return (
     <div className='w-full flex flex-col gap-3'>
@@ -43,24 +51,13 @@ const Home = () => {
           <span onClick={()=>navigate('/splits')} className='text-sm cursor-pointer text-[var(--text)] hover:text-[var(--text-dull)]'>View all</span>
         </div>
         <div className='flex py-3 gap-4 overflow-x-scroll no-scrollbar'>
-          <div className='min-w-[220px]'>
-            <SplitCard/>
-          </div>
-          <div className='min-w-[220px]'>
-            <SplitCard/>
-          </div>
-          <div className='min-w-[220px]'>
-            <SplitCard/>
-          </div>
-          <div className='min-w-[220px]'>
-            <SplitCard/>
-          </div>
-          <div className='min-w-[220px]'>
-            <SplitCard/>
-          </div>
-          <div className='min-w-[220px]'>
-            <SplitCard/>
-          </div>
+
+          {splits.map((item, index)=>(
+            <div key={index} className='min-w-[220px]'>
+              <SplitCard createdBy={item.createdBy} title={item.title} amount={item.amount} participants={item.participants} id={item._id}/>
+            </div>
+          ))}
+
         </div>
       </div>
       <TotalExpenses/>

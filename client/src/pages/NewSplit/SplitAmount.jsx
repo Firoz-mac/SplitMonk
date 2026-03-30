@@ -5,7 +5,7 @@ import { useAppContext } from '../../context/AppContext';
 import { toast } from 'react-toastify';
 
 const SplitAmount = () => {
-    const {navigate, newSplitData, setNewSplitData, axios, user}=useAppContext();
+    const {navigate, newSplitData, setNewSplitData, axios}=useAppContext();
 
     const [splitValue, setSplitValue] = useState('equal');
     const [splitAmounts, setSplitAmounts] = useState([]);
@@ -45,7 +45,6 @@ const SplitAmount = () => {
         const finalData = {
             ...newSplitData,
             amount: Number(newSplitData.amount),
-            createdBy: user?._id,
             participants: updatedParticipants
         }
 

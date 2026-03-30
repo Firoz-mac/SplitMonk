@@ -21,6 +21,7 @@ export const AppContextProvider = ({children})=>{
         splitType: 'equal',
         participants: []
     });
+    const [splits, setSplits] = useState([]);
 
     useEffect(()=>{
         console.log(user)
@@ -62,6 +63,17 @@ export const AppContextProvider = ({children})=>{
         }
     }
 
+    const getSplits = async ()=>{
+        try {
+            const {data} = await axios.get('/api/split/get');
+            if(data.success){
+                setSplits(data.splits);
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     const handleLogout = async ()=>{
         try {
             const {data} = await axios.get('/api/user/logout');
@@ -79,11 +91,13 @@ export const AppContextProvider = ({children})=>{
     useEffect(()=>{
         isUserAuth();
         getExpenses();
-    },[])
+        getSplits();
+    },[]);
+    
 
     const value ={navigate, theme, setTheme, axios, user, setUser, 
         handleLogout, isUserAuth, loading, setLoading, expenses, 
-        setExpenses, newSplitData, setNewSplitData};
+        setExpenses, newSplitData, setNewSplitData, splits, setSplits, getSplits};
     
     return <AppContext.Provider value={value}>
         {children}

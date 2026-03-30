@@ -1,10 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { assets } from '../assets/assets'
+import { useAppContext } from '../context/AppContext';
+import { LuTrash2 } from "react-icons/lu";
+import { toast } from 'react-toastify';
 
-const SplitCard = () => {
-  const profile = [
-    assets.p1, assets.p2, assets.p3, assets.p4
-  ]
+const SplitCard = ({createdBy, title, amount, participants, id}) => {
+
+  const {user, axios, getSplits} = useAppContext();
+  
+  const totalParticipantsCount = participants.length;
+  const paidParticipantsCount  = participants.filter((p)=> p.paid === true).length;
+
+  const progressBarValue = totalParticipantsCount > 0 ? (paidParticipantsCount / totalParticipantsCount) * 100 : 0;
+
+  const currentLoggedUser = participants.find((p)=> p?.user?._id === user?._id);
+
+  const currentLoggedUserAmount = currentLoggedUser?.amount || 0;
+
+  const handleTrashBinClick = async (splitId)=>{
+
+    const {data} = await axios.delete(`/api/split/remove/${splitId}`);
+
+    if(data.success){
+      toast.success(data.message);
+      getSplits();
+    }
+
+  }
+
   return (
     <div className='
       w-full rounded-2xl p-5 text-white
@@ -14,56 +37,57 @@ const SplitCard = () => {
       relative overflow-hidden
     '>
 
-      {/* 🔹 Subtle Light Overlay */}
+
       <div className='absolute inset-0 bg-white/5 pointer-events-none'></div>
 
-      {/* 🔹 User */}
-      <div className='flex items-center gap-2 mb-3 relative z-10'>
-        <div className='w-6 h-6 rounded-full overflow-hidden'>
-          <img className='w-full h-full object-cover' src={assets.p1} alt="" />
+
+      <div className='flex mb-3 relative z-10 justify-between'>
+        <div className='flex items-center gap-2'>
+          <div className='w-6 h-6 rounded-full overflow-hidden'>
+            <img className='w-full h-full object-cover' src={createdBy.profileImg || assets.profileImg1} alt="" />
+          </div>
+          <span className='text-sm text-white/80 font-medium'>{createdBy.userName}</span>
         </div>
-        <span className='text-sm text-white/80 font-medium'>User</span>
+        {createdBy._id == user?._id?
+          <LuTrash2 onClick={()=>handleTrashBinClick(id)} size={18} className='cursor-pointer'/> : null
+        }
       </div>
 
-      {/* 🔹 Title */}
-      <h3 className='text-lg font-semibold relative z-10'>
-        Birthday Preps
-      </h3>
 
-      {/* 🔹 Amount */}
-      <h1 className='text-3xl font-bold mt-1 tracking-tight relative z-10'>
-        $725
-      </h1>
+      <h3 className='text-lg font-semibold relative z-10'>{title}</h3>
 
-      {/* 🔹 Progress Bar */}
+      <h1 className='text-3xl font-bold mt-1 tracking-tight relative z-10'>₹ {amount}</h1>
+      {createdBy._id != user?._id ?
+        <span>You Own : {currentLoggedUserAmount}</span> : null
+      }
+      
+
       <div className='w-full h-1.5 bg-white/20 rounded-full mt-4 overflow-hidden relative z-10'>
         <div className='
-          w-[70%] h-full rounded-full
+          h-full rounded-full
           bg-gradient-to-r from-cyan-300 to-blue-400
           shadow-[0_0_10px_rgba(56,189,248,0.6)]
-        '></div>
+        ' style={{ width : `${progressBarValue}%`}}></div>
       </div>
 
-      {/* 🔹 Avatars + Status */}
       <div className='flex items-center justify-between mt-4 relative z-10'>
 
         <div className='flex -space-x-2'>
-          {profile.map((img, index) => (
+          {participants.map((item, index) => (
             <div
               key={index}
               className='w-7 h-7 rounded-full border-2 border-white overflow-hidden'
             >
-              <img className='w-full h-full object-cover' src={img} alt="" />
+              <img className='w-full h-full object-cover' src={item.user.profileImg || assets.profileImg1} alt="" />
             </div>
           ))}
         </div>
 
         <span className='text-sm text-white/80 font-medium'>
-          4/5 paid
+          {paidParticipantsCount}/{totalParticipantsCount} paid
         </span>
       </div>
 
-      {/* 🔹 Button */}
       <button className='
         w-full mt-5 py-2.5 rounded-xl
         bg-white text-black font-medium
