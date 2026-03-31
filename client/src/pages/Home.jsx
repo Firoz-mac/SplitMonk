@@ -35,16 +35,16 @@ const Home = () => {
         <div className='flex gap-8'>
           <div>
             <h3>You Owe</h3>
-            <h3 className='text-5xl font-medium'>₹1502</h3>
+            <h3 className='text-4xl font-medium'>₹ 1502</h3>
           </div>
           <div>
             <h3>You Are Owed</h3>
-            <h3 className='text-5xl font-medium'>₹2300</h3>
+            <h3 className='text-4xl font-medium'>₹ 2300</h3>
           </div>
         </div>
       </div>
-      <RecentList/>
-      <AdsCard/>
+      {/* <RecentList/> */}
+      
       <div className='bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] p-5 rounded-lg flex flex-col'>
         <div className='flex justify-between'>
           <span className='text-sm'>Recent Splits</span>
@@ -61,6 +61,7 @@ const Home = () => {
         </div>
       </div>
       <TotalExpenses/>
+      <AdsCard/>
     </div>
   )
 }

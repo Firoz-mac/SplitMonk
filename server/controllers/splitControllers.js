@@ -129,3 +129,72 @@ export const removeSplit = async (req, res)=>{
 
     }
 }
+
+//pay split : /api/split/pay
+export const paySplit = async (req, res)=>{
+    try {
+        const {sender, receiver, title, amount, splitId} = req.body;
+        
+        if(!splitId){
+            return res.status(400).json({
+                success:false,
+                message: 'Split ID is required'
+            })
+        }
+
+        const split = await Split.findById(splitId);
+
+        if(!split){
+            return res.status(404).json({
+                success:false,
+                message: 'Split not found'
+            })
+        }
+
+        await Split.findByIdAndUpdate(splitId,{
+            $set:{
+                "participants.$[elem].paid":true
+            },
+        }, {
+            arrayFilters: [{ "elem.user": sender.userId }],
+            returnDocument : 'after'
+        });
+
+        const updatedSplit = await Split.findOneAndUpdate(
+            {
+                _id: splitId,
+                "settlements.from": sender.userId,
+                "settlements.to": receiver.userId
+            },
+            {
+                $inc:{
+                    "settlements.to": receiver.userId
+                }
+            },
+            { returnDocument: "after" }
+        );
+
+        await Split.updateOne(
+            {_id: splitId},
+            {
+                $pull:{
+                    settlements:{
+                        amount:{$lte:0}
+                    }
+                }
+            }
+        );
+
+        return res.status(200).json({
+            success:true,
+            message:'Payment Updated'
+        })
+
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            success:false,
+            message:error.message
+        })
+    }
+}

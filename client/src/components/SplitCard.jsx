@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { assets } from '../assets/assets'
 import { useAppContext } from '../context/AppContext';
 import { LuTrash2 } from "react-icons/lu";
@@ -7,6 +7,18 @@ import { toast } from 'react-toastify';
 const SplitCard = ({createdBy, title, amount, participants, id}) => {
 
   const {user, axios, getSplits} = useAppContext();
+  const [payDetails, setPayDetails] = useState({
+    sender:{
+      userId:'',
+      userName:''
+    },
+    receiver: {
+      userId:'',
+      userName:''
+    },
+    title: '',
+    amount: ''
+  });
   
   const totalParticipantsCount = participants.length;
   const paidParticipantsCount  = participants.filter((p)=> p.paid === true).length;
@@ -28,9 +40,46 @@ const SplitCard = ({createdBy, title, amount, participants, id}) => {
 
   }
 
+  const handlePay = async ()=>{
+
+    try {
+      const payload = {
+        sender:{
+        userId:user._id,
+        userName:user.userName,
+        },
+        receiver:{
+          userId: createdBy._id,
+          userName: createdBy.userName,
+        },
+        title: title,
+        amount: currentLoggedUserAmount,
+        splitId: id
+      }
+
+      setPayDetails(payload);
+
+      const data = await axios.post('/api/split/pay', payload);
+
+      if(data.success){
+        toast.success(data.message);
+        console.log("working");
+        getSplits();
+      }
+
+    } catch (error) {
+      console.log(error.message);
+    }
+    
+  }
+
+  useEffect(()=>{
+    console.log(payDetails);
+  }, [payDetails])
+
   return (
     <div className='
-      w-full rounded-2xl p-5 text-white
+      w-full min-h-[240px] rounded-2xl p-5 text-white
       bg-gradient-to-br from-[#3B82F6] via-[#2563EB] to-[#1D4ED8]
       shadow-[0_10px_30px_rgba(0,0,0,0.4)]
       hover:scale-[1.02] transition-all duration-300
@@ -58,7 +107,7 @@ const SplitCard = ({createdBy, title, amount, participants, id}) => {
 
       <h1 className='text-3xl font-bold mt-1 tracking-tight relative z-10'>₹ {amount}</h1>
       {createdBy._id != user?._id ?
-        <span>You Own : {currentLoggedUserAmount}</span> : null
+        <span>You Owe : {currentLoggedUserAmount}</span> : null
       }
       
 
@@ -87,15 +136,16 @@ const SplitCard = ({createdBy, title, amount, participants, id}) => {
           {paidParticipantsCount}/{totalParticipantsCount} paid
         </span>
       </div>
-
-      <button className='
-        w-full mt-5 py-2.5 rounded-xl
-        bg-white text-black font-medium
-        hover:bg-gray-200 active:scale-95
-        transition-all duration-200 cursor-pointer
-      '>
-        Pay
-      </button>
+      {createdBy._id !== user?._id && !currentLoggedUser?.paid && (
+        <button onClick={handlePay} className='
+          w-full mt-5 py-2.5 rounded-xl
+          bg-white text-black font-medium
+          hover:bg-gray-200 active:scale-95
+          transition-all duration-200 cursor-pointer
+        '>
+          Pay
+        </button>
+      )}
 
     </div>
   )

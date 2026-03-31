@@ -1,19 +1,65 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { IoChevronDown } from "react-icons/io5";
+import { useAppContext } from '../context/AppContext';
 
 const TotalExpenses = () => {
+
+    const {expenses} = useAppContext();
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState("This Month");
 
+    const filteredExpenses = useMemo(()=>{
+        if (!expenses) return [];
+
+        const now = new Date();
+
+        return expenses.filter((item)=> {
+            const expenseDate = new Date(item.createdAt);
+
+            switch(selected){
+                case 'Today':
+                    return expenseDate.toDateString() === now.toDateString();
+
+                case 'This Week':
+                    const startOfWeek = new Date(now);
+                    startOfWeek.setDate(now.getDate() - now.getDay());
+                    return expenseDate >= startOfWeek && expenseDate <= now;
+                case 'This Month':
+                    return (
+                        expenseDate.getMonth() === now.getMonth() && expenseDate.getFullYear() === now.getFullYear()
+                    );
+                case 'This Year':
+                    return expenseDate.getFullYear() === now.getFullYear();
+                default:
+                    return true;
+            }
+        });
+    }, [expenses, selected]);
+
+    const totalExpensesAmount = useMemo(()=> {
+        return filteredExpenses.reduce(
+            (sum, item) => sum + (item.amount || 0), 0
+        );
+    }, [filteredExpenses]);
+
+    const date = new Date();
+
+    const formattedDate = date.toLocaleDateString('en-US', {
+        weekday: 'long',
+        day: 'numeric',
+        year: 'numeric'
+    });
+
     const options = ["Today", "This Week", "This Month", "This Year"];
+    
     return (
         <div className='bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] p-5 rounded-lg flex justify-between'>
             <div className='flex flex-col gap-2'>
                 <div>
                     <h3 className='text-2xl'>Expenses</h3>
-                    <span>Tuesday, 12, 2026</span>
+                    <span>{formattedDate}</span>
                 </div>
-                <span className='text-5xl font-medium'>₹17850</span>
+                <span className='text-4xl font-medium'>₹ {totalExpensesAmount}</span>
             </div>
             <div className="inline-block">
 
