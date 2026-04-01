@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 const SplitCard = ({createdBy, title, amount, participants, id}) => {
 
-  const {user, axios, getSplits} = useAppContext();
+  const {user, axios, getSplits, getExpenses} = useAppContext();
   const [payDetails, setPayDetails] = useState({
     sender:{
       userId:'',
@@ -59,12 +59,13 @@ const SplitCard = ({createdBy, title, amount, participants, id}) => {
 
       setPayDetails(payload);
 
-      const data = await axios.post('/api/split/pay', payload);
+      const {data} = await axios.post('/api/split/pay', payload);
 
       if(data.success){
         toast.success(data.message);
         console.log("working");
         getSplits();
+        getExpenses();
       }
 
     } catch (error) {

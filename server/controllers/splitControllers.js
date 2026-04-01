@@ -1,4 +1,5 @@
 import Split from "../models/Splits.js";
+import Expenses from "../models/Expenses.js";
 
 //add split : /api/split/add
 export const addSplit = async (req, res) =>{
@@ -168,11 +169,18 @@ export const paySplit = async (req, res)=>{
             },
             {
                 $inc:{
-                    "settlements.to": receiver.userId
+                    "settlements.$.amount": -Number(amount)
                 }
             },
             { returnDocument: "after" }
         );
+
+        await Expenses.create({
+            title: title || "Split Payment",
+            amount: Number(amount),
+            userId: sender.userId,
+            paidTo: receiver.userId
+        })
 
         await Split.updateOne(
             {_id: splitId},

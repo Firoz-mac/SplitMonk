@@ -4,10 +4,13 @@ import RecentList from '../components/RecentList'
 import SplitCard from '../components/SplitCard'
 import TotalExpenses from '../components/TotalExpenses'
 import { useAppContext } from '../context/AppContext'
+import { useState } from 'react'
 
 const Home = () => {
 
-  const {navigate, user, splits, setSplits, getSplits, newSplitData}=useAppContext();
+  const {navigate, user, splits, setSplits, getSplits, newSplitData, axios}=useAppContext();
+  const [youOwe, setYouOwe] = useState(0);
+  const [youAreOwed, setYouAreOwed] = useState(0);
 
   const date = new Date();
 
@@ -25,6 +28,18 @@ const Home = () => {
     getSplits();
   },[newSplitData]);
 
+  const getBalance = async ()=>{
+    const {data} = await axios.get('/api/balance/get');
+    if(data.success){
+      setYouOwe(data.youOwe);
+      setYouAreOwed(data.youAreOwed);
+    }
+  }
+
+  useEffect(()=>{
+      getBalance();
+  },[user, splits])
+
   return (
     <div className='w-full flex flex-col gap-3'>
       <div className='bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] p-5 rounded-lg flex flex-col gap-5'>
@@ -35,11 +50,11 @@ const Home = () => {
         <div className='flex gap-8'>
           <div>
             <h3>You Owe</h3>
-            <h3 className='text-4xl font-medium'>₹ 1502</h3>
+            <h3 className='text-4xl font-medium'>₹ {youOwe}</h3>
           </div>
           <div>
             <h3>You Are Owed</h3>
-            <h3 className='text-4xl font-medium'>₹ 2300</h3>
+            <h3 className='text-4xl font-medium'>₹ {youAreOwed}</h3>
           </div>
         </div>
       </div>

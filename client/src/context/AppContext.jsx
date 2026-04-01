@@ -55,6 +55,7 @@ export const AppContextProvider = ({children})=>{
     const getExpenses = async ()=>{
         try {
             const {data} = await axios.get('/api/expense/get');
+            console.log(data.expenses)
             if(data.success){
                 setExpenses(data.expenses);
             }
@@ -97,7 +98,7 @@ export const AppContextProvider = ({children})=>{
 
     const value ={navigate, theme, setTheme, axios, user, setUser, 
         handleLogout, isUserAuth, loading, setLoading, expenses, 
-        setExpenses, newSplitData, setNewSplitData, splits, setSplits, getSplits};
+        setExpenses, newSplitData, setNewSplitData, splits, setSplits, getSplits, getExpenses};
     
     return <AppContext.Provider value={value}>
         {children}
