@@ -36,6 +36,7 @@ const SplitCard = ({createdBy, title, amount, participants, id}) => {
     if(data.success){
       toast.success(data.message);
       getSplits();
+      getExpenses();
     }
 
   }
@@ -76,7 +77,7 @@ const SplitCard = ({createdBy, title, amount, participants, id}) => {
 
   useEffect(()=>{
     console.log(payDetails);
-  }, [payDetails])
+  }, [payDetails]);
 
   return (
     <div className='

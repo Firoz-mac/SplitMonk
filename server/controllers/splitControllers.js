@@ -1,5 +1,7 @@
 import Split from "../models/Splits.js";
 import Expenses from "../models/Expenses.js";
+import Notifications from "../models/Notifications.js";
+import User from "../models/User.js";
 
 //add split : /api/split/add
 export const addSplit = async (req, res) =>{
@@ -40,6 +42,17 @@ export const addSplit = async (req, res) =>{
         const data = await Split.create({
             title, amount, createdBy, participants: formattedParticipants, settlements,
         });
+
+        const createdUser = await User.findById(createdBy);
+
+        const notifications = formattedParticipants.filter(p=>
+            p.user.toString() !== createdBy.toString()
+        ).map(p=> ({
+            userId: p.user,
+            message: `${createdUser.userName || "Someone"} added you to "${title}" split of ₹${p.amount}`,
+        }));
+
+        await Notifications.insertMany(notifications);
 
         return res.status(201).json({
             success:true,

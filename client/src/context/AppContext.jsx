@@ -22,6 +22,7 @@ export const AppContextProvider = ({children})=>{
         participants: []
     });
     const [splits, setSplits] = useState([]);
+    const [notifications, setNotifications] = useState([])
 
     useEffect(()=>{
         console.log(user)
@@ -75,6 +76,17 @@ export const AppContextProvider = ({children})=>{
         }
     }
 
+    const getNotifications = async ()=>{
+        try {
+            const {data} = await axios.get('/api/notifications/get');
+            if(data.success){
+                setNotifications(data.notifications);
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     const handleLogout = async ()=>{
         try {
             const {data} = await axios.get('/api/user/logout');
@@ -93,12 +105,17 @@ export const AppContextProvider = ({children})=>{
         isUserAuth();
         getExpenses();
         getSplits();
+        
     },[]);
-    
+
+    useEffect(()=>{
+        getNotifications();
+    },[user])
 
     const value ={navigate, theme, setTheme, axios, user, setUser, 
         handleLogout, isUserAuth, loading, setLoading, expenses, 
-        setExpenses, newSplitData, setNewSplitData, splits, setSplits, getSplits, getExpenses};
+        setExpenses, newSplitData, setNewSplitData, splits,
+        setSplits, getSplits, getExpenses, notifications};
     
     return <AppContext.Provider value={value}>
         {children}

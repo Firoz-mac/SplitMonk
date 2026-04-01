@@ -9,6 +9,7 @@ import expensesRouter from './routes/expensesRoutes.js';
 import searchRouter from './routes/searchRoutes.js';
 import splitRouter from './routes/splitRoutes.js';
 import balanceRouter from './routes/balanceRoutes.js';
+import notificationsRouter from './routes/notificationsRoutes.js';
 
 const app=express();
 const port = 4000;
@@ -33,6 +34,7 @@ app.use('/api/expense', expensesRouter);
 app.use('/api/search', searchRouter);
 app.use('/api/split', splitRouter);
 app.use('/api/balance', balanceRouter);
+app.use('/api/notifications', notificationsRouter);
 
 app.listen(port, ()=>{
     console.log(`Server is running on http://localhost:${port}`)
