@@ -9,10 +9,11 @@ import { assets } from '../assets/assets';
 import MenuIcon from '../components/MenuIcon';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
+import { MdTimeline } from "react-icons/md";
 
 const MainLayout = () => {
 
-    const {navigate, user, handleLogout} = useAppContext();
+    const {navigate, user, handleLogout, unreadCount} = useAppContext();
     const location = useLocation();
 
     const menuItems = [
@@ -40,10 +41,23 @@ const MainLayout = () => {
 
             <div className='flex-1 flex flex-col p-4 overflow-hidden'>
                 <div className='w-full flex gap-2 justify-end pb-4'>
-                    <button onClick={()=>navigate('/notifications')} className='text-2xl bg-[var(--bg-icon)] 
-                    hover:bg-[var(--bg-hover)] p-2 rounded-lg cursor-pointer'>
-                        <IoNotificationsOutline  className='text-[var(--icon-color)]'/>
-                    </button>
+                    
+
+                        <button onClick={()=>navigate('/notifications')} className='relative text-2xl bg-[var(--bg-icon)] 
+                        hover:bg-[var(--bg-hover)] p-2 rounded-lg cursor-pointer'>
+                            {unreadCount >0 ?
+                            <div className='w-4 h-4 bg-[var(--primary)] absolute rounded-full top-1 right-1 text-[10px] flex justify-center items-center'>
+                                {unreadCount}
+                            </div> : null
+                            }
+                            <IoNotificationsOutline  className='text-[var(--icon-color)]'/>
+                        </button>
+
+                    {user?.userName === import.meta.env.VITE_ADMIN &&(
+                    <button onClick={()=>navigate('/log')} className='bg-[var(--bg-icon)] text-2xl p-2 cursor-pointer rounded-lg'><MdTimeline /></button>
+                    )
+                    }
+
                     <div onClick={()=>navigate('/profile')} className='bg-[var(--bg-icon)] rounded-full w-10 h-10 
                     cursor-pointer overflow-hidden'>
                         <img className='w-full h-full object-cover' src={user && user.profileImg? user.profileImg : assets.profileImg1} alt="" />

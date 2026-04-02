@@ -17,6 +17,7 @@ import TotalExpList from './pages/TotalExpList';
 import Splits from './pages/Splits';
 import { useAppContext } from './context/AppContext';
 import Search from './pages/Search';
+import ActivityLog from './pages/ActivityLog';
 
 function App() {
 
@@ -39,6 +40,7 @@ function App() {
           <Route path='/expense-list' element={<TotalExpList/>}/>
           <Route path='/splits' element={<Splits/>}/>
           <Route path='/search' element={<Search/>}/>
+          <Route path='/log' element={<ActivityLog/>}/>
         </Route>
       </Routes>
     </div>

@@ -10,6 +10,8 @@ import searchRouter from './routes/searchRoutes.js';
 import splitRouter from './routes/splitRoutes.js';
 import balanceRouter from './routes/balanceRoutes.js';
 import notificationsRouter from './routes/notificationsRoutes.js';
+import http from 'http';
+import { Server } from 'socket.io';
 
 const app=express();
 const port = 4000;
@@ -25,6 +27,32 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({origin: allowedOrigins, credentials:true}));
 
+
+const server = http.createServer(app);
+//socket.io setup
+const io = new Server(server, {
+    cors:{
+        origin: allowedOrigins,
+        credentials:true
+    }
+});
+
+io.on('connection', (socket)=>{
+    console.log("User connected:", socket.id);
+
+    //join room
+    socket.on('join', (userId)=>{
+        socket.join(userId);
+        console.log('Joined Room:', userId)
+    });
+
+    socket.on('disconnect', ()=>{
+        console.log("User disconnected:", socket.id);
+    });
+});
+
+export {io};
+
 app.get('/',(req,res)=>{
     res.send('api is working');
 });
@@ -36,6 +64,6 @@ app.use('/api/split', splitRouter);
 app.use('/api/balance', balanceRouter);
 app.use('/api/notifications', notificationsRouter);
 
-app.listen(port, ()=>{
+server.listen(port, ()=>{
     console.log(`Server is running on http://localhost:${port}`)
 })

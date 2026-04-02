@@ -2,6 +2,7 @@ import Split from "../models/Splits.js";
 import Expenses from "../models/Expenses.js";
 import Notifications from "../models/Notifications.js";
 import User from "../models/User.js";
+import { io } from "../server.js";
 
 //add split : /api/split/add
 export const addSplit = async (req, res) =>{
@@ -53,6 +54,10 @@ export const addSplit = async (req, res) =>{
         }));
 
         await Notifications.insertMany(notifications);
+
+        notifications.forEach(notification=>{
+            io.to(notification.userId.toString()).emit('new-notification', notification)
+        })
 
         return res.status(201).json({
             success:true,
@@ -193,7 +198,7 @@ export const paySplit = async (req, res)=>{
             amount: Number(amount),
             userId: sender.userId,
             paidTo: receiver.userId
-        })
+        });
 
         await Split.updateOne(
             {_id: splitId},
@@ -205,6 +210,15 @@ export const paySplit = async (req, res)=>{
                 }
             }
         );
+
+        const notification = await Notifications.create({
+            userId:receiver.userId,
+            message: `${sender.userName || "Someone"} paid you ₹${amount} for "${title}" split`,
+        });
+
+        if(notification){
+            io.to(receiver.userId.toString()).emit("new-notification", notification);
+        }
 
         return res.status(200).json({
             success:true,

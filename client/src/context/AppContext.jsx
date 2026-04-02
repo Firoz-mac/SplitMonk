@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import socket from "../socket";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
@@ -22,7 +23,8 @@ export const AppContextProvider = ({children})=>{
         participants: []
     });
     const [splits, setSplits] = useState([]);
-    const [notifications, setNotifications] = useState([])
+    const [notifications, setNotifications] = useState([]);
+    const [unreadCount, setUnreadCount] = useState(0);
 
     useEffect(()=>{
         console.log(user)
@@ -81,6 +83,10 @@ export const AppContextProvider = ({children})=>{
             const {data} = await axios.get('/api/notifications/get');
             if(data.success){
                 setNotifications(data.notifications);
+                console.log('hi', data.notifications);
+
+                const unread = data.notifications.filter(n=> !n.isRead).length;
+                setUnreadCount(unread);
             }
         } catch (error) {
             console.log(error.message);
@@ -110,12 +116,32 @@ export const AppContextProvider = ({children})=>{
 
     useEffect(()=>{
         getNotifications();
-    },[user])
+
+        if(user?._id){
+            socket.emit("join", user._id);
+        }
+    },[user]);
+
+    useEffect(()=>{
+        socket.on("new-notification", (notification)=>{
+            console.log("New Notification : ", notification);
+
+            setNotifications(prev=>[notification, ...prev]);
+
+            setUnreadCount(prev => prev + 1);
+
+            toast.info(notification.message);
+            
+        });
+
+        return ()=> socket.off("new-notification");
+    },[]);
 
     const value ={navigate, theme, setTheme, axios, user, setUser, 
         handleLogout, isUserAuth, loading, setLoading, expenses, 
         setExpenses, newSplitData, setNewSplitData, splits,
-        setSplits, getSplits, getExpenses, notifications};
+        setSplits, getSplits, getExpenses, notifications, 
+        unreadCount, setUnreadCount};
     
     return <AppContext.Provider value={value}>
         {children}
