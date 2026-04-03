@@ -2,8 +2,8 @@ import express from 'express';
 import { getLogs } from '../controllers/AdminControllers.js';
 import authUser from '../middleware/authUser.js';
 
-const adminRouter = express.Router();
+const logRouter = express.Router();
 
-adminRouter.get('/get', authUser, getLogs)
+logRouter.get('/get', authUser, getLogs)
 
-export default adminRouter;
+export default logRouter;
