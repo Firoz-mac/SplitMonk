@@ -12,6 +12,7 @@ import balanceRouter from './routes/balanceRoutes.js';
 import notificationsRouter from './routes/notificationsRoutes.js';
 import http from 'http';
 import { Server } from 'socket.io';
+import adminRouter from './routes/AdminRoutes.js';
 
 const app=express();
 const port = 4000;
@@ -63,6 +64,7 @@ app.use('/api/search', searchRouter);
 app.use('/api/split', splitRouter);
 app.use('/api/balance', balanceRouter);
 app.use('/api/notifications', notificationsRouter);
+app.use('/api/logs', adminRouter);
 
 server.listen(port, ()=>{
     console.log(`Server is running on http://localhost:${port}`)

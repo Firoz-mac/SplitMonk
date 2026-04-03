@@ -1,5 +1,6 @@
 import Expenses from "../models/Expenses.js";
 import mongoose from "mongoose";
+import Log from "../models/Log.js";
 
 //add new expense : /api/expense/add
 export const addExpense = async (req, res)=>{
@@ -15,6 +16,11 @@ export const addExpense = async (req, res)=>{
         expense.userId = req.userId;
 
         const data = await Expenses.create(expense);
+
+        const log = await Log.create({
+            userId: req.userId,
+            action : "EXPENSE_CREATED",
+        });
 
         return res.status(201).json({
             success:true,

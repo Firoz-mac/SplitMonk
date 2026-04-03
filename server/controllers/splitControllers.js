@@ -3,6 +3,7 @@ import Expenses from "../models/Expenses.js";
 import Notifications from "../models/Notifications.js";
 import User from "../models/User.js";
 import { io } from "../server.js";
+import Log from "../models/Log.js";
 
 //add split : /api/split/add
 export const addSplit = async (req, res) =>{
@@ -57,7 +58,12 @@ export const addSplit = async (req, res) =>{
 
         notifications.forEach(notification=>{
             io.to(notification.userId.toString()).emit('new-notification', notification)
-        })
+        });
+
+        const log = await Log.create({
+            userId: req.userId,
+            action: "SPLIT_CREATED",
+        });
 
         return res.status(201).json({
             success:true,
@@ -218,7 +224,12 @@ export const paySplit = async (req, res)=>{
 
         if(notification){
             io.to(receiver.userId.toString()).emit("new-notification", notification);
-        }
+        };
+
+        const log = await Log.create({
+            userId: sender.userId,
+            action: "PAYMENT_DONE",
+        });
 
         return res.status(200).json({
             success:true,

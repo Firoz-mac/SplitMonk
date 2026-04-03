@@ -8,7 +8,8 @@ const logSchema = new mongoose.Schema({
     },
     action:{
         type:String,
-        enum: ["SPLIT_CREATED", "PAYMENT_DONE", "LOGIN", "LOGOUT"],
+        enum: ["SPLIT_CREATED", "PAYMENT_DONE","EXPENSE_CREATED"],
+        require:true
     },
     createdAt:{
         type:Date,
@@ -17,5 +18,5 @@ const logSchema = new mongoose.Schema({
     }
 });
 
-const log = mongoose.model.logs || mongoose.model('logs', logSchema);
-export default log;
+const Log = mongoose.model.logs || mongoose.model('logs', logSchema);
+export default Log;
