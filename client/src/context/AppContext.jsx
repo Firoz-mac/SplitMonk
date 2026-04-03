@@ -50,7 +50,6 @@ export const AppContextProvider = ({children})=>{
     const getExpenses = async ()=>{
         try {
             const {data} = await axios.get('/api/expense/get');
-            console.log(data.expenses)
             if(data.success){
                 setExpenses(data.expenses);
             }
@@ -99,12 +98,8 @@ export const AppContextProvider = ({children})=>{
 
     useEffect(()=>{
         isUserAuth();
-        if(user){
-            getExpenses();
-            getSplits();
-        }
-        
-        
+        getExpenses();
+        getSplits();
     },[]);
 
     useEffect(()=>{
