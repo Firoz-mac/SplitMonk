@@ -12,7 +12,7 @@ import balanceRouter from './routes/balanceRoutes.js';
 import notificationsRouter from './routes/notificationsRoutes.js';
 import http from 'http';
 import { Server } from 'socket.io';
-import adminRouter from './routes/AdminRoutes.js';
+import adminRouter from './routes/adminRoutes.js';
 
 const app=express();
 const port = 4000;
