@@ -21,7 +21,7 @@ await connectDB();
 await connectCloudinary()
 
 //allow origins
-const allowedOrigins=['http://localhost:5173', 'http://127.0.0.1:5173', 'https://splitzy-three.vercel.app/']
+const allowedOrigins=['http://localhost:5173', 'https://splitzy-three.vercel.app']
 
 //middleware config
 app.use(express.json());
