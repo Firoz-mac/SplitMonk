@@ -21,10 +21,6 @@ const Home = () => {
   });
 
   useEffect(()=>{
-    console.log(splits);
-  },[splits])
-
-  useEffect(()=>{
     getSplits();
   },[newSplitData]);
 
@@ -38,7 +34,8 @@ const Home = () => {
 
   useEffect(()=>{
       getBalance();
-  },[user, splits])
+  },[user, splits]);
+
 
   return (
     <div className='w-full flex flex-col gap-3'>
@@ -63,7 +60,10 @@ const Home = () => {
       <div className='bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] p-5 rounded-lg flex flex-col'>
         <div className='flex justify-between'>
           <span className='text-sm'>Recent Splits</span>
+          {splits.length > 0 ?
           <span onClick={()=>navigate('/splits')} className='text-sm cursor-pointer text-[var(--text)] hover:text-[var(--text-dull)]'>View all</span>
+          : null
+          }
         </div>
         <div className='flex py-3 gap-4 overflow-x-scroll no-scrollbar'>
 

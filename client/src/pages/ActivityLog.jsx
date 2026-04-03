@@ -12,7 +12,6 @@ const ActivityLog = () => {
     const {data} = await axios.get('/api/logs/get');
     if(data.success){
       setLogs(data.logs);
-      console.log(data.logs);
     }
   }
 
@@ -25,13 +24,10 @@ const ActivityLog = () => {
         <h4 className='text-2xl font-medium'>Recent Activity</h4>
         <div className='flex-1'>
           {logs.map((log, index)=>(
-            <>
               <div key={index} className='flex flex-col'>
                 <span >userId: {log.userId}</span>
                 <span>{log.action}</span>
               </div>
-              
-            </>
           ))}
             
         </div>

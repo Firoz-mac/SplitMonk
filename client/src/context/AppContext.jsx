@@ -26,14 +26,6 @@ export const AppContextProvider = ({children})=>{
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
 
-    useEffect(()=>{
-        console.log(user)
-    }, [user]);
-
-    useEffect(()=>{
-        console.log(newSplitData)
-    },[newSplitData])
-
     useEffect(() => {
         const root = document.documentElement;
         if (theme === 'light') {
@@ -83,8 +75,6 @@ export const AppContextProvider = ({children})=>{
             const {data} = await axios.get('/api/notifications/get');
             if(data.success){
                 setNotifications(data.notifications);
-                console.log('hi', data.notifications);
-
                 const unread = data.notifications.filter(n=> !n.isRead).length;
                 setUnreadCount(unread);
             }
@@ -109,13 +99,18 @@ export const AppContextProvider = ({children})=>{
 
     useEffect(()=>{
         isUserAuth();
-        getExpenses();
-        getSplits();
+        if(user){
+            getExpenses();
+            getSplits();
+        }
+        
         
     },[]);
 
     useEffect(()=>{
-        getNotifications();
+        if(user){
+            getNotifications();
+        }
 
         if(user?._id){
             socket.emit("join", user._id);
