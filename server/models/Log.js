@@ -16,7 +16,7 @@ const logSchema = new mongoose.Schema({
         default: Date.now,
         expires: 86400
     }
-});
+}, { timestamps: true });
 
 const Log = mongoose.model.logs || mongoose.model('logs', logSchema);
 export default Log;

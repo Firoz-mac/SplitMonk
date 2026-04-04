@@ -12,7 +12,7 @@ export const getLogs = async (req, res)=>{
             });
         }
 
-        const logs = await Log.find();
+        const logs = await Log.find().sort({ createdAt: -1 });;
 
         res.status(200).json({
             success:true,
