@@ -4,7 +4,6 @@ import { IoClose } from "react-icons/io5";
 import { useAppContext } from '../../context/AppContext';
 import { FaArrowLeft } from "react-icons/fa6";
 import { toast } from 'react-toastify';
-import { useRef } from 'react';
 import { useCallback } from 'react';
 
 const ChoosePeoples = () => {
