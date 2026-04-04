@@ -4,31 +4,58 @@ import { IoClose } from "react-icons/io5";
 import { useAppContext } from '../../context/AppContext';
 import { FaArrowLeft } from "react-icons/fa6";
 import { toast } from 'react-toastify';
+import { useRef } from 'react';
+import { useCallback } from 'react';
 
 const ChoosePeoples = () => {
 
     const {navigate, newSplitData, setNewSplitData, axios} = useAppContext();
     const [searchResults, setSearchResults] = useState([]);
     const [query, setQuery] = useState('');
+    const [isSearching, setIsSearching] = useState(false);
+    const abortControllerRef = useRef(null);
 
     useEffect(()=>{
+        if(abortControllerRef.current){
+            abortControllerRef.current.abort();
+        }
         const delay = setTimeout(async ()=>{
             if(!query.trim()){
                 setSearchResults([]);
+                setIsSearching(false);
                 return;
             }
+
+            setIsSearching(true);
+            abortControllerRef.current = new AbortController();
+
             try {
-                const {data} = await axios.get('/api/search/get', {params:{query}});
-                setSearchResults(data.data);
+                const {data} = await axios.get('/api/search/get', {
+                    params:{query : query.trim()},
+                    signal: abortControllerRef.current.signal
+                });
+
+                setSearchResults(data.data || []);
             } catch (error) {
-                console.log(error.message);
+                if (error.name !== 'AbortError' && error.code !== 'ERR_CANCELED') {
+                    console.error('Search error:', error.message);
+                    setSearchResults([]);
+                }
+            } finally{
+                setIsSearching(false);
             }
-        }, 400);
+        }, 300);
 
-        return ()=> clearTimeout(delay);
-    },[query]);
+        return ()=> {
+            clearTimeout(delay);
+            if (abortControllerRef.current){
+                abortControllerRef.current.abort();
+            }
+        };
 
-    const addParticipant =(user)=>{
+    },[query, axios, abortControllerRef]);
+
+    const addParticipant = useCallback((user)=>{
         setNewSplitData(prev=>{
             if(prev.participants.some(p=> p.userId === user._id)){
                 return prev;
@@ -49,22 +76,29 @@ const ChoosePeoples = () => {
         });
         setSearchResults([]);
         setQuery('');
-    }
+    }, [setNewSplitData]);
 
-    const removeParticipant =(userId)=>{
+    const removeParticipant = useCallback((userId)=>{
         setNewSplitData(prev=>({
             ...prev,
             participants: prev.participants.filter(p=> p.userId !== userId)
         }));
-    }
+    }, [setNewSplitData]);
 
-    const handleClick=()=>{
+    const handleClick= useCallback(()=>{
         if(newSplitData.participants.length > 0){
             navigate('/split-amount');
         }else{
             toast.error('Choose participants');
         }
-    }
+    },  [newSplitData.participants.length, navigate]);
+
+    const handleInputChange = useCallback((e)=>{
+        const value = e.target.value;
+        if(value.length<=50){
+            setQuery(value);
+        }
+    },[]);
 
     return (
         <div className='w-full max-w-md flex flex-col gap-5'>
@@ -116,8 +150,10 @@ const ChoosePeoples = () => {
             <input
                 type='text'
                 placeholder="Username"
-                onChange={(e)=>setQuery(e.target.value)}
+                onChange={handleInputChange}
                 value={query}
+                autoComplete="off"
+                spellCheck="false"
                 className="
                         w-full py-3 px-4 rounded-xl
                         bg-[var(--bg-card)] border border-[var(--border)]

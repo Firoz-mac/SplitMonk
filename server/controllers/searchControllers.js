@@ -6,14 +6,7 @@ export const searchUsers = async (req, res) => {
     try {
         let { query } = req.query;
         const userId = req.userId;
-
-        if (!query || query.trim() === "") {
-            return res.status(400).json({
-                success: false,
-                message: "Search query is required",
-            });
-        }
-
+        
         query = query.trim();
 
         const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
