@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { assets } from '../../assets/assets'
 import { IoClose } from "react-icons/io5";
 import { useAppContext } from '../../context/AppContext';
 import { FaArrowLeft } from "react-icons/fa6";
 import { toast } from 'react-toastify';
-import { useRef } from 'react';
-import { useCallback } from 'react';
 
 const ChoosePeoples = () => {
 
@@ -13,96 +11,95 @@ const ChoosePeoples = () => {
     const [searchResults, setSearchResults] = useState([]);
     const [query, setQuery] = useState('');
     const [isSearching, setIsSearching] = useState(false);
-    const abortControllerRef = useRef(null);
+    const timeoutRef = useRef(null); // Changed: Use timeout ref instead of abort controller
 
-    useEffect(()=>{
-        if(abortControllerRef.current){
-            abortControllerRef.current.abort();
+    // Simplified useEffect without AbortController for better iOS compatibility
+    useEffect(() => {
+        // Clear previous timeout
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
         }
-        const delay = setTimeout(async ()=>{
-            if(!query.trim()){
-                setSearchResults([]);
-                setIsSearching(false);
-                return;
-            }
 
-            setIsSearching(true);
-            abortControllerRef.current = new AbortController();
+        // Don't search if query is empty
+        if (!query.trim()) {
+            setSearchResults([]);
+            setIsSearching(false);
+            return;
+        }
 
+        setIsSearching(true);
+
+        // Set new timeout
+        timeoutRef.current = setTimeout(async () => {
             try {
-                const {data} = await axios.get('/api/search/get', {
-                    params:{query : query.trim()},
-                    signal: abortControllerRef.current.signal
+                console.log('Searching for:', query); // Temporary for debugging
+                const { data } = await axios.get('/api/search/get', {
+                    params: { query: query.trim() }
                 });
-
+                console.log('Search results:', data); // Temporary for debugging
                 setSearchResults(data.data || []);
             } catch (error) {
-                if (error.name !== 'AbortError' && error.code !== 'ERR_CANCELED') {
-                    console.error('Search error:', error.message);
-                    setSearchResults([]);
-                }
-            } finally{
+                console.error('Search error:', error);
+                setSearchResults([]);
+                // Show toast error for debugging
+                toast.error('Search failed. Please try again.');
+            } finally {
                 setIsSearching(false);
             }
-        }, 300);
+        }, 500); // Increased debounce for iOS
 
-        return ()=> {
-            clearTimeout(delay);
-            if (abortControllerRef.current){
-                abortControllerRef.current.abort();
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
             }
         };
+    }, [query, axios]);
 
-    },[query, axios, abortControllerRef]);
-
-    const addParticipant = useCallback((user)=>{
-        setNewSplitData(prev=>{
-            if(prev.participants.some(p=> p.userId === user._id)){
+    const addParticipant = useCallback((user) => {
+        setNewSplitData(prev => {
+            if (prev.participants.some(p => p.userId === user._id)) {
                 return prev;
             }
-
-            return{
+            return {
                 ...prev,
-                participants: 
-                    [...prev.participants, 
-                        {   
-                            userId: user._id,
-                            userName: user.userName,
-                            profileImg: user.profileImg,
-                            amount: 0
-                        }
-                    ]
+                participants: [...prev.participants, {
+                    userId: user._id,
+                    userName: user.userName,
+                    profileImg: user.profileImg,
+                    amount: 0
+                }]
             }
         });
         setSearchResults([]);
         setQuery('');
     }, [setNewSplitData]);
 
-    const removeParticipant = useCallback((userId)=>{
-        setNewSplitData(prev=>({
+    const removeParticipant = useCallback((userId) => {
+        setNewSplitData(prev => ({
             ...prev,
-            participants: prev.participants.filter(p=> p.userId !== userId)
+            participants: prev.participants.filter(p => p.userId !== userId)
         }));
     }, [setNewSplitData]);
 
-    const handleClick= useCallback(()=>{
-        if(newSplitData.participants.length > 0){
+    const handleClick = useCallback(() => {
+        if (newSplitData.participants.length > 0) {
             navigate('/split-amount');
-        }else{
+        } else {
             toast.error('Choose participants');
         }
-    },  [newSplitData.participants.length, navigate]);
+    }, [newSplitData.participants.length, navigate]);
 
-    const handleInputChange = useCallback((e)=>{
+    const handleInputChange = useCallback((e) => {
         const value = e.target.value;
-        if(value.length<=50){
+        if (value.length <= 50) {
             setQuery(value);
         }
-    },[]);
+    }, []);
 
     return (
-        <div className='w-full max-w-md flex flex-col gap-5'>
-            <FaArrowLeft onClick={()=>navigate(-1)} className='text-xl text-[var(--text)] hover:text-[var(--text-dull)] cursor-pointer'/>
+        <div className='w-full max-w-md flex flex-col gap-5 pb-4'>
+            <FaArrowLeft onClick={() => navigate(-1)} className='text-xl text-[var(--text)] hover:text-[var(--text-dull)] cursor-pointer' />
+
             <div className='flex items-center gap-2 text-xs'>
                 <div className='
                     w-6 h-6 rounded-full 
@@ -120,6 +117,7 @@ const ChoosePeoples = () => {
                     flex items-center justify-center
                 '>3</div>
             </div>
+
             <div>
                 <h3 className='text-2xl md:text-3xl font-semibold leading-snug'>
                     Choose people <br className='hidden sm:block' /> in this split.
@@ -130,19 +128,28 @@ const ChoosePeoples = () => {
                 </p>
             </div>
 
-            <div className='flex flex-wrap gap-2 max-w-full'>
-                {newSplitData.participants.map((p, index)=>(
-                    <div key={index} className='flex flex-col w-fit items-center gap-1'>
+            <div className='flex flex-wrap gap-2 max-w-full min-h-[72px]'>
+                {newSplitData.participants.map((p, index) => (
+                    <div key={p.userId || index} className='flex flex-col w-fit items-center gap-1'>
                         <div className='relative'>
-                            <div className='w-12 h-12 rounded-full overflow-hidden'>
-                                <img className='w-full h-full object-cover' src={p.profileImg || assets.profileImg1} alt="" />
+                            <div className='w-12 h-12 rounded-full overflow-hidden bg-gray-200'>
+                                <img
+                                    className='w-full h-full object-cover'
+                                    src={p.profileImg || assets.profileImg1}
+                                    alt={p.userName}
+                                    loading="lazy"
+                                />
                             </div>
-                            <div onClick={()=>removeParticipant(p.userId)} className='absolute top-0 right-0 w-5 h-5 rounded-full flex items-center justify-center
-                        bg-gray-500 text-white text-xs cursor-pointer'>
+                            <button
+                                onClick={() => removeParticipant(p.userId)}
+                                className='absolute top-0 right-0 w-5 h-5 rounded-full flex items-center justify-center
+                            bg-gray-500 text-white text-xs cursor-pointer hover:bg-gray-600'
+                                aria-label={`Remove ${p.userName}`}
+                            >
                                 <IoClose size={12} />
-                            </div>
+                            </button>
                         </div>
-                        <span className='text-xs'>{p.userName}</span>
+                        <span className='text-xs truncate max-w-[60px]'>{p.userName}</span>
                     </div>
                 ))}
             </div>
@@ -155,29 +162,63 @@ const ChoosePeoples = () => {
                 autoComplete="off"
                 spellCheck="false"
                 className="
-                        w-full py-3 px-4 rounded-xl
-                        bg-[var(--bg-card)] border border-[var(--border)]
-                        text-[var(--text)] placeholder:text-[var(--text-dull)]
-                        focus:outline-none focus:border-blue-500
-                        focus:ring-2 focus:ring-blue-500/20
-                        transition
-                    "
+                    w-full py-3 px-4 rounded-xl
+                    bg-[var(--bg-card)] border border-[var(--border)]
+                    text-[var(--text)] placeholder:text-[var(--text-dull)]
+                    focus:outline-none focus:border-blue-500
+                    focus:ring-2 focus:ring-blue-500/20
+                    transition
+                "
             />
+
+            {/* Debug info - Remove after testing */}
+            {query && (
+                <div className="text-xs text-[var(--text-dull)] px-2">
+                    Searching for: "{query}" | Results: {searchResults.length}
+                </div>
+            )}
+
             {searchResults.length > 0 && (
-                <div className='bg-[var(--bg-card)] h-42 flex flex-col gap-1 p-3 overflow-scroll no-scrollbar rounded-lg'>
-                    {searchResults.map((item, index)=>(
-                        <div key={index} onClick={()=>addParticipant(item)} className=' flex items-center gap-2 cursor-pointer py-1'>
-                            <div className='w-10 h-10 rounded-full overflow-hidden'>
-                                <img className='w-full h-full object-cover' src={item.profileImg? item.profileImg: assets.profileImg1} alt="" />
+                <div className='bg-[var(--bg-card)] max-h-48 flex flex-col gap-1 p-3 overflow-y-auto no-scrollbar rounded-lg'>
+                    {searchResults.map((item, index) => (
+                        <button
+                            key={item._id || index}
+                            onClick={() => addParticipant(item)}
+                            className='flex items-center gap-2 cursor-pointer py-1 hover:bg-[var(--bg-card-hover)] px-2 rounded-lg transition-colors w-full text-left'
+                        >
+                            <div className='w-10 h-10 rounded-full overflow-hidden bg-gray-200'>
+                                <img
+                                    className='w-full h-full object-cover'
+                                    src={item.profileImg || assets.profileImg1}
+                                    alt={item.userName}
+                                    loading="lazy"
+                                />
                             </div>
                             <span className='text-sm'>{item.userName}</span>
-                        </div>
+                        </button>
                     ))}
                 </div>
             )}
-            <button onClick={handleClick} className='w-full py-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600
-                text-white font-medium hover:opacity-90 active:scale-95 transition-all duration-200
-                shadow-[0_5px_15px_rgba(59,130,246,0.4)] cursor-pointer'>
+
+            {isSearching && query.trim() && searchResults.length === 0 && (
+                <div className='bg-[var(--bg-card)] p-4 rounded-lg text-center'>
+                    <div className="inline-block w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    <span className="ml-2 text-sm text-[var(--text-dull)]">Searching...</span>
+                </div>
+            )}
+
+            {!isSearching && query.trim() && searchResults.length === 0 && query.length > 1 && (
+                <div className='bg-[var(--bg-card)] p-4 rounded-lg text-center text-[var(--text-dull)]'>
+                    No users found for "{query}"
+                </div>
+            )}
+
+            <button
+                onClick={handleClick}
+                className='w-full py-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600
+                    text-white font-medium hover:opacity-90 active:scale-95 transition-all duration-200
+                    shadow-[0_5px_15px_rgba(59,130,246,0.4)] cursor-pointer'
+            >
                 Continue
             </button>
         </div>
