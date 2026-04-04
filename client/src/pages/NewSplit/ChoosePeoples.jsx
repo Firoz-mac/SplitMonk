@@ -15,6 +15,7 @@ const ChoosePeoples = () => {
     const [isSearching, setIsSearching] = useState(false);
     const [error, setError] = useState(null);
     const timeoutRef = useRef(null);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     
 
     useEffect(()=>{
@@ -35,11 +36,27 @@ const ChoosePeoples = () => {
         timeoutRef.current = setTimeout(async ()=>{
             try {
                 console.log('Searching for:', query);
-                const {data} = await axios.get('/api/search/get', {
-                    params:{query : query.trim()},
+                console.log('Is iOS device:', isIOS);
+
+                const config = {
+                    params: { query: query.trim() },
                     timeout: 10000,
-                    withCredentials: true
-                });
+                    withCredentials: true,
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                };
+
+                if (isIOS) {
+                    config.headers['X-Requested-With'] = 'XMLHttpRequest';
+                    config.headers['If-Modified-Since'] = 'Sat, 1 Jan 2000 00:00:00 GMT';
+                }
+
+                const {data} = await axios.get('/api/search/get', config);
+
                 // const response = await fetch(`/api/search/get?query=${encodeURIComponent(query.trim())}`, {
                 //     method: 'GET',
                 //     headers:{
@@ -57,7 +74,10 @@ const ChoosePeoples = () => {
                 console.error('Search error:', error);
                 setError(error.message);
                 setSearchResults([]);
-                if (error.message !== 'canceled') {
+
+                if (isIOS && error.message === 'Network Error') {
+                    toast.error('Network error on iOS. Please check your connection or try again.');
+                }else if (error.message !== 'canceled'){
                     toast.error('Search failed. Please check your connection.');
                 }
             } finally{
@@ -207,7 +227,7 @@ const ChoosePeoples = () => {
                 <div className='bg-[var(--bg-card)] p-4 rounded-lg text-center text-[var(--text-dull)]'>
                     No users found for "{query}"
                 </div>
-            )}
+            )} 
             <button onClick={handleClick} className='w-full py-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600
                 text-white font-medium hover:opacity-90 active:scale-95 transition-all duration-200
                 shadow-[0_5px_15px_rgba(59,130,246,0.4)] cursor-pointer'>
