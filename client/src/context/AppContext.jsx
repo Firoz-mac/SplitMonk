@@ -4,8 +4,22 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import socket from "../socket";
 
+
+axios.interceptors.request.use((config) => {
+    const token = localStorage.getItem("splitzyToken");
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+});
+
+
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
+
+
 
 export const AppContext = createContext();
 
@@ -37,11 +51,7 @@ export const AppContextProvider = ({children})=>{
 
     const isUserAuth = async ()=>{
         try {
-            const {data} = await axios.get('/api/user/is-auth', {
-                headers:{
-                    Authorization: `Bearer ${localStorage.getItem("splitzyToken")}`
-                }
-            });
+            const {data} = await axios.get('/api/user/is-auth');
             if(data.success){
                 setUser(data.user)
                 navigate('/home')
@@ -90,6 +100,7 @@ export const AppContextProvider = ({children})=>{
         try {
             const {data} = await axios.get('/api/user/logout');
             if(data.success){
+                localStorage.removeItem("splitzyToken");
                 setUser(null);
                 toast.success(data.message);
                 navigate('/');
