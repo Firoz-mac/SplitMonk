@@ -12,110 +12,30 @@ const ChoosePeoples = () => {
     const {navigate, newSplitData, setNewSplitData, axios} = useAppContext();
     const [searchResults, setSearchResults] = useState([]);
     const [query, setQuery] = useState('');
-    const [isSearching, setIsSearching] = useState(false);
-    const [error, setError] = useState(null);
-    const timeoutRef = useRef(null);
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const [baseUrl, setBaseUrl] = useState(window.location.origin);
 
     useEffect(()=>{
 
-        if(timeoutRef.current){
-            clearTimeout(timeoutRef.current);
-        }
-
         if (!query.trim() || query.trim().length < 2) {
             setSearchResults([]);
-            setIsSearching(false);
             return;
         }
 
-        setIsSearching(true);
-        setError(null);
-
-        timeoutRef.current = setTimeout(async ()=>{
+        const searchUsers = async ()=>{
             try {
-                console.log('Searching for:', query);
-                console.log('Is iOS device:', isIOS);
-
-                const config = {
-                    params: { query: query.trim() },
-                    timeout: 10000,
-                    withCredentials: true,
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    }
-                };
-
-                if (isIOS) {
-                    
-                    const response = await fetch(`${baseUrl}/api/search/get?query=${encodeURIComponent(query.trim())}`,{
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                            'Cache-Control': 'no-cache',
-                            'Pragma': 'no-cache'
-                        },
-                        credentials: 'include',
-                        cache: 'no-store',
-                        mode: 'cors'
-                    });
-
-                    console.log('Response status:', response.status);
-                    console.log('Response ok:', response.ok);
-
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error('Error response:', errorText);
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    console.log('Search results data:', data);
-                    setSearchResults(data.data || []);
-
-                    if (data.data && data.data.length === 0){
-                        console.log('No users found for query:', query);
-                    }
-
-                }else{
-                    const {data} = await axios.get('/api/search/get', config);
-                    console.log('Search results:', data);
-                    setSearchResults(data.data || []);
+                const {data} = await axios.get('/api/search/get',{
+                    params: { query }
+                });
+                if(data.success){
+                    setSearchResults(data.data)
+                    console.log(data)
                 }
-  
             } catch (error) {
-                console.error('Search error:', error);
-                console.error('Error name:', error.name);
-                console.error('Error message:', error.message);
-                setError(error.message);
-                setSearchResults([]);
-
-                if (isIOS) {
-                    if (error.message.includes('Failed to fetch')) {
-                        toast.error('iOS: Network request failed. Check your internet connection.');
-                    }else if (error.message.includes('CORS')){
-                        toast.error('iOS: CORS error. Please contact support.');
-                    }
-                } else {
-                    toast.error('Search failed. Please check your connection.');
-                }
-            } finally{
-                setIsSearching(false);
+                console.log(error.message);
             }
-        }, 800);
+        }
+        searchUsers();
 
-        return ()=> {  
-            if (timeoutRef.current){
-                clearTimeout(timeoutRef.current);
-            }
-        };
-
-    },[query, axios, isIOS, baseUrl]);
+    },[query]);
 
     const addParticipant = useCallback((user)=>{
         setNewSplitData(prev=>{
@@ -190,7 +110,6 @@ const ChoosePeoples = () => {
                 <p className='text-sm text-[var(--text-dull)] mt-1'>
                     Search for a name in your list
                 </p>
-                <p>base url :{baseUrl}</p>
             </div>
 
             <div className='flex flex-wrap gap-2 max-w-full'>
@@ -226,19 +145,6 @@ const ChoosePeoples = () => {
                         transition
                     "
             />
-            {query && query.trim().length > 0 && (
-                <div className="text-xs text-[var(--text-dull)] px-2 space-y-1">
-                    <div>Searching for: "{query}" | Results: {searchResults.length}</div>
-                    {isSearching && <div className="text-blue-500">⏳ Searching...</div>}
-                    {error && <div className="text-red-500">⚠️ Error: {error}</div>}
-                    {isIOS && (
-                        <div className="text-orange-500 text-xs">📱 iOS Error Details: {error}</div>
-                    )}
-                    {!isSearching && query.trim().length < 2 && query.trim().length > 0 && (
-                        <div className="text-yellow-500">⚠️ Type at least 2 characters</div>
-                    )}
-                </div>
-            )}
             {searchResults.length > 0 && (
                 <div className='bg-[var(--bg-card)] h-42 flex flex-col gap-1 p-3 overflow-scroll no-scrollbar rounded-lg'>
                     {searchResults.map((item, index)=>(
@@ -251,11 +157,6 @@ const ChoosePeoples = () => {
                     ))}
                 </div>
             )}
-            {!isSearching && query.trim().length >= 2 && searchResults.length === 0 && !error && (
-                <div className='bg-[var(--bg-card)] p-4 rounded-lg text-center text-[var(--text-dull)]'>
-                    No users found for "{query}"
-                </div>
-            )} 
             <button onClick={handleClick} className='w-full py-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600
                 text-white font-medium hover:opacity-90 active:scale-95 transition-all duration-200
                 shadow-[0_5px_15px_rgba(59,130,246,0.4)] cursor-pointer'>
