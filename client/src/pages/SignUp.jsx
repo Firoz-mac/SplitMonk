@@ -10,7 +10,7 @@ const SignUp = () => {
     const [confPassShow, setConfPassShow] = useState(false);
     const [pageValue, setPageValue] = useState('Login');
 
-    const {navigate, axios, setUser, isUserAuth} = useAppContext();
+    const {navigate, axios, setUser, isUserAuth, loading, setLoading} = useAppContext();
 
     const [formData, setFormData] = useState({
         email: '',
@@ -30,8 +30,14 @@ const SignUp = () => {
 
     const handleSubmit= async (e)=>{
         e.preventDefault();
+
+        if(loading) return;
+
         try {
+            setLoading(true);
+
             if(pageValue === 'Signup' && formData.password !== formData.confirmPassword){
+                setLoading(false);
                 return toast.error("Passwords are not matching");
             }
 
@@ -63,6 +69,8 @@ const SignUp = () => {
             toast.error(
                 error?.response?.data?.message || "Server error, try again later"
             );
+        } finally{
+            setLoading(false);
         }
     };
 
@@ -170,10 +178,10 @@ const SignUp = () => {
                         : null
 
                     }
-                    <button type='submit' className='bg-linear-to-br rounded-lg
+                    <button disabled={loading} type='submit' className='bg-linear-to-br rounded-lg
                      from-blue-400 to-blue-600 py-2 text-black cursor-pointer
                       hover:brightness-110 transition-all'>
-                        {pageValue}
+                        {loading? 'Processing..' : pageValue}
                     </button>
 
                 </form>
