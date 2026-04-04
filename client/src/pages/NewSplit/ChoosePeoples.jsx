@@ -16,6 +16,8 @@ const ChoosePeoples = () => {
     const [error, setError] = useState(null);
     const timeoutRef = useRef(null);
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const [baseUrl, setBaseUrl] = useState(window.location.origin);
+
     
 
     useEffect(()=>{
@@ -51,33 +53,57 @@ const ChoosePeoples = () => {
                 };
 
                 if (isIOS) {
-                    config.headers['X-Requested-With'] = 'XMLHttpRequest';
-                    config.headers['If-Modified-Since'] = 'Sat, 1 Jan 2000 00:00:00 GMT';
+                    
+                    const response = await fetch(`${baseUrl}/api/search/get?query=${encodeURIComponent(query.trim())}`,{
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Cache-Control': 'no-cache',
+                            'Pragma': 'no-cache'
+                        },
+                        credentials: 'include',
+                        cache: 'no-store',
+                        mode: 'cors'
+                    });
+
+                    console.log('Response status:', response.status);
+                    console.log('Response ok:', response.ok);
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error('Error response:', errorText);
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Search results data:', data);
+                    setSearchResults(data.data || []);
+
+                    if (data.data && data.data.length === 0){
+                        console.log('No users found for query:', query);
+                    }
+
+                }else{
+                    const {data} = await axios.get('/api/search/get', config);
+                    console.log('Search results:', data);
+                    setSearchResults(data.data || []);
                 }
-
-                const {data} = await axios.get('/api/search/get', config);
-
-                // const response = await fetch(`/api/search/get?query=${encodeURIComponent(query.trim())}`, {
-                //     method: 'GET',
-                //     headers:{
-                //         'Content-Type': 'application/json'
-                //     }
-                // });
-
-                // if (!response.ok) {
-                //     throw new Error(`HTTP ${response.status}`);
-                // }
-                // const data = await response.json();
-                console.log('Search results:', data);
-                setSearchResults(data.data || []);
+  
             } catch (error) {
                 console.error('Search error:', error);
+                console.error('Error name:', error.name);
+                console.error('Error message:', error.message);
                 setError(error.message);
                 setSearchResults([]);
 
-                if (isIOS && error.message === 'Network Error') {
-                    toast.error('Network error on iOS. Please check your connection or try again.');
-                }else if (error.message !== 'canceled'){
+                if (isIOS) {
+                    if (error.message.includes('Failed to fetch')) {
+                        toast.error('iOS: Network request failed. Check your internet connection.');
+                    }else if (error.message.includes('CORS')){
+                        toast.error('iOS: CORS error. Please contact support.');
+                    }
+                } else {
                     toast.error('Search failed. Please check your connection.');
                 }
             } finally{
@@ -91,7 +117,7 @@ const ChoosePeoples = () => {
             }
         };
 
-    },[query, axios]);
+    },[query, axios, isIOS, baseUrl]);
 
     const addParticipant = useCallback((user)=>{
         setNewSplitData(prev=>{
@@ -166,6 +192,7 @@ const ChoosePeoples = () => {
                 <p className='text-sm text-[var(--text-dull)] mt-1'>
                     Search for a name in your list
                 </p>
+                <p>base url :{baseUrl}</p>
             </div>
 
             <div className='flex flex-wrap gap-2 max-w-full'>
@@ -206,6 +233,9 @@ const ChoosePeoples = () => {
                     <div>Searching for: "{query}" | Results: {searchResults.length}</div>
                     {isSearching && <div className="text-blue-500">⏳ Searching...</div>}
                     {error && <div className="text-red-500">⚠️ Error: {error}</div>}
+                    {isIOS && (
+                        <div className="text-orange-500 text-xs">📱 iOS Error Details: {error}</div>
+                    )}
                     {!isSearching && query.trim().length < 2 && query.trim().length > 0 && (
                         <div className="text-yellow-500">⚠️ Type at least 2 characters</div>
                     )}
