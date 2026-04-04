@@ -61,6 +61,7 @@ const SignUp = () => {
                     setUser(data.user);
                     navigate("/home");
                     isUserAuth();
+                    localStorage.setItem("splitzyToken", data.token);
                 }else{
                     toast.error(data?.message || "Something went wrong");
                 }

@@ -37,7 +37,11 @@ export const AppContextProvider = ({children})=>{
 
     const isUserAuth = async ()=>{
         try {
-            const {data} = await axios.get('/api/user/is-auth');
+            const {data} = await axios.get('/api/user/is-auth', {
+                headers:{
+                    Authorization: `Bearer ${localStorage.getItem("splitzyToken")}`
+                }
+            });
             if(data.success){
                 setUser(data.user)
                 navigate('/home')

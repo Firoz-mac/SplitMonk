@@ -46,7 +46,8 @@ const ChoosePeoples = () => {
                         'Cache-Control': 'no-cache',
                         'Pragma': 'no-cache',
                         'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem("splitzyToken")}`
                     }
                 };
 

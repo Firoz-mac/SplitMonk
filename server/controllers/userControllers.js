@@ -47,6 +47,7 @@ export const register = async (req, res)=>{
         if(user && token){
             return res.json({
                 success : true,
+                token,
                 user: {email:user.email, userName: user.userName}
             })
         }
@@ -108,6 +109,7 @@ export const login = async (req, res)=>{
 
         return res.status(200).json({
             success : true,
+            token,
             user: {email:user.email, name: user.name}
         })
 
