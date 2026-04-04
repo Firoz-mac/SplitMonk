@@ -98,13 +98,13 @@ export const AppContextProvider = ({children})=>{
 
     useEffect(()=>{
         isUserAuth();
-        getExpenses();
-        getSplits();
     },[]);
 
     useEffect(()=>{
         if(user){
             getNotifications();
+            getExpenses();
+            getSplits();
         }
 
         if(user?._id){

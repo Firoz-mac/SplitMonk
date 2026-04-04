@@ -18,8 +18,6 @@ const ChoosePeoples = () => {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const [baseUrl, setBaseUrl] = useState(window.location.origin);
 
-    
-
     useEffect(()=>{
 
         if(timeoutRef.current){
