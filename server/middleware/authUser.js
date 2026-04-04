@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 const authUser = async (req, res, next)=>{
     
     let token = req.cookies.splitzyToken;
+    console.log("Cookies:", req.cookies);
 
     if(!token) { 
         const authHeader = req.headers.authorization;
