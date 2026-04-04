@@ -17,8 +17,9 @@ const MainLayout = () => {
     const location = useLocation();
 
     const menuItems = [
-        { icon: <MdOutlineAdd />, path: "/addExpense",},
+        
         { icon: <GoHome />, path: "/home" },
+        { icon: <MdOutlineAdd />, path: "/addExpense",},
         { icon: <BsDatabaseAdd />, path: "/split" },
         { icon: <LiaUserSolid />, path: "/profile" },
     ];
@@ -72,7 +73,7 @@ const MainLayout = () => {
             justify-around items-center py-3 border-t border-gray-800 z-50'>
                 {
                     menuItems.map((item, index) => (
-                        <MenuIcon key={index} icon={item.icon} path={item.path} />
+                        <MenuIcon key={index} icon={item.icon} path={item.path} active={location.pathname === item.path} />
                     ))
                 }
             </div>

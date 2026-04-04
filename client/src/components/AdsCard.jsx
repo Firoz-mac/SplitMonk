@@ -8,7 +8,7 @@ const AdsCard = () => {
             <span>Limited Time Offer</span>
             <h3 className='text-2xl font-bold'>SPLIT YOUR BILLS WITH <br /> 10% OFF</h3>
         </div>
-        <img className='h-50 md:h-35 justify-end' src={assets.ad1} alt="ads" />
+        <img loading="lazy" className='h-50 md:h-35 justify-end' src={assets.ad1} alt="ads" />
     </div>
   )
 }
