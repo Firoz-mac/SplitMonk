@@ -133,6 +133,8 @@ export const AppContextProvider = ({children})=>{
 
             setNotifications(prev=>[notification, ...prev]);
 
+            getSplits();
+
             setUnreadCount(prev => prev + 1);
 
             toast.info(notification.message);
