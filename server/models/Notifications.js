@@ -10,8 +10,9 @@ const notificationSchema = new mongoose.Schema({
         type:String,
         required: true,
     },
-    type:{
+    splitType:{
         type:String,
+        enum: ["split", "payment"],
         default: "split"
     },
     isRead:{

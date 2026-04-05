@@ -55,7 +55,7 @@ const SplitCard = ({createdBy, title, amount, participants, id}) => {
         },
         title: title,
         amount: currentLoggedUserAmount,
-        splitId: id
+        splitId: id,
       }
 
       setPayDetails(payload);

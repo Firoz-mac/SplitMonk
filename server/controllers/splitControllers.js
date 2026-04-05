@@ -52,6 +52,7 @@ export const addSplit = async (req, res) =>{
         ).map(p=> ({
             userId: p.user,
             message: `${createdUser.userName || "Someone"} added you to "${title}" split of ₹${p.amount}`,
+            splitType: 'split'
         }));
 
         await Notifications.insertMany(notifications);
@@ -158,7 +159,7 @@ export const removeSplit = async (req, res)=>{
 //pay split : /api/split/pay
 export const paySplit = async (req, res)=>{
     try {
-        const {sender, receiver, title, amount, splitId} = req.body;
+        const {sender, receiver, title, amount, splitId, type} = req.body;
         
         if(!splitId){
             return res.status(400).json({
@@ -220,6 +221,7 @@ export const paySplit = async (req, res)=>{
         const notification = await Notifications.create({
             userId:receiver.userId,
             message: `${sender.userName || "Someone"} paid you ₹${amount} for "${title}" split`,
+            splitType: 'payment'
         });
 
         if(notification){
