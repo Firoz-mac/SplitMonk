@@ -10,7 +10,7 @@ import { useState } from 'react'
 
 const Home = () => {
 
-  const {navigate, user, splits, setSplits, getSplits, newSplitData, axios}=useAppContext();
+  const {navigate, user, splits, getSplits, newSplitData, axios}=useAppContext();
   const [youOwe, setYouOwe] = useState(0);
   const [youAreOwed, setYouAreOwed] = useState(0);
 
@@ -38,12 +38,13 @@ const Home = () => {
       getBalance();
   },[user, splits]);
 
-  const [selected, setSelected] = useState("This Month");
-  const options = ["Today", "This Week", "This Month", "This Year"];
-
-
   return (
     <div className='w-full flex flex-col gap-3'>
+
+      <div className='py-2'>
+        <span className='text-sm text-[var(--text-dull)]'>{formattedDate}</span>
+        <h3 className='text-4xl font-medium'>Hi {user ? user.userName : "User"}</h3>
+      </div>
 
       <div className='grid md:grid-cols-2 gap-3'>
         <div className='flex-1'>
