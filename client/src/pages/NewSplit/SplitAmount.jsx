@@ -5,7 +5,7 @@ import { useAppContext } from '../../context/AppContext';
 import { toast } from 'react-toastify';
 
 const SplitAmount = () => {
-    const {navigate, newSplitData, setNewSplitData, axios}=useAppContext();
+    const {navigate, newSplitData, setNewSplitData, getSplits, axios}=useAppContext();
 
     const [splitValue, setSplitValue] = useState('equal');
     const [splitAmounts, setSplitAmounts] = useState([]);
@@ -62,6 +62,7 @@ const SplitAmount = () => {
                     }
                 )
                 navigate('/home');
+                getSplits();
             }
 
         } catch (error) {
