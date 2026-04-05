@@ -1,14 +1,29 @@
 import React from 'react'
-import { assets } from '../assets/assets'
+import { BsStars } from "react-icons/bs";
 
 const AdsCard = () => {
   return (
-    <div className='bg-linear-to-br flex flex-col md:flex-row from-blue-400 to-blue-600 w-full h-fit rounded-lg items-center justify-between'>
-        <div className='p-5'>
-            <span>Limited Time Offer</span>
-            <h3 className='text-2xl font-bold'>SPLIT YOUR BILLS WITH <br /> 10% OFF</h3>
+    <div className='relative overflow-hidden bg-gradient-to-br from-blue-500/10 to-purple-500/10 
+      backdrop-blur-md p-6 rounded-2xl border border-[var(--border)]'>
+      <div className='absolute -top-10 -right-10 w-32 h-32 bg-blue-500/20 blur-3xl'></div>
+      <div className='flex items-start gap-4'>
+        <div className='bg-[var(--primary)]/20 text-[var(--primary)] 
+          p-3 rounded-xl'>
+          <BsStars className='text-xl' />
         </div>
-        <img loading="lazy" className='h-50 md:h-35 justify-end' src={assets.ad1} alt="ads" />
+
+        <div className='flex flex-col gap-1'>
+          <span className='text-xs font-semibold text-blue-400 uppercase tracking-wide'>
+            Limited Time Offer
+          </span>
+          <p className='text-sm text-[var(--text)] font-medium'>
+            Refer a friend and earn ₹120 credit
+          </p>
+          <p className='text-xs text-[var(--text-dull)]'>
+            Use it toward your next subscription.
+          </p>
+        </div>
+      </div>
     </div>
   )
 }

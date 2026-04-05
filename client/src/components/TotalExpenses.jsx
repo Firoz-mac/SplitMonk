@@ -1,29 +1,41 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { IoChevronDown } from "react-icons/io5";
+import { MdOutlineAdd } from "react-icons/md";
 import { useAppContext } from '../context/AppContext';
 
 const TotalExpenses = () => {
 
-    const {expenses} = useAppContext();
+    const { expenses, navigate } = useAppContext();
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState("This Month");
 
-    const filteredExpenses = useMemo(()=>{
+    const filteredExpenses = useMemo(() => {
         if (!expenses) return [];
 
         const now = new Date();
 
-        return expenses.filter((item)=> {
+        return expenses.filter((item) => {
             const expenseDate = new Date(item.createdAt);
 
-            switch(selected){
+            switch (selected) {
                 case 'Today':
-                    return expenseDate.toDateString() === now.toDateString();
+                    const startOfDay = new Date(now);
+                    startOfDay.setHours(0, 0, 0, 0);
+                    const endOfDay = new Date(now);
+                    endOfDay.setHours(23, 59, 59, 999);
+                    return expenseDate >= startOfDay && expenseDate <= endOfDay;
 
                 case 'This Week':
                     const startOfWeek = new Date(now);
-                    startOfWeek.setDate(now.getDate() - now.getDay());
-                    return expenseDate >= startOfWeek && expenseDate <= now;
+                    const day = now.getDay();
+                    const diff = day === 0 ? 6 : day - 1;
+                    startOfWeek.setDate(now.getDate() - diff);
+                    startOfWeek.setHours(0, 0, 0, 0);
+
+                    const endOfWeek = new Date(now);
+                    endOfWeek.setHours(23, 59, 59, 999);
+                    return expenseDate >= startOfWeek && expenseDate <= endOfWeek;
+
                 case 'This Month':
                     return (
                         expenseDate.getMonth() === now.getMonth() && expenseDate.getFullYear() === now.getFullYear()
@@ -36,63 +48,59 @@ const TotalExpenses = () => {
         });
     }, [expenses, selected]);
 
-    const totalExpensesAmount = useMemo(()=> {
+    const totalExpensesAmount = useMemo(() => {
         return filteredExpenses.reduce(
             (sum, item) => sum + (item.amount || 0), 0
         );
     }, [filteredExpenses]);
 
-    const date = new Date();
-
-    const formattedDate = date.toLocaleDateString('en-US', {
-        weekday: 'long',
-        day: 'numeric',
-        year: 'numeric'
-    });
-
     const options = ["Today", "This Week", "This Month", "This Year"];
-    
+
     return (
-        <div className='bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] p-5 rounded-lg flex justify-between'>
-            <div className='flex flex-col gap-2'>
-                <div>
-                    <h3 className='text-2xl'>Expenses</h3>
-                    <span>{formattedDate}</span>
+
+        <div className='flex flex-col gap-5 bg-[var(--bg-card)]/80 backdrop-blur-md p-6 rounded-2xl border 
+            border-[var(--border)] shadow-sm w-full h-full'>
+
+            <div className='flex justify-between items-center'>
+                <span className='text-xs text-[var(--text-dull)] font-medium'>
+                    Total Expenses
+                </span>
+
+                <div className='relative'>
+                    <button onClick={() => setOpen(!open)}
+                        className='flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs bg-[var(--bg-card-hover)] 
+                        hover:bg-[var(--border)] transition-all duration-200'>
+                        {selected}
+                        <IoChevronDown className={`transition ${open ? "rotate-180" : ""}`} />
+                    </button>
+
+                    {open && (
+                        <div className='absolute right-0 mt-2 w-40 bg-[var(--bg-card)] rounded-xl shadow-xl border 
+                            border-[var(--border)] overflow-hidden z-50'>
+                            {options.map((option) => (
+                                <div key={option} onClick={() => { setSelected(option); setOpen(false); }}
+                                    className="px-4 py-2 text-xs hover:bg-[var(--bg-card-hover)] transition cursor-pointer">
+                                    {option}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
-                <span className='text-4xl font-medium'>₹ {totalExpensesAmount}</span>
             </div>
-            <div className="inline-block">
-
-                {/* Button */}
-                <button
-                    onClick={() => setOpen(!open)}
-                    className="flex items-center gap-2 bg-[var(--bg-card)] px-3 py-2 rounded-xl text-[var(--text)] hover:bg-[var(--bg-card-hover)] transition cursor-pointer"
-                >
-                    <span className='text-xs'>{selected}</span>
-                    <IoChevronDown className={`text-xs transition ${open ? "rotate-180" : ""}`} />
-                </button>
-
-                {/* Dropdown */}
-                {open && (
-                    <div className="right-0 mt-2 w-40 bg-[var(--bg-card)] rounded-xl shadow-lg border border-[var(--border)] overflow-hidden">
-
-                        {options.map((option) => (
-                            <div
-                                key={option}
-                                onClick={() => {
-                                    setSelected(option);
-                                    setOpen(false);
-                                }}
-                                className="px-4 py-2 text-xs hover:bg-[var(--bg-card-hover)] cursor-pointer"
-                            >
-                                {option}
-                            </div>
-                        ))}
-
-                    </div>
-                )}
+            <div className='flex flex-col gap-1'>
+                <span className='text-4xl font-semibold tracking-tight'>
+                    ₹{totalExpensesAmount}
+                </span>
+                <span className='text-xs text-green-500'>
+                    +12% from last week
+                </span>
             </div>
 
+            <button onClick={()=> navigate('/addExpense')} className='flex items-center justify-center gap-2 bg-[var(--primary)] hover:opacity-90 
+                py-2.5 rounded-xl text-sm font-medium transition-all active:scale-95'>
+                <MdOutlineAdd />
+                New Expense
+            </button>
         </div>
     )
 }

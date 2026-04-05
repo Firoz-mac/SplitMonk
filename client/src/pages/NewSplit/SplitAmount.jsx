@@ -62,7 +62,6 @@ const SplitAmount = () => {
                     }
                 )
                 navigate('/home');
-                getSplits();
             }
 
         } catch (error) {

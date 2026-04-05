@@ -6,6 +6,8 @@ import TotalExpenses from '../components/TotalExpenses'
 import { useAppContext } from '../context/AppContext'
 import { useState } from 'react'
 
+
+
 const Home = () => {
 
   const {navigate, user, splits, setSplits, getSplits, newSplitData, axios}=useAppContext();
@@ -36,28 +38,34 @@ const Home = () => {
       getBalance();
   },[user, splits]);
 
+  const [selected, setSelected] = useState("This Month");
+  const options = ["Today", "This Week", "This Month", "This Year"];
+
 
   return (
     <div className='w-full flex flex-col gap-3'>
-      <div className='bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] p-5 rounded-lg flex flex-col gap-5'>
-        <div>
-          <h3 className='text-3xl font-medium'>Hi {user ? user.userName : ""}</h3>
-          <span>{formattedDate}</span>
+
+      <div className='grid md:grid-cols-2 gap-3'>
+        <div className='flex-1'>
+          <TotalExpenses/>
         </div>
-        <div className='flex gap-8'>
-          <div>
+        <div className='flex flex-col gap-2'>
+          <div className='bg-[var(--bg-card)]/80 backdrop-blur-md p-6 rounded-2xl border border-[var(--border)] 
+            shadow-sm'>
             <h3>You Owe</h3>
             <h3 className='text-4xl font-medium'>₹ {youOwe}</h3>
           </div>
-          <div>
+          <div className='bg-[var(--bg-card)]/80 backdrop-blur-md p-6 rounded-2xl border border-[var(--border)] 
+            shadow-sm'>
             <h3>You Are Owed</h3>
             <h3 className='text-4xl font-medium'>₹ {youAreOwed}</h3>
           </div>
         </div>
       </div>
+      
       {/* <RecentList/> */}
       
-      <div className='bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] p-5 rounded-lg flex flex-col'>
+      <div className='bg-[var(--bg-card)]/80 backdrop-blur-md p-6 rounded-2xl border border-[var(--border)] p-5 flex flex-col'>
         <div className='flex justify-between'>
           <span className='text-sm'>Recent Splits</span>
           {splits.length > 0 ?
@@ -75,7 +83,6 @@ const Home = () => {
 
         </div>
       </div>
-      <TotalExpenses/>
       <AdsCard/>
     </div>
   )
