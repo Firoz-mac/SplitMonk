@@ -50,7 +50,7 @@ const Profile = () => {
                     </div>
                 </div>
                 <span>Account Settings</span>
-                <div className='flex flex-col bg-[var(--bg-card)] gap-5 p-5 rounded-lg'>
+                <div className='flex flex-col bg-[var(--bg-card)]/80 backdrop-blur-md border border-[var(--border)] gap-5 p-5 rounded-lg'>
                     <div className='flex items-center gap-2 cursor-pointer'>
                         <div className='bg-linear-to-br rounded-lg from-blue-400 to-blue-600 py-2 flex items-center justify-center p-2'>
                             <LiaUserSolid className='w-5 h-5'/>

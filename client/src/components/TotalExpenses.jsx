@@ -56,6 +56,49 @@ const TotalExpenses = () => {
 
     const options = ["Today", "This Week", "This Month", "This Year"];
 
+    const getWeeklyComparison = (expenses) => {
+        const now = new Date();
+        const startOfThisWeek = new Date(now);
+        startOfThisWeek.setDate(now.getDate() - now.getDay());
+
+        const startOfLastWeek = new Date(startOfThisWeek);
+        startOfLastWeek.setDate(startOfThisWeek.getDate() - 7);
+
+        let thisWeekTotal = 0;
+        let lastWeekTotal = 0;
+
+        expenses.forEach(exp => {
+            const date = new Date(exp.createdAt);
+
+            if (date >= startOfThisWeek) {
+                thisWeekTotal += exp.amount;
+            } else if (date >= startOfLastWeek && date < startOfThisWeek) {
+                lastWeekTotal += exp.amount;
+            }
+        });
+
+        let percentage = 0;
+        if (lastWeekTotal > 0) {
+            percentage = ((thisWeekTotal - lastWeekTotal) / lastWeekTotal) * 100;
+        }
+
+        if (lastWeekTotal === 0) {
+            return {
+                percentage: 100,
+                isIncrease: true
+            };
+        }
+
+        return {
+            percentage: percentage.toFixed(1),
+            isIncrease: thisWeekTotal >= lastWeekTotal
+        }
+    }
+
+    const { percentage, isIncrease } = useMemo(() =>
+        getWeeklyComparison(expenses),
+        [expenses]);
+
     return (
 
         <div className='flex flex-col gap-5 bg-[var(--bg-card)]/80 backdrop-blur-md p-6 rounded-2xl border 
@@ -91,12 +134,12 @@ const TotalExpenses = () => {
                 <span className='text-4xl font-semibold tracking-tight'>
                     ₹{totalExpensesAmount}
                 </span>
-                <span className='text-xs text-green-500'>
-                    +12% from last week
+                <span className={`text-xs ${isIncrease ? 'text-green-500' : 'text-red-500'}`}>
+                    {isIncrease ? '+' : ''}{percentage}% from last week
                 </span>
             </div>
 
-            <button onClick={()=> navigate('/addExpense')} className='flex items-center justify-center gap-2 bg-[var(--primary)] hover:opacity-90 
+            <button onClick={() => navigate('/addExpense')} className='flex items-center justify-center gap-2 bg-[var(--primary)] hover:opacity-90 
                 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-95'>
                 <MdOutlineAdd />
                 New Expense

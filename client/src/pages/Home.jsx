@@ -64,8 +64,6 @@ const Home = () => {
         </div>
       </div>
       
-      {/* <RecentList/> */}
-      
       <div className='bg-[var(--bg-card)]/80 backdrop-blur-md p-6 rounded-2xl border border-[var(--border)] p-5 flex flex-col'>
         <div className='flex justify-between'>
           <span className='text-sm'>Recent Splits</span>
@@ -76,11 +74,22 @@ const Home = () => {
         </div>
         <div className='flex py-3 gap-4 overflow-x-scroll no-scrollbar'>
 
-          {splits.map((item, index)=>(
-            <div key={index} className='min-w-[220px]'>
-              <SplitCard createdBy={item.createdBy} title={item.title} amount={item.amount} participants={item.participants} id={item._id}/>
-            </div>
-          ))}
+          
+          {splits.length > 0 ? 
+          
+            splits.map((item, index)=>(
+              <div key={index} className='min-w-[220px]'>
+                <SplitCard createdBy={item.createdBy} title={item.title} amount={item.amount} participants={item.participants} id={item._id}/>
+              </div>
+            ))
+            :
+            <div >
+              <span className='text-sm text-[var(--text-dull)]'>
+                No splits yet,
+                Start by creating a new split with your friends.
+              </span>
+            </div> 
+          }
 
         </div>
       </div>
