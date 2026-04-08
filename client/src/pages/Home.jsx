@@ -5,8 +5,8 @@ import SplitCard from '../components/SplitCard'
 import TotalExpenses from '../components/TotalExpenses'
 import { useAppContext } from '../context/AppContext'
 import { useState } from 'react'
-
-
+import MonthlyLimit from '../components/MonthlyLimit'
+import MonthlyLimitBreakdown from '../components/MonthlyLimitBreakdown'
 
 const Home = () => {
 
@@ -94,6 +94,8 @@ const Home = () => {
         </div>
       </div>
       <AdsCard/>
+      <MonthlyLimit/>
+      <MonthlyLimitBreakdown/>
     </div>
   )
 }

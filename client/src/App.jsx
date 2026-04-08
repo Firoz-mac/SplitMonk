@@ -18,6 +18,7 @@ import Splits from './pages/Splits';
 import { useAppContext } from './context/AppContext';
 import Search from './pages/Search';
 import ActivityLog from './pages/ActivityLog';
+import AddLimit from './pages/AddLimit';
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
           <Route path='/splits' element={<Splits/>}/>
           <Route path='/search' element={<Search/>}/>
           <Route path='/log' element={<ActivityLog/>}/>
+          <Route path='/add-limit' element={<AddLimit/>}/>
         </Route>
       </Routes>
     </div>
