@@ -18,5 +18,5 @@ const logSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-const Log = mongoose.model.logs || mongoose.model('logs', logSchema);
+const Log = mongoose.models.logs || mongoose.model('logs', logSchema);
 export default Log;

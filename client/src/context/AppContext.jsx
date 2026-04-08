@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import socket from "../socket";
+import { UtensilsCrossed, CarTaxiFront, Handbag, ReceiptText, Clapperboard, Dices, Trash2 } from 'lucide-react';
 
 
 axios.interceptors.request.use((config) => {
@@ -39,6 +40,15 @@ export const AppContextProvider = ({children})=>{
     const [splits, setSplits] = useState([]);
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [monthlyLimit, setMonthlyLimit] = useState([]);
+    const categoryIcons = {
+        Food: UtensilsCrossed,
+        Travel: CarTaxiFront,
+        Shopping: Handbag,
+        Bills: ReceiptText,
+        Entertainment: Clapperboard,
+        Other: Dices
+    };
 
     useEffect(() => {
         const root = document.documentElement;
@@ -96,6 +106,17 @@ export const AppContextProvider = ({children})=>{
         }
     }
 
+    const getMonthlyLimit = async ()=>{
+        try {
+            const {data} = await axios.get('/api/limit/get');
+            if(data.success){
+                setMonthlyLimit(data.data);
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     const handleLogout = async ()=>{
         try {
             const {data} = await axios.get('/api/user/logout');
@@ -120,6 +141,7 @@ export const AppContextProvider = ({children})=>{
             getNotifications();
             getExpenses();
             getSplits();
+            getMonthlyLimit();
         }
 
         if(user?._id){
@@ -148,7 +170,7 @@ export const AppContextProvider = ({children})=>{
         handleLogout, isUserAuth, loading, setLoading, expenses, 
         setExpenses, newSplitData, setNewSplitData, splits,
         setSplits, getSplits, getExpenses, notifications, 
-        unreadCount, setUnreadCount};
+        unreadCount, setUnreadCount, monthlyLimit, getMonthlyLimit, categoryIcons};
     
     return <AppContext.Provider value={value}>
         {children}
