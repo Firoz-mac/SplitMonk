@@ -1,6 +1,7 @@
 import Expenses from "../models/Expenses.js";
 import mongoose from "mongoose";
 import Log from "../models/Log.js";
+import MonthlyLimit from './../models/MonthlyLimit.js';
 
 //add new expense : /api/expense/add
 export const addExpense = async (req, res)=>{
@@ -14,8 +15,17 @@ export const addExpense = async (req, res)=>{
         }
 
         expense.userId = req.userId;
+        const userId = req.userId;
+        const title = expense.title;
 
         const data = await Expenses.create(expense);
+
+
+        const limitData = await MonthlyLimit.findOneAndUpdate(
+            {userId, category: { $regex: title, $options: "i" }},
+            { $inc: { spent: Number(expense.amount) } },
+            { new: true }
+        );
 
         const log = await Log.create({
             userId: req.userId,

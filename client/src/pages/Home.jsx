@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import AdsCard from '../components/AdsCard'
-import RecentList from '../components/RecentList'
 import SplitCard from '../components/SplitCard'
 import TotalExpenses from '../components/TotalExpenses'
 import { useAppContext } from '../context/AppContext'
@@ -10,7 +9,7 @@ import MonthlyLimitBreakdown from '../components/MonthlyLimitBreakdown'
 
 const Home = () => {
 
-  const {navigate, user, splits, getSplits, newSplitData, axios}=useAppContext();
+  const {navigate, user, splits, getSplits, newSplitData, axios, monthlyLimit}=useAppContext();
   const [youOwe, setYouOwe] = useState(0);
   const [youAreOwed, setYouAreOwed] = useState(0);
 
@@ -95,7 +94,10 @@ const Home = () => {
       </div>
       <AdsCard/>
       <MonthlyLimit/>
-      <MonthlyLimitBreakdown/>
+      {monthlyLimit.length > 0 ?
+        <MonthlyLimitBreakdown/> : null
+      }
+      
     </div>
   )
 }

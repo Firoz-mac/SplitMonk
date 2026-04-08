@@ -1,32 +1,18 @@
 import React, { useMemo } from 'react'
 import { UtensilsCrossed } from 'lucide-react';
-
-
+import { useAppContext } from '../context/AppContext';
 
 const MonthlyLimitBreakdown = () => {
 
-    const limitData = [
-    {
-        category: "Food",
-        limit: 1000,
-        spent: 750,
-        icon: "food",
-    },
-    {
-        category: "Travel",
-        spent: 300,
-        limit: 800,
-        icon: "travel",
-    }
-    ];
+    const {monthlyLimit} = useAppContext();
 
     const processedData = useMemo(()=>{
-        return limitData.map(item =>({
+        return monthlyLimit.map(item =>({
             ...item,
             percentage: Math.min((item.spent / item.limit) * 100, 100)
         }));
         
-    },[limitData]);
+    },[monthlyLimit]);
 
     return (
         <div className='flex flex-col gap-3'>
