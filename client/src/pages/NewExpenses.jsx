@@ -108,7 +108,7 @@ const NewExpenses = () => {
                         </div>
                     )}
                 </div>
-                <input onChange={handleChange} type='text' placeholder="How much?"
+                <input onChange={handleChange} type='number' placeholder="How much?"
                     className="w-full py-3 px-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]
                         text-[var(--text)] placeholder:text-[var(--text-dull)] focus:outline-none focus:border-blue-500
                         focus:ring-2 focus:ring-blue-500/20 transition" value={expense.amount} name='amount' />
