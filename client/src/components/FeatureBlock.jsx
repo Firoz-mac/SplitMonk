@@ -6,7 +6,7 @@ const FeatureBlock = ({ title, subTitle, img, features, reverse }) => {
     return (
         <div className={`flex flex-col justify-between ${reverse ? 'md:flex-row-reverse' : ''} gap-10 md:flex-row py-30 md:px-60`}>
             <div className='flex justify-center'>
-                <img className='w-50' src={img} alt="" />
+                <img className='w-50 h-auto object-contain' src={img} alt="" />
             </div>
             <div className='flex flex-col justify-center max-w-sm gap-5'>
                 <h4 className='text-2xl font-medium md:text-4xl'>{title}</h4>
