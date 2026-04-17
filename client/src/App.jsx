@@ -19,6 +19,7 @@ import { useAppContext } from './context/AppContext';
 import Search from './pages/Search';
 import ActivityLog from './pages/ActivityLog';
 import AddLimit from './pages/AddLimit';
+import LandingNew from './pages/LandingNew';
 
 function App() {
 
@@ -26,7 +27,8 @@ function App() {
     <div>
       <ToastContainer />
       <Routes>
-        <Route path='/' element={ <LandingPage/>}/>
+        {/* <Route path='/' element={ <LandingPage/>}/> */}
+        <Route path='/' element={ <LandingNew/>}/>
         <Route path='/signup' element={<SignUp/>}/>
         <Route path='/otp' element={<OtpSection/>}/>
         <Route path='/forgotpassword' element={<ForgotPassword/>}/>

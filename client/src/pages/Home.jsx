@@ -42,7 +42,7 @@ const Home = () => {
 
       <div className='py-2'>
         <span className='text-sm text-[var(--text-dull)]'>{formattedDate}</span>
-        <h3 className='text-4xl font-medium'>Hi {user ? user.userName : "User"}</h3>
+        <h3 className='text-2xl md:text-3xl font-medium'>Welcome {user ? user.userName : "User"}</h3>
       </div>
 
       <div className='grid md:grid-cols-2 gap-3'>

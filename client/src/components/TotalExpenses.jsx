@@ -140,7 +140,7 @@ const TotalExpenses = () => {
             </div>
 
             <button onClick={() => navigate('/addExpense')} className='flex items-center justify-center gap-2 bg-[var(--primary)] hover:opacity-90 
-                py-2.5 rounded-xl text-sm font-medium transition-all active:scale-95'>
+                py-2.5 rounded-xl text-sm font-medium transition-all active:scale-95 cursor-pointer'>
                 <MdOutlineAdd />
                 New Expense
             </button>

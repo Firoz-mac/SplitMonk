@@ -233,7 +233,7 @@ const LandingPage = () => {
                             <div className="flex gap-5 md:gap-6 order-1 md:order-2">
                                 
                                 {/* Discord */}
-                                <a className="text-[var(--text)] hover:text-[var(--text-dull)]">
+                                <a href='https://discord.gg/KnHfQp4k' className="text-[var(--text)] hover:text-[var(--text-dull)]">
                                     <LiaDiscord className='w-5 h-5'/>
                                 </a>
                                 {/* Github */}

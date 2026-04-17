@@ -63,12 +63,12 @@ const Profile = () => {
                         </div>
                         <span>Security & Privacy</span>
                     </div>
-                    <div className='flex items-center gap-2 cursor-pointer'>
+                    <a href='https://discord.gg/KnHfQp4k' className='flex items-center gap-2 cursor-pointer'>
                         <div className='bg-linear-to-br rounded-lg from-blue-400 to-blue-600 py-2 flex items-center justify-center p-2'>
                             <AiOutlineQuestionCircle className='w-5 h-5'/>
                         </div>
                         <span>Help Center</span>
-                    </div>
+                    </a>
                 </div>
                 <button onClick={()=>handleLogout()} className=' rounded-lg bg-red-500 py-2 hover:bg-red-600 active:scale-95 transition-all duration-200 
                     cursor-pointer hover:brightness-110 shadow-sm hover:shadow-md'>

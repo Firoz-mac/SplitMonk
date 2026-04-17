@@ -10,6 +10,7 @@ import MenuIcon from '../components/MenuIcon';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import { MdTimeline } from "react-icons/md";
+import { UserRoundCog, UsersRound, Plus } from 'lucide-react';
 
 const MainLayout = () => {
 
@@ -19,9 +20,9 @@ const MainLayout = () => {
     const menuItems = [
         
         { icon: <GoHome />, path: "/home" },
-        { icon: <MdOutlineAdd />, path: "/addExpense",},
-        { icon: <BsDatabaseAdd />, path: "/split" },
-        { icon: <LiaUserSolid />, path: "/profile" },
+        { icon: <Plus />, path: "/addExpense"},
+        { icon: <UsersRound />, path: "/split" },
+        { icon: <UserRoundCog />, path: "/profile" },
     ];
 
 
