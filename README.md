@@ -1,9 +1,9 @@
-Splitzy
+SplitMonk
 Smart way to split expenses with friends — simple, fast, and transparent.
-Splitzy is a full-stack web application designed to help users manage shared expenses effortlessly.
-Whether you're traveling, sharing rent, or splitting daily costs, Splitzy keeps track of everything and ensures everyone pays their fair share.
+SplitMonk is a full-stack web application designed to help users manage shared expenses effortlessly.
+Whether you're traveling, sharing rent, or splitting daily costs, SplitMonk keeps track of everything and ensures everyone pays their fair share.
 
-**Live Demo:** https://splitzy-three.vercel.app
+**Live Demo:** https://SplitMonk-three.vercel.app
 
 ✨ Features
 👥 Group Split creation & management
@@ -45,5 +45,5 @@ Authentication:
 JWT (JSON Web Tokens)
 
 Clone the repository:
-git clone https://github.com/Firoz-mac/Splitzy.git
-cd Splitzy
+git clone https://github.com/Firoz-mac/SplitMonk.git
+cd SplitMonk
