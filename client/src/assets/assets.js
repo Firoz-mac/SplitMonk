@@ -7,6 +7,15 @@ import group from './group.png'
 import speed from './speed.png'
 import mockup from './mockup.png'
 import check from './check.png'
+import safeVec from './safeVec.png'
+import safeVec2 from './safeVec2.png'
+import safeVec3 from './safeVec3.png'
+import test from './test.png'
+import test1 from './test1.png'
+import unt from './Untitled-1.png'
+import shoppingIcon from './ShoppingIcon.png'
+import foodIcon from './foodIcon.png'
+import travelIcon from './travelIcon.png'
 
 export const assets = {
     logo,
@@ -18,6 +27,15 @@ export const assets = {
     speed,
     mockup,
     check,
+    safeVec,
+    safeVec2,
+    safeVec3,
+    test,
+    test1,
+    unt,
+    shoppingIcon,
+    foodIcon,
+    travelIcon,
 };
 
 export const features = [

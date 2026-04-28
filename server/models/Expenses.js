@@ -14,6 +14,10 @@ const expensesSchema = new mongoose.Schema({
         type: Number,
         required:true
     },
+    category:{
+        type: String,
+        required: true
+    },
     paidTo:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users'

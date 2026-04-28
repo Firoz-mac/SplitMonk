@@ -1,13 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { IoChevronDown } from "react-icons/io5";
+import { IoChevronDown, IoArrowForwardOutline, IoNotificationsOutline } from "react-icons/io5";
 import { MdOutlineAdd } from "react-icons/md";
 import { useAppContext } from '../context/AppContext';
+import { assets } from '../assets/assets';
+
 
 const TotalExpenses = () => {
 
-    const { expenses, navigate } = useAppContext();
+    const { expenses, navigate, user, splits, axios } = useAppContext();
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState("This Month");
+    const [youOwe, setYouOwe] = useState(0);
+    const [youAreOwed, setYouAreOwed] = useState(0);
+
 
     const filteredExpenses = useMemo(() => {
         if (!expenses) return [];
@@ -54,7 +59,15 @@ const TotalExpenses = () => {
         );
     }, [filteredExpenses]);
 
-    const options = ["Today", "This Week", "This Month", "This Year"];
+    const options = ["This Month", "Today", "This Week","This Year"];
+
+    const handleFilter = () =>{
+       setSelected((prev)=> {
+        const currentIndex = options.indexOf(prev);
+        const nextIndex = (currentIndex +1) % options.length;
+        return options[nextIndex];
+       });
+    };
 
     const getWeeklyComparison = (expenses) => {
         const now = new Date();
@@ -97,53 +110,92 @@ const TotalExpenses = () => {
 
     const { percentage, isIncrease } = useMemo(() =>
         getWeeklyComparison(expenses),
-        [expenses]);
+    [expenses]);
+
+    const getBalance = async () => {
+        const { data } = await axios.get('/api/balance/get');
+        if (data.success) {
+            setYouOwe(data.youOwe);
+            setYouAreOwed(data.youAreOwed);
+        }
+    }
+
+    useEffect(() => {
+        getBalance();
+    }, [user, splits]);
 
     return (
 
-        <div className='flex flex-col gap-5 bg-[var(--bg-card)]/80 backdrop-blur-md p-6 rounded-2xl border 
-            border-[var(--border)] shadow-sm w-full h-full'>
+        <div className="bg-[var(--primary)] px-5 pt-6 pb-16 rounded-b-2xl relative">
 
-            <div className='flex justify-between items-center'>
-                <span className='text-xs text-[var(--text-dull)] font-medium'>
-                    Total Expenses
-                </span>
+            <div className="flex justify-between items-center">
 
-                <div className='relative'>
-                    <button onClick={() => setOpen(!open)}
-                        className='flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs bg-[var(--bg-card-hover)] 
-                        hover:bg-[var(--border)] transition-all duration-200'>
-                        {selected}
-                        <IoChevronDown className={`transition ${open ? "rotate-180" : ""}`} />
-                    </button>
+                <div className="flex items-center gap-4">
+                    <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-white/40">
+                        <img
+                            src={user && user.profileImg? user.profileImg : assets.profileImg1}
+                            alt=""
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
 
-                    {open && (
-                        <div className='absolute right-0 mt-2 w-40 bg-[var(--bg-card)] rounded-xl shadow-xl border 
-                            border-[var(--border)] overflow-hidden z-50'>
-                            {options.map((option) => (
-                                <div key={option} onClick={() => { setSelected(option); setOpen(false); }}
-                                    className="px-4 py-2 text-xs hover:bg-[var(--bg-card-hover)] transition cursor-pointer">
-                                    {option}
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                    <div className="flex flex-col leading-none">
+                        <span className="text-xs text-white/70">Good Morning</span>
+                        <span className="text-lg font-semibold text-white -mt-0.5">{user ? user.userName : "User"}</span>
+                    </div>
+                </div>
+
+                <div className="w-11 h-11 bg-[var(--primary-dark)] backdrop-blur-md rounded-full flex items-center justify-center cursor-pointer transition">
+                    <div className='relative'>
+                    <IoNotificationsOutline className="text-white text-xl" />
+                    <div className='bg-red-600 w-2 h-2 rounded-full absolute top-0 right-0'></div>
+                    </div>
                 </div>
             </div>
-            <div className='flex flex-col gap-1'>
-                <span className='text-4xl font-semibold tracking-tight'>
+
+            <div className="flex flex-col items-center mt-8 text-white gap-2">
+                
+                <button onClick={handleFilter} className="flex items-center gap-1 text-xs bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm cursor-pointer">
+                    {selected}
+                </button>
+
+                <span className="text-6xl font-bold tracking-tight mt-2">
                     ₹{totalExpensesAmount}
                 </span>
-                <span className={`text-xs ${isIncrease ? 'text-green-500' : 'text-red-500'}`}>
+
+                <span className={'text-xs text-white/70'}>
                     {isIncrease ? '+' : ''}{percentage}% from last week
                 </span>
             </div>
 
-            <button onClick={() => navigate('/addExpense')} className='flex items-center justify-center gap-2 bg-[var(--primary)] hover:opacity-90 
-                py-2.5 rounded-xl text-sm font-medium transition-all active:scale-95 cursor-pointer'>
-                <MdOutlineAdd />
-                New Expense
-            </button>
+            <div className="absolute left-1/2 -bottom-8 -translate-x-1/2 w-[90%] max-w-sm">
+                <div className="flex justify-between items-center bg-[var(--bg-primary)] rounded-3xl px-6 py-4 shadow-xl">
+
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-[#6366f1]/30 rounded-full flex items-center justify-center text-[var(--primary)]">
+                            <IoArrowForwardOutline className='rotate-310 text-2xl'/>
+                        </div>
+                        <div className="flex flex-col text-[var(--text-primary)]">
+                            <span className="text-xs">You Owe</span>
+                            <span className="font-medium">₹{youOwe}</span>
+                        </div>
+                    </div>
+
+                    <div className="w-px h-10 bg-gray-200"></div>
+
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-[#6366f1]/30 rounded-full flex items-center justify-center text-[var(--primary)]">
+                            <IoArrowForwardOutline className='rotate-120 text-2xl'/>
+                        </div>
+                        <div className="flex flex-col text-[var(--text-primary)]">
+                            <span className="text-xs">You Get</span>
+                            <span className="font-medium">₹{youAreOwed}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     )
 }

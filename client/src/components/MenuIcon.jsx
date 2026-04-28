@@ -12,7 +12,7 @@ const MenuIcon = ({icon, active, path, onClick}) => {
   
   return (
     <button onClick={handleClick} className={`text-2xl p-1 rounded-xl transition-all duration-200 cursor-pointer
-        ${active ? "text-[var(--icon-hover-color)]" : "text-[var(--icon-color)] hover:text-[var(--icon-hover-color)]"}`}>
+        ${active ? "text-gray-600" : "text-gray-500"}`}>
             {icon}
     </button>
   )
