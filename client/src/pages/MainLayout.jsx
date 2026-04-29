@@ -60,7 +60,12 @@ const MainLayout = () => {
             </nav>
 
             {openCamera && (
-                <CameraScanner onClose={() => setOpenCamera(false)}/>
+                <CameraScanner 
+                    onClose={() => setOpenCamera(false)}
+                    onCapture={(imageData)=>{
+                        console.log(imageData);
+                    }}
+                />
             )}
 
         </div>
