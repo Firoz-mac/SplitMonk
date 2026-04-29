@@ -1,18 +1,20 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { RiHomeSmile2Fill } from "react-icons/ri";
 import MenuIcon from '../components/MenuIcon';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ScanQrCode } from 'lucide-react';
 import { IoIosSettings } from "react-icons/io";
+import CameraScanner from '../components/CameraScanner';
 
 const MainLayout = () => {
 
     const location = useLocation();
+    const [openCamera, setOpenCamera] = useState(false);
 
     const menuItems = [
         
         { icon: <RiHomeSmile2Fill />, path: "/home", label: "Home", },
-        { icon: <ScanQrCode />, path: "/scan", label: "Scan", },
+        { icon: <ScanQrCode />, label: "Scan", onClick: () => setOpenCamera(true) },
         { icon: <IoIosSettings />, path: "/profile", label: "settings", },
     ];
 
@@ -22,10 +24,11 @@ const MainLayout = () => {
                 <nav aria-label="Desktop navigation" className="flex flex-col gap-6 md:gap-8 items-center">
                     {menuItems.map((item) => (
                         <MenuIcon
-                            key={item.path}
+                            key={item.label}
                             icon={item.icon}
                             path={item.path}
                             label={item.label}
+                            onClick={item.onClick}
                             active={location.pathname === item.path || location.pathname.startsWith(`${item.path}/`)}
                         />
                     ))}
@@ -46,14 +49,20 @@ const MainLayout = () => {
             >
                 {menuItems.map((item) => (
                     <MenuIcon
-                        key={item.path}
+                        key={item.label}
                         icon={item.icon}
                         path={item.path}
                         label={item.label}
+                        onClick={item.onClick}
                         active={location.pathname === item.path || location.pathname.startsWith(`${item.path}/`)}
                     />
                 ))}
             </nav>
+
+            {openCamera && (
+                <CameraScanner onClose={() => setOpenCamera(false)}/>
+            )}
+
         </div>
     )
 }
