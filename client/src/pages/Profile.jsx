@@ -1,14 +1,15 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { assets } from '../assets/assets'
-import { MdOutlineModeEdit } from "react-icons/md";
-import { LiaUserSolid } from "react-icons/lia";
-import { AiOutlineQuestionCircle } from "react-icons/ai";
-import { MdLockOutline } from "react-icons/md";
+import { MdLanguage } from "react-icons/md";
 import { useAppContext } from '../context/AppContext';
 import { toast } from 'react-toastify';
+import { FaUser, FaBug, FaLock } from "react-icons/fa";
+import { IoChevronDown, IoPersonAddSharp } from "react-icons/io5";
+
 
 const Profile = () => {
     const profileInputRef= useRef(null);
+    const [isProfileUploading, setIsProfileUploading] = useState(false);
 
     const {user, setUser, axios, handleLogout} = useAppContext();
 
@@ -19,6 +20,7 @@ const Profile = () => {
 
             const formData = new FormData();
             formData.append('profileImg', file);
+            setIsProfileUploading(true);
             
             const {data} = await axios.put('/api/user/update-profile',
                 formData,
@@ -27,54 +29,143 @@ const Profile = () => {
             if(data.success){
                 setUser(data.user);
                 toast.success(data.message);
+                setIsProfileUploading(false);
             }
+
         } catch (error) {
             console.log(error.message);
         }
     }
 
+    const accountSecurity = [
+        {
+            title: "Personal Information",
+            icon : <FaUser/>
+        },
+        {
+            title: "Change Pin",
+            icon : <FaLock />
+        },
+        {
+            title: "Change Language",
+            icon : <MdLanguage />
+        }
+    ];
+
+    const moreInformation =[
+        {
+            title: "Invite Friends",
+            icon : <IoPersonAddSharp />
+        },
+        {
+            title: "Help Center",
+            icon : <FaBug />
+        },
+    ]
+
     return (
-        <div className='w-full flex justify-center items-center'>
-            <div className='w-md flex flex-col gap-3'>
-                <div className='flex justify-center'>
-                    <div className='relative w-fit'>
-                        <div className='w-30 h-30 overflow-hidden rounded-full'>
-                            <img className='w-full h-full object-cover' src={user && user.profileImg? user.profileImg : assets.profileImg1} alt="" />
+        
+        <div className='bg-[var(--primary)]'>
+
+            <div className='w-full flex flex-col justify-center items-center py-8'>
+
+                <div className="flex flex-col items-center w-fit">
+                    <div className="relative w-25 h-25 md:w-30 md:h-30 overflow-visible">
+                        <div
+                            onClick={() => !isProfileUploading && profileInputRef.current?.click()}
+                            className="relative w-full h-full overflow-hidden rounded-full border-4 border-white/30 
+                            shadow-lg cursor-pointer"
+                        >
+                            <img
+                                src={user?.profileImg || assets.profileImg1}
+                                alt="profile"
+                                className="w-full h-full object-cover"
+                            />
+
+                            {isProfileUploading && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                                    <div className="w-8 h-8 border-4 border-white/40 border-t-white rounded-full animate-spin" />
+                                </div>
+                            )}
                         </div>
 
-                        <div onClick={()=>profileInputRef.current.click()} className='absolute bottom-0 right-0 w-6 h-6 rounded-full bg-blue-500 text-white 
-                                flex items-center justify-center text-sm cursor-pointer'>
-                            <MdOutlineModeEdit />
-                        </div>
-                        <input ref={profileInputRef} onChange={handleFileChange} className='hidden' type="file" />
+                        <input ref={profileInputRef} onChange={handleFileChange} type="file" className="hidden"/>
+
                     </div>
                 </div>
-                <span>Account Settings</span>
-                <div className='flex flex-col bg-[var(--bg-card)]/80 backdrop-blur-md border border-[var(--border)] gap-5 p-5 rounded-lg'>
-                    <div className='flex items-center gap-2 cursor-pointer'>
-                        <div className='bg-linear-to-br rounded-lg from-blue-400 to-blue-600 py-2 flex items-center justify-center p-2'>
-                            <LiaUserSolid className='w-5 h-5'/>
-                        </div>
-                        <span>Personal Information</span>
-                    </div>
-                    <div className='flex items-center gap-2 cursor-pointer'>
-                        <div className='bg-linear-to-br rounded-lg from-blue-400 to-blue-600 py-2 flex items-center justify-center p-2'>
-                            <MdLockOutline className='w-5 h-5'/>
-                        </div>
-                        <span>Security & Privacy</span>
-                    </div>
-                    <a href='https://discord.gg/KnHfQp4k' className='flex items-center gap-2 cursor-pointer'>
-                        <div className='bg-linear-to-br rounded-lg from-blue-400 to-blue-600 py-2 flex items-center justify-center p-2'>
-                            <AiOutlineQuestionCircle className='w-5 h-5'/>
-                        </div>
-                        <span>Help Center</span>
-                    </a>
-                </div>
-                <button onClick={()=>handleLogout()} className=' rounded-lg bg-red-500 py-2 hover:bg-red-600 active:scale-95 transition-all duration-200 
-                    cursor-pointer hover:brightness-110 shadow-sm hover:shadow-md'>
-                            Logout
-                </button>
+
             </div>
+            <div className='bg-[var(--bg-primary)] rounded-t-2xl px-5 py-5 md:py-10 flex justify-center min-h-[65vh]'>
+
+                <div className='max-w-md w-full flex flex-col gap-6'>
+
+                    <div className='flex flex-col gap-3'>
+
+                        <span className="text-sm font-semibold text-[var(--text-primary)]">Account & Security</span>
+
+                        <div className="bg-[var(--bg-secondary)] rounded-2xl overflow-hidden 
+                        divide-y divide-[var(--border-color)]">
+                            {accountSecurity.map((option) => (
+                                <button
+                                    key={option.title}
+                                    type="button"
+                                    className="w-full p-4 flex justify-between items-center cursor-pointer 
+                                    transition hover:bg-black/5 active:scale-[0.99]"
+                                >
+                                    <div className="flex gap-3 items-center text-[var(--text-primary)]">
+                                        <span className="text-[var(--primary)]">
+                                            {option.icon}
+                                        </span>
+                                        <span className="text-sm font-medium">{option.title}</span>
+                                    </div>
+
+                                    <IoChevronDown className="-rotate-90 text-[var(--text-muted)]" />
+                                </button>
+                            ))}
+                        </div>
+
+                    </div>
+
+                    <div className='flex flex-col gap-3'>
+
+                        <span className="text-sm font-semibold text-[var(--text-primary)]">More Information</span>
+
+                        <div className="bg-[var(--bg-secondary)] rounded-2xl overflow-hidden 
+                        divide-y divide-[var(--border-color)]">
+                            {moreInformation.map((option) => (
+                                <button
+                                    key={option.title}
+                                    type="button"
+                                    className="w-full p-4 flex justify-between items-center cursor-pointer 
+                                    transition hover:bg-black/5 active:scale-[0.99]"
+                                >
+                                    <div className="flex gap-3 items-center text-[var(--text-primary)]">
+                                        <span className="text-[var(--primary)]">
+                                            {option.icon}
+                                        </span>
+                                        <span className="text-sm font-medium">{option.title}</span>
+                                    </div>
+
+                                    <IoChevronDown className="-rotate-90 text-[var(--text-muted)]" />
+                                </button>
+                            ))}
+                        </div>
+
+                    </div>
+
+                    <button
+                        onClick={()=>handleLogout()}
+                        type='button' 
+                        className='rounded-xl bg-red-500 py-3 text-sm font-semibold hover:bg-red-600 active:scale-95 
+                        transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md text-white'
+                    >
+                        Logout
+                    </button>
+
+                </div>
+            </div>
+
+            
         </div>
     )
 }
