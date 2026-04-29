@@ -1,57 +1,59 @@
 import React, { useEffect } from 'react'
-import { MdOutlineAdd, MdTimeline } from "react-icons/md";
-import { GoHome } from "react-icons/go";
-import { LiaUserSolid } from "react-icons/lia";
-import { RiLogoutCircleRLine, RiHomeSmile2Fill } from "react-icons/ri";
-import { BsDatabaseAdd } from "react-icons/bs";
-import { IoNotificationsOutline, IoMail } from "react-icons/io5";
-import { assets } from '../assets/assets';
+import { RiHomeSmile2Fill } from "react-icons/ri";
 import MenuIcon from '../components/MenuIcon';
 import { Outlet, useLocation } from 'react-router-dom';
-import { useAppContext } from '../context/AppContext';
-import { UserRoundCog, UsersRound, Plus, SquareSplitHorizontal, ScanQrCode } from 'lucide-react';
-import { IoIosWallet, IoIosSettings } from "react-icons/io";
+import { ScanQrCode } from 'lucide-react';
+import { IoIosSettings } from "react-icons/io";
 
 const MainLayout = () => {
 
-    const {navigate, user, handleLogout} = useAppContext();
     const location = useLocation();
 
     const menuItems = [
         
-        { icon: <RiHomeSmile2Fill />, path: "/home" },
-        { icon: <ScanQrCode />, path: "/split" },
-        { icon: <IoIosSettings />, path: "/profile" },
+        { icon: <RiHomeSmile2Fill />, path: "/home", label: "Home", },
+        { icon: <ScanQrCode />, path: "/scan", label: "Scan", },
+        { icon: <IoIosSettings />, path: "/profile", label: "settings", },
     ];
 
-
     return (
-        <div className='flex h-screen'>
-            <div className='hidden md:flex flex-col w-20  bg-[var(--bg-secondary)] items-center justify-center'>
-                <div className='flex flex-col gap-6 md:gap-8 items-center'>
-                    {
-                        menuItems.map((item, index) => (
-                            <MenuIcon key={index} icon={item.icon} path={item.path} active={location.pathname === item.path}/>
-                        ))
-                    }
+        <div className='flex h-screen bg-[var(--bg-primary)]'>
+            <aside className="hidden md:flex flex-col w-20 shrink-0 bg-[var(--bg-secondary)] border-r border-[var(--border-color)] items-center justify-center">
+                <nav aria-label="Desktop navigation" className="flex flex-col gap-6 md:gap-8 items-center">
+                    {menuItems.map((item) => (
+                        <MenuIcon
+                            key={item.path}
+                            icon={item.icon}
+                            path={item.path}
+                            label={item.label}
+                            active={location.pathname === item.path || location.pathname.startsWith(`${item.path}/`)}
+                        />
+                    ))}
+                </nav>
+            </aside>
 
+            <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+                <div className="flex-1 pb-20 md:pb-0 overflow-y-auto bg-[var(--bg-primary)] text-[var(--text-primary)]">
+                    <Outlet />
                 </div>
-            </div>
+            </main>
 
-            <div className='flex-1 flex flex-col px-0 overflow-hidden'>
-                <div className='flex-1 pb-15 bg-[var(--bg-primary)] text-[var(--text-primary)]'>
-                    <Outlet/>
-                </div>
-            </div>
-
-            <div className='md:hidden flex fixed bottom-0 left-0 w-full bg-[var(--bg-secondary)]
-            justify-around items-center py-3 z-50'>
-                {
-                    menuItems.map((item, index) => (
-                        <MenuIcon key={index} icon={item.icon} path={item.path} active={location.pathname === item.path} />
-                    ))
-                }
-            </div>
+            <nav
+                aria-label="Mobile navigation"
+                className="md:hidden flex fixed bottom-0 left-0 w-full bg-[var(--bg-secondary)]/95 
+                backdrop-blur-md border-t border-[var(--border-color)] justify-around items-center 
+                py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] z-50"
+            >
+                {menuItems.map((item) => (
+                    <MenuIcon
+                        key={item.path}
+                        icon={item.icon}
+                        path={item.path}
+                        label={item.label}
+                        active={location.pathname === item.path || location.pathname.startsWith(`${item.path}/`)}
+                    />
+                ))}
+            </nav>
         </div>
     )
 }
