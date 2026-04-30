@@ -1,18 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { toast } from 'react-toastify';
 import { assets } from './../assets/assets';
-import { IoChevronDown } from "react-icons/io5";
 
 const NewExpenses = () => {
-    const { navigate, axios, expenses, setExpenses, getMonthlyLimit } = useAppContext();
-    const [open, setOpen] = useState(false);
+    const { axios, setExpenses, getMonthlyLimit } = useAppContext();
     const [selected, setSelected] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
     const [expense, setExpense] = useState({
         title: '',
         amount: '',
-        category:''
+        category: ''
     });
     const isDisable = !expense.title || !expense.amount || !expense.category || !selected;
     const categories = [
@@ -49,51 +47,58 @@ const NewExpenses = () => {
             if (data.success) {
                 setExpenses(prev => [data.data, ...prev]);
                 getMonthlyLimit();
+
+                setExpense({
+                    title: '',
+                    amount: '',
+                    category: ''
+                });
+
+                setSelected(null);
+
+                return true;
             }
+
+            toast.error('Failed to add expense');
+
         } catch (error) {
             console.log(error);
-        } finally {
-            setExpense({
-                title: '',
-                amount: '',
-                category:''
-            });
-            setSelected(null)
+            toast.error('Something went wrong');
+            return false;
         }
-
     };
 
     const handleSubmit = async () => {
-        setIsSaving(true);
-        await saveExpense();
-        setIsSaving(false);
-        toast.success('New Expense Added');
+        if (isDisable || isSaving) return;
 
-        console.log(expense);
+        setIsSaving(true);
+
+        const success = await saveExpense();
+
+        setIsSaving(false);
+
+        if(success){
+            toast.success('New Expense Added');
+        }
     };
 
-    useEffect(()=>{
-        const handleKeyDown = (e) =>{
-            if(e.key === 'Enter' && !isDisable) {
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Enter' && !isDisable && !isSaving) {
                 handleSubmit();
             }
-            if(e.key === 'Escape' && open){
-                setOpen(false);
-            }
         };
+
         window.addEventListener('keydown', handleKeyDown);
+
         return () => window.removeEventListener('keydown', handleKeyDown);
-    },[open]);
+    }, [isDisable, isSaving, expense, selected]);
 
     return (
 
-        <div onClick={()=>{ 
-                if(open){
-                    setOpen(false)
-                }}
-            } className='w-screen h-screen flex justify-center'
+        <div className='w-screen h-screen flex justify-center'
         >
-            <div onClick={(e) => e.stopPropagation()} className='w-full max-w-md px-5 py-10 space-y-10 
+            <div className='w-full max-w-md px-5 py-10 space-y-10 
                 flex flex-col md:justify-center'
             >
                 <div>
@@ -124,18 +129,19 @@ const NewExpenses = () => {
                                 className='w-full pl-8 pr-3 py-3 rounded-xl border 
                                 border-[var(--border-color)] focus:outline-none 
                                 focus:ring-2 focus:ring-primary text-sm'
-                                
+
                             />
                         </div>
 
                         <div className="flex gap-2 mt-1">
                             {[100, 500, 1000, 2000].map(amt => (
                                 <button
+                                    type="button"
                                     key={amt}
-                                    onClick={() => 
+                                    onClick={() =>
                                         setExpense((prev) => ({
-                                        ...prev,
-                                        amount:amt.toString(),
+                                            ...prev,
+                                            amount: amt.toString(),
                                         }))
                                     }
                                     className="px-3 py-1 text-sm hover:bg-[var(--bg-secondary)]
@@ -170,59 +176,39 @@ const NewExpenses = () => {
                             Category
                         </label>
 
-                        {/* Selected box */}
-                        <div
-                            onClick={() => setOpen(!open)}
-                            className="w-full px-3 py-3 rounded-xl border border-[var(--border-color)] 
-                            flex items-center justify-between cursor-pointer"
-                        >
-                            {selected ? (
-                                <div className="flex gap-3 items-center">
-                                    {selected.icon && (
-                                            <img className="w-5" src={selected.icon} alt="" />
-                                    )}
-                                    <p className="text-sm">{selected.title}</p>
-                                </div>
-                            ) : (
-                                <span className="text-[var(--text-secondary)] text-sm">Select category</span>
-                            )}
+                        <div className="grid grid-cols-2 gap-3">
+                            {categories.map((cat) => (
+                                <button
+                                    type="button"
+                                    key={cat.title}
+                                    onClick={() => {
+                                        setSelected(cat)
+                                        setExpense((prev) => ({
+                                            ...prev,
+                                            category: cat.title,
+                                        }));
+                                    }}
 
-                            <IoChevronDown
-                                className={`transition-transform duration-200 ${open ? "rotate-180" : ""
-                                    }`}
-                            />
+                                    className={`flex items-center cursor-pointer gap-3 p-3 rounded-xl border text-sm transition
+                                    ${selected?.title === cat.title
+                                            ? "border-[var(--primary)] bg-[var(--primary)]/10"
+                                            : "border-[var(--border-color)] bg-[var(--bg-primary)]"
+                                        }`}
+                                >
+                                    {cat.icon && <img className="w-5" src={cat.icon} alt="" />}
+                                    <span>{cat.title}</span>
+                                </button>
+
+                            ))}
                         </div>
 
-                        {/* Dropdown */}
-                        {open && (
-                            <div className="absolute top-full mt-2 w-full bg-[var(--bg-primary)] p-1 rounded-xl border 
-                            border-[var(--border-color)] shadow-md z-10 form-slide-in">
-                                {categories.map((cat, i) => (
-                                    <div key={i}
-                                        onClick={() => {
-                                            setSelected(cat);
-                                            setOpen(false);
-                                            setExpense((prev)=> ({
-                                                ...prev,
-                                                category:cat.title
-                                            }))
-                                        }}
-                                        className="flex items-center gap-3 px-3 py-2 rounded-lg 
-                                        hover:bg-[var(--bg-secondary)] cursor-pointer"
-                                        style={{ animationDelay: `${i * 0.02}s` }}
-                                    >   
-                                        {cat.icon && (
-                                            <img className="w-5" src={cat.icon} alt="" />
-                                        )}
-                                        <span className="text-sm">{cat.title}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
                     </div>
 
                 </div>
-                <button onClick={handleSubmit} disabled={isDisable} className='w-full bg-[var(--primary)] hover:bg-[var(--primary-dark)]
+                <button 
+                    onClick={handleSubmit}
+                    disabled={isDisable || isSaving} 
+                    className='w-full bg-[var(--primary)] hover:bg-[var(--primary-dark)] 
                     text-white p-2 rounded-lg cursor-pointer'
                 >
                     {isSaving ? 'Saving...' : 'Add expense'}

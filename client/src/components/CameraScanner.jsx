@@ -10,10 +10,6 @@ const CameraScanner = ({ onClose, onCapture, loggedUserQr }) => {
 
     const { user } = useAppContext();
 
-    useEffect(() => {
-        console.log(loggedUserQr);
-    }, []);
-
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const animationRef = useRef(null);

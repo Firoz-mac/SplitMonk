@@ -34,6 +34,7 @@ export const AppContextProvider = ({children})=>{
     const [newSplitData, setNewSplitData] = useState({
         title: '',
         amount: '',
+        category:'',
         splitType: 'equal',
         participants: []
     });
