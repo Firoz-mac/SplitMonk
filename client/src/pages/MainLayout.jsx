@@ -5,11 +5,18 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { ScanQrCode } from 'lucide-react';
 import { IoIosSettings } from "react-icons/io";
 import CameraScanner from '../components/CameraScanner';
+import { useAppContext } from '../context/AppContext';
 
 const MainLayout = () => {
 
     const location = useLocation();
+    const {user} = useAppContext();
     const [openCamera, setOpenCamera] = useState(false);
+
+    const handleScan = (qrValue) => {
+        console.log("Scanned QR:", qrValue);
+    };
+    
 
     const menuItems = [
         
@@ -62,9 +69,8 @@ const MainLayout = () => {
             {openCamera && (
                 <CameraScanner 
                     onClose={() => setOpenCamera(false)}
-                    onCapture={(imageData)=>{
-                        console.log(imageData);
-                    }}
+                    onCapture={handleScan}
+                    loggedUserQr={user._id || ""}
                 />
             )}
 

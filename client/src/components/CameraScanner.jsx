@@ -1,19 +1,33 @@
-import React, { useRef, useEffect, useState } from 'react'
-import { GrFormCheckmark } from "react-icons/gr";
-import { IoMdRefresh } from "react-icons/io";
+import React, { useRef, useEffect, useState } from "react";
+import jsQR from "jsqr";
+import { QRCodeCanvas } from "qrcode.react";
+import { MdOutlineQrCodeScanner } from "react-icons/md";
+import { IoMdClose } from "react-icons/io";
+import { assets } from './../assets/assets';
+import { useAppContext } from "../context/AppContext";
 
-const CameraScanner = ({ onClose, onCapture }) => {
+const CameraScanner = ({ onClose, onCapture, loggedUserQr }) => {
+
+    const { user } = useAppContext();
+
+    useEffect(() => {
+        console.log(loggedUserQr);
+    }, []);
 
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
+    const animationRef = useRef(null);
 
-    const [capturedImage, setCapturedImage] = useState(null);
     const [cameraError, setCameraError] = useState("");
+    const [showUserQR, setShowUserQR] = useState(false);
 
     useEffect(() => {
         startCamera();
 
-        return () => stopCamera();
+        return () => {
+            stopScanning();
+            stopCamera();
+        };
     }, []);
 
     const startCamera = async () => {
@@ -27,8 +41,11 @@ const CameraScanner = ({ onClose, onCapture }) => {
 
             if (videoRef.current) {
                 videoRef.current.srcObject = stream;
+                videoRef.current.onloadedmetadata = () => {
+                    videoRef.current.play();
+                    scanQRCode();
+                };
             }
-
         } catch (err) {
             console.error(err);
             setCameraError("Unable to access camera");
@@ -37,17 +54,30 @@ const CameraScanner = ({ onClose, onCapture }) => {
 
     const stopCamera = () => {
         const stream = videoRef.current?.srcObject;
+
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
             videoRef.current.srcObject = null;
         }
     };
 
-    const captureImage = () => {
+    const stopScanning = () => {
+        if (animationRef.current) {
+            cancelAnimationFrame(animationRef.current);
+            animationRef.current = null;
+        }
+    };
+
+    const scanQRCode = () => {
+        if (showUserQR) return;
+
         const video = videoRef.current;
         const canvas = canvasRef.current;
 
-        if (!video || !canvas) return;
+        if (!video || !canvas || video.readyState !== video.HAVE_ENOUGH_DATA) {
+            animationRef.current = requestAnimationFrame(scanQRCode);
+            return;
+        }
 
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
@@ -55,92 +85,109 @@ const CameraScanner = ({ onClose, onCapture }) => {
         const ctx = canvas.getContext("2d");
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        const imageData = canvas.toDataURL("image/png");
-        setCapturedImage(imageData);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
 
-        stopCamera();
-    };
+        if (qrCode) {
+            stopScanning();
+            stopCamera();
 
-    const retakeImage = () => {
-        setCapturedImage(null);
-        startCamera();
-    };
+            if (onCapture) {
+                onCapture(qrCode.data);
+            }
 
-    const useImage = () => {
-        if (onCapture) {
-            onCapture(capturedImage);
+            onClose();
+            return;
         }
 
-        onClose();
+        animationRef.current = requestAnimationFrame(scanQRCode);
+    };
+
+    const handleShowQR = () => {
+        stopScanning();
+        stopCamera();
+        setShowUserQR(true);
     };
 
     const handleClose = () => {
+        stopScanning();
         stopCamera();
         onClose();
     };
 
     return (
-        <div className="fixed inset-0 z-50 bg-black flex flex-col">
-            <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-4 py-4 bg-gradient-to-b from-black/70 to-transparent">
-                <h2 className="text-white text-lg font-semibold"></h2>
+        <div className="fixed inset-0 z-50 bg-black overflow-hidden">
+            {showUserQR ? (
+                <div className="absolute inset-0 flex items-center justify-center bg-black px-6">
+                    <div className="w-full max-w-[340px] bg-white p-5 rounded-2xl shadow-2xl">
+                        <div className="flex gap-3 justify-center items-center mb-4">
+                            <div className="w-10 h-10 bg-amber-300 rounded-full overflow-hidden shrink-0">
+                                <img
+                                    className="w-full h-full object-cover"
+                                    src={user?.profileImg || assets.profileImg1}
+                                    alt={user?.userName || "User"}
+                                />
+                            </div>
+
+                            <span className="text-base font-semibold text-gray-900 truncate">
+                                {user?.userName}
+                            </span>
+                        </div>
+
+                        <div className="flex justify-center">
+                            <QRCodeCanvas
+                                value={loggedUserQr || ""}
+                                size={260}
+                                level="H"
+                                includeMargin
+                            />
+                        </div>
+
+                        <div className="mt-4 text-center">
+                            <span className="text-sm text-gray-500">
+                                Scan to pay with splitMonk
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            ) : cameraError ? (
+                <div className="absolute inset-0 flex items-center justify-center px-6">
+                    <p className="text-white text-center">{cameraError}</p>
+                </div>
+            ) : (
+                <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="absolute inset-0 w-full h-full object-cover"
+                />
+            )}
+
+            <div className="absolute inset-x-0 top-0 z-10 flex justify-end p-6 bg-gradient-to-b 
+            from-black/60 to-transparent space-x-10">
+                <button type="button" onClick={handleShowQR}>
+                    <MdOutlineQrCodeScanner className="w-7 h-7 text-white" />
+                </button>
 
                 <button
+                    type="button"
                     onClick={handleClose}
-                    className="w-10 h-10 rounded-full bg-white/15 text-white flex items-center justify-center hover:bg-white/25"
+                    className="rounded-full text-white flex items-center justify-center hover:bg-black/60"
                 >
-                    ✕
+                    <IoMdClose className="w-7 h-7" />
                 </button>
             </div>
 
-            <div className="flex-1 flex items-center justify-center px-4">
-                {cameraError ? (
-                    <p className="text-white text-center">{cameraError}</p>
-                ) : capturedImage ? (
-                    <img
-                        src={capturedImage}
-                        alt="captured"
-                        className="w-full max-w-md rounded-2xl object-cover shadow-xl"
-                    />
-                ) : (
-                    <video
-                        ref={videoRef}
-                        autoPlay
-                        playsInline
-                        className="w-full max-w-md rounded-2xl object-cover shadow-xl"
-                    />
-                )}
-            </div>
-
-            <div className="px-6 py-6 bg-gradient-to-t from-black/80 to-transparent">
-                {capturedImage ? (
-                    <div className="flex gap-3">
-                        <button
-                            onClick={retakeImage}
-                            className="flex-1 py-3 rounded-xl bg-white/15 text-white font-medium hover:bg-white/25 flex justify-center items-center"
-                        >
-                            <IoMdRefresh className='text-2xl'/>
-                        </button>
-
-                        <button
-                            onClick={useImage}
-                            className="flex-1 py-3 rounded-xl bg-white text-black font-semibold hover:bg-gray-200 flex justify-center items-center"
-                        >
-                            <GrFormCheckmark className='text-2xl'/>
-                        </button>
-                    </div>
-                ) : (
-                    <button
-                        onClick={captureImage}
-                        className="mx-auto w-20 h-20 rounded-full border-4 border-white flex items-center justify-center"
-                    >
-                        <span className="w-14 h-14 rounded-full bg-white block" />
-                    </button>
-                )}
-            </div>
+            {!showUserQR && !cameraError && (
+                <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+                    <div className="w-64 h-64 border-2 border-white rounded-2xl shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]" />
+                </div>
+            )}
 
             <canvas ref={canvasRef} className="hidden" />
         </div>
     );
-}
+};
 
-export default CameraScanner
+export default CameraScanner;
