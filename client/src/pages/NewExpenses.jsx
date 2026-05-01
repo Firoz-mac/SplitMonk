@@ -12,6 +12,7 @@ const NewExpenses = () => {
         amount: '',
         category: ''
     });
+    
     const isDisable = !expense.title || !expense.amount || !expense.category || !selected;
     const categories = [
         {
