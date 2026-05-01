@@ -52,7 +52,7 @@ const CreateSplit = () => {
 
   return (
     <div className='w-full h-full flex justify-center'>
-        <div className='w-full max-w-md px-5 py-5 space-y-5 flex flex-col justify-between md:justify-center'>
+        <div className='w-full max-w-md px-5 py-5 space-y-5 flex flex-col md:justify-center'>
             <div className='space-y-5'>
                 <div className='flex justify-center'>
                     <h2 className="text-md font-medium">Create Split</h2>

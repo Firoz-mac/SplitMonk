@@ -98,7 +98,7 @@ const NewExpenses = () => {
     return (
 
         <div className='w-full h-full flex justify-center'>
-            <div className='w-full max-w-md px-5 py-5 space-y-10 flex flex-col justify-between md:justify-center'>
+            <div className='w-full max-w-md px-5 py-5 space-y-10 flex flex-col md:justify-center'>
                 <div className='space-y-5'>
                     <div>
                         <h3 className='font-medium text-lg'>Add new expense</h3>
