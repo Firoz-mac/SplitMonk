@@ -96,114 +96,113 @@ const NewExpenses = () => {
 
     return (
 
-        <div className='w-screen h-screen flex justify-center'
-        >
-            <div className='w-full max-w-md px-5 py-10 space-y-10 
-                flex flex-col md:justify-center'
-            >
-                <div>
-                    <h3 className='font-medium text-lg'>Add new expense</h3>
-                    <p className='text-sm text-[var(--text-secondary)]'>
-                        Enter the details of your expense to help you track your spending.
-                    </p>
-                </div>
-                <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm font-medium text-[var(--text-secondary)]">
-                            Enter Amount
-                        </label>
+        <div className='w-full h-full flex justify-center'>
+            <div className='w-full max-w-md px-5 py-5 space-y-10 flex flex-col justify-between md:justify-center'>
+                <div className='space-y-5'>
+                    <div>
+                        <h3 className='font-medium text-lg'>Add new expense</h3>
+                        <p className='text-sm text-[var(--text-secondary)]'>
+                            Enter the details of your expense to help you track your spending.
+                        </p>
+                    </div>
+                    <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-[var(--text-secondary)]">
+                                Enter Amount
+                            </label>
 
-                        <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] text-sm">
-                                ₹
-                            </span>
+                            <div className="relative">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] text-sm">
+                                    ₹
+                                </span>
 
-                            <input
-                                onChange={handleChange}
-                                type="number"
-                                inputMode="decimal"
-                                name='amount'
-                                value={expense.amount}
-                                pattern="[0-9]*"
-                                placeholder="0.00"
-                                className='w-full pl-8 pr-3 py-3 rounded-xl border 
-                                border-[var(--border-color)] focus:outline-none 
-                                focus:ring-2 focus:ring-primary text-sm'
+                                <input
+                                    onChange={handleChange}
+                                    type="number"
+                                    inputMode="decimal"
+                                    name='amount'
+                                    value={expense.amount}
+                                    pattern="[0-9]*"
+                                    placeholder="0.00"
+                                    className='w-full pl-8 pr-3 py-3 rounded-xl border 
+                                    border-[var(--border-color)] focus:outline-none 
+                                    focus:ring-2 focus:ring-primary text-sm'
 
-                            />
+                                />
+                            </div>
+
+                            <div className="flex gap-2 mt-1">
+                                {[100, 500, 1000, 2000].map(amt => (
+                                    <button
+                                        type="button"
+                                        key={amt}
+                                        onClick={() =>
+                                            setExpense((prev) => ({
+                                                ...prev,
+                                                amount: amt.toString(),
+                                            }))
+                                        }
+                                        className="px-3 py-1 text-sm hover:bg-[var(--bg-secondary)]
+                                        rounded-full border border-[var(--border-color)] cursor-pointer"
+                                    >
+                                        ₹{amt}
+                                    </button>
+                                ))}
+                            </div>
+
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-[var(--text-secondary)]">
+                                What was it for?
+                            </label>
+
+                            <div>
+                                <input
+                                    type="text"
+                                    onChange={handleChange}
+                                    name='title'
+                                    value={expense.title}
+                                    placeholder="e.g. Coffee"
+                                    className="w-full pl-3 py-3 rounded-xl border border-[var(--border-color)] 
+                                    focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                                />
+                            </div>
                         </div>
 
-                        <div className="flex gap-2 mt-1">
-                            {[100, 500, 1000, 2000].map(amt => (
-                                <button
-                                    type="button"
-                                    key={amt}
-                                    onClick={() =>
-                                        setExpense((prev) => ({
-                                            ...prev,
-                                            amount: amt.toString(),
-                                        }))
-                                    }
-                                    className="px-3 py-1 text-sm hover:bg-[var(--bg-secondary)]
-                                    rounded-full border border-[var(--border-color)] cursor-pointer"
-                                >
-                                    ₹{amt}
-                                </button>
-                            ))}
+                        <div className="flex flex-col gap-2 relative">
+                            <label className="text-sm font-medium text-[var(--text-secondary)]">
+                                Category
+                            </label>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                {categories.map((cat) => (
+                                    <button
+                                        type="button"
+                                        key={cat.title}
+                                        onClick={() => {
+                                            setSelected(cat)
+                                            setExpense((prev) => ({
+                                                ...prev,
+                                                category: cat.title,
+                                            }));
+                                        }}
+
+                                        className={`flex items-center cursor-pointer gap-3 p-3 rounded-xl border text-sm transition
+                                        ${selected?.title === cat.title
+                                                ? "border-[var(--primary)] bg-[var(--primary)]/10"
+                                                : "border-[var(--border-color)] bg-[var(--bg-primary)]"
+                                            }`}
+                                    >
+                                        {cat.icon && <img className="w-5" src={cat.icon} alt="" />}
+                                        <span>{cat.title}</span>
+                                    </button>
+
+                                ))}
+                            </div>
+
                         </div>
 
                     </div>
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm font-medium text-[var(--text-secondary)]">
-                            What was it for?
-                        </label>
-
-                        <div>
-                            <input
-                                type="text"
-                                onChange={handleChange}
-                                name='title'
-                                value={expense.title}
-                                placeholder="e.g. Coffee"
-                                className="w-full pl-3 py-3 rounded-xl border border-[var(--border-color)] 
-                                focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-2 relative">
-                        <label className="text-sm font-medium text-[var(--text-secondary)]">
-                            Category
-                        </label>
-
-                        <div className="grid grid-cols-2 gap-3">
-                            {categories.map((cat) => (
-                                <button
-                                    type="button"
-                                    key={cat.title}
-                                    onClick={() => {
-                                        setSelected(cat)
-                                        setExpense((prev) => ({
-                                            ...prev,
-                                            category: cat.title,
-                                        }));
-                                    }}
-
-                                    className={`flex items-center cursor-pointer gap-3 p-3 rounded-xl border text-sm transition
-                                    ${selected?.title === cat.title
-                                            ? "border-[var(--primary)] bg-[var(--primary)]/10"
-                                            : "border-[var(--border-color)] bg-[var(--bg-primary)]"
-                                        }`}
-                                >
-                                    {cat.icon && <img className="w-5" src={cat.icon} alt="" />}
-                                    <span>{cat.title}</span>
-                                </button>
-
-                            ))}
-                        </div>
-
-                    </div>
-
                 </div>
                 <button 
                     onClick={handleSubmit}
@@ -215,6 +214,7 @@ const NewExpenses = () => {
                 </button>
             </div>
         </div>
+        
     )
 }
 
