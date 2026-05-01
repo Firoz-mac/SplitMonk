@@ -48,6 +48,7 @@ const CreateSplit = () => {
     const handleSubmit = () =>{
         if (isDisable) return;
         console.log(newSplitData);
+        navigate('/choose');
     }
 
   return (
