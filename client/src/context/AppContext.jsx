@@ -31,13 +31,17 @@ export const AppContextProvider = ({children})=>{
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
     const [expenses, setExpenses] = useState([]);
+    const [openCamera, setOpenCamera] = useState(false)
+    
     const [newSplitData, setNewSplitData] = useState({
         title: '',
         amount: '',
         category:'',
+        creatorAmount:'',
         splitType: 'equal',
         participants: []
     });
+
     const [splits, setSplits] = useState([]);
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
@@ -168,7 +172,7 @@ export const AppContextProvider = ({children})=>{
     },[]);
 
     const value ={navigate, theme, setTheme, axios, user, setUser, 
-        handleLogout, isUserAuth, loading, setLoading, expenses, 
+        handleLogout, isUserAuth, loading, setLoading, openCamera, setOpenCamera, expenses, 
         setExpenses, newSplitData, setNewSplitData, splits,
         setSplits, getSplits, getExpenses, notifications, 
         unreadCount, setUnreadCount, monthlyLimit, getMonthlyLimit, categoryIcons};

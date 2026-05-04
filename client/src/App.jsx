@@ -6,8 +6,6 @@ import OtpSection from './pages/OtpSection';
 import Home from './pages/Home';
 import ForgotPassword from './pages/ForgotPassword';
 import MainLayout from './pages/MainLayout';
-import ChoosePeoples from './pages/NewSplit/ChoosePeoples';
-import SplitAmount from './pages/NewSplit/SplitAmount';
 import NewExpenses from './pages/NewExpenses';
 import Profile from './pages/Profile';
 import Notifications from './pages/Notifications';
@@ -17,7 +15,7 @@ import Search from './pages/Search';
 import ActivityLog from './pages/ActivityLog';
 import AddLimit from './pages/AddLimit';
 import LandingNew from './pages/LandingNew';
-import CreateSplit from './pages/NewSplit/CreateSplit';
+import Split from './pages/Split';
 
 function App() {
 
@@ -31,9 +29,7 @@ function App() {
         <Route path='/forgotpassword' element={<ForgotPassword/>}/>
         <Route element={<MainLayout/>}>
           <Route path='/home' element={<Home/>}/>
-          <Route path='/split' element={<CreateSplit/>}/>
-          <Route path='/choose' element={<ChoosePeoples/>}/>
-          <Route path='/split-amount' element={<SplitAmount/>}/>
+          <Route path='/split' element={<Split/>}/>
           <Route path='/addExpense' element={<NewExpenses/>}/>
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/notifications' element={<Notifications/>}/>

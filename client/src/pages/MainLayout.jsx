@@ -10,8 +10,7 @@ import { useAppContext } from '../context/AppContext';
 const MainLayout = () => {
 
     const location = useLocation();
-    const {user} = useAppContext();
-    const [openCamera, setOpenCamera] = useState(false);
+    const {user, openCamera, setOpenCamera} = useAppContext();
 
     const handleScan = (qrValue) => {
         console.log("Scanned QR:", qrValue);
@@ -26,7 +25,7 @@ const MainLayout = () => {
     ];
 
     return (
-        <div className='flex h-screen bg-[var(--bg-primary)]'>
+        <div className='flex h-dvh bg-[var(--bg-primary)]'>
             <aside className="hidden md:flex flex-col w-20 shrink-0 bg-[var(--bg-secondary)] border-r border-[var(--border-color)] items-center justify-center">
                 <nav aria-label="Desktop navigation" className="flex flex-col gap-6 md:gap-8 items-center">
                     {menuItems.map((item) => (
@@ -42,8 +41,8 @@ const MainLayout = () => {
                 </nav>
             </aside>
 
-            <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-                <div className="flex-1 pb-20 md:pb-0 overflow-y-auto bg-[var(--bg-primary)] text-[var(--text-primary)]">
+            <main className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
+                <div className="flex-1 min-h-0 pb-20 md:pb-0 overflow-y-auto bg-[var(--bg-primary)] text-[var(--text-primary)]">
                     <Outlet />
                 </div>
             </main>

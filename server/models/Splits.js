@@ -14,6 +14,10 @@ const splitSchema = new mongoose.Schema({
         type: Number,
         required:true
     },
+    category:{
+        type: String,
+        required:true
+    },
     splitType:{
         type: String,
         enum: ['equal', 'unequal'],

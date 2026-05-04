@@ -5,13 +5,13 @@ import { useAppContext } from '../context/AppContext';
 
 const QuickActions = () => {
 
-    const {navigate} = useAppContext();
+    const {navigate, setOpenCamera} = useAppContext();
 
     const icons = [
-        { icon: <Plus />, label: "Expense", path: "/addExpense" },
-        { icon: <SquareSplitHorizontal />, label: "Split", path: "/split" },
-        { icon: <ScanQrCode />, label: "Scan", path: "/scan" },
-        { icon: <IndianRupee />, label: "Pay", path: "/settlement" },
+        { icon: <Plus />, label: "Expense", action: ()=> navigate("/addExpense") },
+        { icon: <SquareSplitHorizontal />, label: "Split", action: ()=> navigate("/split") },
+        { icon: <ScanQrCode />, label: "Scan", action: () => setOpenCamera(true) },
+        { icon: <IndianRupee />, label: "Pay", action: () => navigate("/pay") },
     ];
 
     return (
@@ -22,7 +22,7 @@ const QuickActions = () => {
                 {icons.map((item, i) => (
                     <button
                         type="button"
-                        onClick={()=>navigate(item.path)} 
+                        onClick={item.action} 
                         key={item.path || i}
                         aria-label={item.label}
                         className="flex flex-col items-center gap-2 group cursor-pointer rounded-2xl py-2 

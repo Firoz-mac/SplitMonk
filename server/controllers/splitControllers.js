@@ -8,7 +8,7 @@ import Log from "../models/Log.js";
 //add split : /api/split/add
 export const addSplit = async (req, res) =>{
     try {
-        const {title, amount, participants} = req.body;
+        const {title, amount, participants, category, creatorAmount} = req.body;
         const createdBy = req.userId;
 
         if(!participants || participants.length === 0){
@@ -18,17 +18,22 @@ export const addSplit = async (req, res) =>{
             });
         }
 
-        let formattedParticipants = participants.map((p=>({
-            user: p.userId,
-            amount: p.amount,
-            paid: p.paid || false
-        })));
+        let formattedParticipants = participants.map((p=>{
+            return {
+                user: p._id,
+                amount: p.amount,
+                paid: p.paid || false
+            }
+        }));
+
+
+
 
         const isCreatorIncluded = formattedParticipants.some((p)=> p.user.toString() === createdBy.toString());
         if(!isCreatorIncluded){
             formattedParticipants.push({
                 user: createdBy,
-                amount: 0,
+                amount: creatorAmount,
                 paid: true,
             })
         }
@@ -42,7 +47,7 @@ export const addSplit = async (req, res) =>{
         ));
 
         const data = await Split.create({
-            title, amount, createdBy, participants: formattedParticipants, settlements,
+            title, amount, category, createdBy, participants: formattedParticipants, settlements,
         });
 
         const createdUser = await User.findById(createdBy);
