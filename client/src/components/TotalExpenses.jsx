@@ -151,7 +151,9 @@ const TotalExpenses = () => {
                 </div>
 
                 <button 
-                    type='button' aria-label="Open notifications" 
+                    type='button'
+                    onClick={()=>navigate('/notifications')}
+                    aria-label="Open notifications"
                     className='w-11 h-11 bg-[var(--primary-dark)]/80 backdrop-blur-md rounded-full flex items-center 
                     justify-center cursor-pointer transition hover:scale-105 active:scale-95'
                 >
