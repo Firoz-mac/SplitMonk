@@ -26,9 +26,6 @@ export const addSplit = async (req, res) =>{
             }
         }));
 
-
-
-
         const isCreatorIncluded = formattedParticipants.some((p)=> p.user.toString() === createdBy.toString());
         if(!isCreatorIncluded){
             formattedParticipants.push({
@@ -56,8 +53,12 @@ export const addSplit = async (req, res) =>{
             p.user.toString() !== createdBy.toString()
         ).map(p=> ({
             userId: p.user,
-            message: `${createdUser.userName || "Someone"} added you to "${title}" split of ₹${p.amount}`,
-            splitType: 'split'
+            splitCreatorId: createdBy,
+            splitId: data._id,
+            message: `invited you to join the split "${title}" for ₹${p.amount}`,
+            type: 'split_request',
+            splitType: 'split',
+            status:"pending"
         }));
 
         await Notifications.insertMany(notifications);

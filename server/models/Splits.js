@@ -37,8 +37,13 @@ const splitSchema = new mongoose.Schema({
             paid:{
                 type: Boolean,
                 default: false
-            }
-        }
+            },
+            requestStatus:{
+                type: String,
+                enum: ['pending', 'accepted', 'declined'],
+                default: 'pending',
+            },
+        },
     ],
     settlements:[
         {

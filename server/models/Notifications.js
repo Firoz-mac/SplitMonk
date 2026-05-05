@@ -6,14 +6,27 @@ const notificationSchema = new mongoose.Schema({
         required: true,
         ref: 'users'
     },
+    splitCreatorId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users'
+    },
+    splitId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "splits",
+    },
     message:{
         type:String,
         required: true,
     },
-    splitType:{
-        type:String,
-        enum: ["split", "payment"],
-        default: "split"
+    type:{
+        type: String,
+        enum: ["split_request", "payment", "info"],
+        default: "info",
+    },
+    status:{
+        type: String,
+        enum: ["pending", "accepted", "declined", "none"],
+        default: "none",
     },
     isRead:{
         type:Boolean,
