@@ -174,7 +174,7 @@ export const AppContextProvider = ({children})=>{
     const value ={navigate, theme, setTheme, axios, user, setUser, 
         handleLogout, isUserAuth, loading, setLoading, openCamera, setOpenCamera, expenses, 
         setExpenses, newSplitData, setNewSplitData, splits,
-        setSplits, getSplits, getExpenses, notifications, 
+        setSplits, getSplits, getExpenses, notifications, getNotifications,
         unreadCount, setUnreadCount, monthlyLimit, getMonthlyLimit, categoryIcons};
     
     return <AppContext.Provider value={value}>

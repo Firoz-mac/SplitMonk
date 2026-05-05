@@ -7,11 +7,26 @@ import SplitRequestNotify from '../components/notifications/SplitRequestNotify';
 
 const Notifications = () => {
     const { notifications, axios, setUnreadCount } = useAppContext();
-    const [notifyfilter, setNotifyFilter] = useState('all');
+    const [notifyFilter, setNotifyFilter] = useState('all');
+    const [filterdNotifications, setFilterdNotifications]= useState([]);
+
+    // useEffect(()=>{
+    //     console.log(notifications)
+    // },[]);
 
     useEffect(()=>{
-        console.log(notifications)
-    },[])
+
+        if(notifyFilter === 'all'){
+            setFilterdNotifications(notifications);
+        }
+
+        if(notifyFilter === 'request'){
+
+            const requestNotifications = notifications.filter((notify)=> notify.type === 'split_request')
+            setFilterdNotifications(requestNotifications);
+        }
+        
+    },[notifyFilter, notifications]);
 
     useEffect(() => {
         const markAsRead = async () => {
@@ -40,7 +55,7 @@ const Notifications = () => {
                             type='button'
                             onClick={()=>setNotifyFilter('all')}
                             className={`text-sm py-2 px-3 rounded-md cursor-pointer 
-                                ${notifyfilter === 'all'
+                                ${notifyFilter === 'all'
                                     ? 'bg-[var(--primary)]/20 text-[var(--primary)]' 
                                     : 'text-[var(--text-muted)]'
                                 }
@@ -53,7 +68,7 @@ const Notifications = () => {
                             type='button'
                             onClick={()=>setNotifyFilter('request')}
                             className={`text-sm py-2 px-3 rounded-md cursor-pointer 
-                                ${notifyfilter === 'request'
+                                ${notifyFilter === 'request'
                                     ? 'bg-[var(--primary)]/20 text-[var(--primary)]' 
                                     : 'text-[var(--text-muted)]'
                                 }
@@ -66,19 +81,42 @@ const Notifications = () => {
 
                 <div className='flex-1 overflow-y-scroll'>
 
-                    <div className='divide-y divide-[var(--border-color)]'>
-                        <PaymentNotify />
-                        <SplitRequestNotify/>
-                        <SplitRequestNotify/>
-                        <PaymentNotify />
-                    </div>
+                    {filterdNotifications? (
 
-                    {/* <div className='flex flex-col items-center justify-center w-full h-full px-10'>
+                        <div className='divide-y divide-[var(--border-color)]'>
 
-                        <span className='font-medium text-lg'>No notifications yet</span>
-                        <p className='text-sm text-center text-[var(--text-secondary)]'>Your notification will appear here once you've received them.</p>
+                            {
+                                filterdNotifications.map((notify)=>{
+                                    if (notify.type === 'payment'){
+                                        return (
+                                            <PaymentNotify notification={notify} key={notify._id}/>
+                                        )
+                                    }
 
-                    </div> */}
+                                    if (notify.type === 'split_request'){
+                                        return (
+                                            <SplitRequestNotify notification={notify} key={notify._id}/>
+                                        )
+                                    }
+
+                                    return null;
+                                })
+                            }
+
+                        </div>
+
+                    )
+                    :
+                    (
+
+                        <div className='flex flex-col items-center justify-center w-full h-full px-10'>
+
+                            <span className='font-medium text-lg'>No notifications yet</span>
+                            <p className='text-sm text-center text-[var(--text-secondary)]'>Your notification will appear here once you've received them.</p>
+
+                        </div>
+
+                    )}
 
                 </div>
             </div>

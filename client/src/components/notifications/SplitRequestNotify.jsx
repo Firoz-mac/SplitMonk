@@ -1,22 +1,46 @@
 import React from 'react'
+import { useEffect } from 'react'
+import { useAppContext } from '../../context/AppContext';
+import { toast } from 'react-toastify';
 
-const SplitRequestNotify = () => {
+const SplitRequestNotify = ({notification}) => {
 
-    const data = {
-        userName:'Hex',
-        profileImg:'',
-        message: 'added you to "test" split of ₹50'
+    const {axios, getNotifications} = useAppContext();
+
+    useEffect(()=>{
+        console.log(notification)   
+    },[notification]);
+
+    const handleRequestStatus = async (value, id)=>{
+
+        const data = {value, id};
+
+        try {
+            const response = await axios.post('/api/notifications/statusUpdate', data);
+            if(response.data.success){
+                toast.success(response.data.message)
+                getNotifications();
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        
     }
 
   return (
 
-    <div className='flex items-start gap-3 rounded-md py-5 px-5'>
+    <div className={`flex items-start gap-3 rounded-md py-5 px-5 
+        ${notification.status === 'accepted' 
+            ? 'bg-[var(--primary)]/20' 
+            : 'bg-red-200'
+        }`
+    }>
 
         {
-            data.profileImg? (
+            notification.splitCreatorId.profileImg? (
                 <div className='h-10 w-10 shrink-0 overflow-hidden rounded-full'>
                     <img 
-                        src={data.profileImg} 
+                        src={notification.splitCreatorId?.profileImg} 
                         alt="profile"
                         className='h-full w-full object-cover'
                     />
@@ -28,40 +52,49 @@ const SplitRequestNotify = () => {
                 <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--primary)] 
                 text-sm font-medium text-white'
                 >
-                    {data?.userName?.charAt(0)?.toUpperCase()}
+                    {notification.splitCreatorId?.userName?.charAt(0)?.toUpperCase()}
                 </div>
             )
 
         }
 
-          <div className='min-w-0 space-y-3'>
-              <div>
-                  <div className='flex items-center gap-2'>
-                      <span className='font-medium'>{data.userName}</span>
-                      <span className='text-sm text-[var(--text-secondary)]'>4h ago</span>
-                  </div>
+            <div className='min-w-0 space-y-3'>
 
-                  <p className='break-words text-sm'>{data.message}</p>
-              </div>
+                <div>
+                    <div className='flex items-center gap-2'>
+                        <span className='font-medium'>{notification.splitCreatorId?.userName}</span>
+                        <span className='text-sm text-[var(--text-secondary)]'>4h ago</span>
+                    </div>
 
-              <div className='flex flex-wrap gap-2'>
-                  <button
-                      type='button'
-                      className='rounded-md border border-[var(--border-color)] bg-transparent px-5 py-2 
-                      text-sm hover:bg-[var(--surface-hover)] cursor-pointer'
-                  >
-                      Decline
-                  </button>
+                    <p className='break-words text-sm'>{notification.message}</p>
+                </div>
 
-                  <button
-                      type='button'
-                      className='rounded-md bg-[var(--primary)] px-5 py-2 text-sm text-white hover:opacity-90 
-                      cursor-pointer'
-                  >
-                      Accept
-                  </button>
-              </div>
-          </div>
+                {notification.status === 'pending' ? (
+                    <div className='flex flex-wrap gap-2'>
+                        <button
+                            type='button'
+                            onClick={()=>handleRequestStatus('declined', notification._id)}
+                            className='rounded-md border border-[var(--border-color)] bg-transparent px-5 py-2 
+                            text-sm hover:bg-[var(--surface-hover)] cursor-pointer'
+                        >
+                            Decline
+                        </button>
+
+                        <button
+                            type='button'
+                            onClick={()=>handleRequestStatus('accepted', notification._id)}
+                            className='rounded-md bg-[var(--primary)] px-5 py-2 text-sm text-white hover:opacity-90 
+                            cursor-pointer'
+                        >
+                            Accept
+                        </button>
+                    </div>
+                )
+                : 
+                null
+                }
+              
+            </div>
 
     </div>
 
