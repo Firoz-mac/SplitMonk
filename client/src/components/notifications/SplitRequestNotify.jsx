@@ -7,13 +7,9 @@ const SplitRequestNotify = ({notification}) => {
 
     const {axios, getNotifications} = useAppContext();
 
-    useEffect(()=>{
-        console.log(notification)   
-    },[notification]);
+    const handleRequestStatus = async (value, notificationId, splitId)=>{
 
-    const handleRequestStatus = async (value, id)=>{
-
-        const data = {value, id};
+        const data = {value, notificationId, splitId};
 
         try {
             const response = await axios.post('/api/notifications/statusUpdate', data);
@@ -32,7 +28,7 @@ const SplitRequestNotify = ({notification}) => {
     <div className={`flex items-start gap-3 rounded-md py-5 px-5 
         ${notification.status === 'accepted' 
             ? 'bg-[var(--primary)]/20' 
-            : 'bg-red-200'
+            : notification.status === 'declined' ? 'bg-red-200' : ''
         }`
     }>
 
@@ -70,10 +66,11 @@ const SplitRequestNotify = ({notification}) => {
                 </div>
 
                 {notification.status === 'pending' ? (
+
                     <div className='flex flex-wrap gap-2'>
                         <button
                             type='button'
-                            onClick={()=>handleRequestStatus('declined', notification._id)}
+                            onClick={()=>handleRequestStatus('declined', notification._id, notification.splitId)}
                             className='rounded-md border border-[var(--border-color)] bg-transparent px-5 py-2 
                             text-sm hover:bg-[var(--surface-hover)] cursor-pointer'
                         >
@@ -82,7 +79,7 @@ const SplitRequestNotify = ({notification}) => {
 
                         <button
                             type='button'
-                            onClick={()=>handleRequestStatus('accepted', notification._id)}
+                            onClick={()=>handleRequestStatus('accepted', notification._id, notification.splitId)}
                             className='rounded-md bg-[var(--primary)] px-5 py-2 text-sm text-white hover:opacity-90 
                             cursor-pointer'
                         >

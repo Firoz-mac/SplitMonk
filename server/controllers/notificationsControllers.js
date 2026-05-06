@@ -1,4 +1,5 @@
 import Notifications from "../models/Notifications.js"
+import Split from './../models/Splits.js';
 
 //get notifications : /api/notifications/get
 export const getNotifications = async (req, res)=>{
@@ -49,10 +50,10 @@ export const markNotificationsAsRead = async (req, res)=>{
 
 export const updateSplitReqStatus = async (req, res)=>{
     try {
-        const { id, value } = req.body;
+        const { value, notificationId, splitId } = req.body;
         const userId = req.userId
 
-        if(!id || !value){
+        if(!notificationId || !value || !splitId){
             return res.status(400).json({
                 success: false,
                 message: 'Invalid Action',
@@ -68,7 +69,7 @@ export const updateSplitReqStatus = async (req, res)=>{
 
         const notification = await Notifications.findByIdAndUpdate(
             {
-                _id: id,
+                _id: notificationId,
                 userId,
                 type: 'split_request',
                 status: 'pending',
@@ -77,7 +78,7 @@ export const updateSplitReqStatus = async (req, res)=>{
                 status: value,
                 isRead: true,
             },
-            { new: true }
+            { returnDocument: 'after' }
         )
 
         if(!notification){
@@ -87,10 +88,31 @@ export const updateSplitReqStatus = async (req, res)=>{
             })
         }
 
+        const split = await Split.findOneAndUpdate(
+            {
+                _id:splitId,
+                'participants.user':userId,
+            },
+            {
+                $set:{
+                    'participants.$.requestStatus': value,
+                },
+            },
+            { returnDocument: 'after' }
+        )
+
+        if(!split){
+            return res.status(404).json({
+                success: false,
+                message: 'Something went wrong',
+            })
+        }
+
         return res.status(200).json({
             success: true,
             message:`Split request ${value}`
         })
+
     } catch (error) {
         console.log(error.message);
         return res.status(500).json({

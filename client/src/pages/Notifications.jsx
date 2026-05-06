@@ -79,7 +79,7 @@ const Notifications = () => {
                     </div>
                 </div>
 
-                <div className='flex-1 overflow-y-scroll'>
+                <div className='flex-1 overflow-y-scroll no-scrollbar'>
 
                     {filterdNotifications? (
 

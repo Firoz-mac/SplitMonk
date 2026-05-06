@@ -32,6 +32,7 @@ export const addSplit = async (req, res) =>{
                 user: createdBy,
                 amount: creatorAmount,
                 paid: true,
+                requestStatus: 'accepted',
             })
         }
 

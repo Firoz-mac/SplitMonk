@@ -105,7 +105,7 @@ const Split = () => {
        
         const totalAmount = Number(newSplitData.amount || 0);
         const numberOfParticipants = newSplitData.participants.length + 1;
-        const equalSplitAmount = totalAmount/numberOfParticipants;
+        const equalSplitAmount = Number((totalAmount/numberOfParticipants).toFixed(2));
 
         const participants = newSplitData.participants.map((participant) =>({
             ...participant,
