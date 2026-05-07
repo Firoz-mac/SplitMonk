@@ -1,5 +1,5 @@
 import React from 'react'
-import { Plus, SquareSplitHorizontal, ScanQrCode, IndianRupee } from 'lucide-react';
+import { Plus, SquareSplitHorizontal, ScanQrCode, Inbox } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 
@@ -11,7 +11,8 @@ const QuickActions = () => {
         { icon: <Plus />, label: "Expense", action: ()=> navigate("/addExpense") },
         { icon: <SquareSplitHorizontal />, label: "Split", action: ()=> navigate("/split") },
         { icon: <ScanQrCode />, label: "Scan", action: () => setOpenCamera(true) },
-        { icon: <IndianRupee />, label: "Pay", action: () => navigate("/pay") },
+        { icon: <Inbox />, label: "Split Box", action: () => navigate("/splitBox") },
+        
     ];
 
     return (

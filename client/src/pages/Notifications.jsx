@@ -10,9 +10,9 @@ const Notifications = () => {
     const [notifyFilter, setNotifyFilter] = useState('all');
     const [filterdNotifications, setFilterdNotifications]= useState([]);
 
-    // useEffect(()=>{
-    //     console.log(notifications)
-    // },[]);
+    useEffect(()=>{
+        console.log(notifications)
+    },[]);
 
     useEffect(()=>{
 
@@ -81,7 +81,7 @@ const Notifications = () => {
 
                 <div className='flex-1 overflow-y-scroll no-scrollbar'>
 
-                    {filterdNotifications? (
+                    {filterdNotifications.length > 0 ? (
 
                         <div className='divide-y divide-[var(--border-color)]'>
 
