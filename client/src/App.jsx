@@ -17,6 +17,7 @@ import AddLimit from './pages/AddLimit';
 import LandingNew from './pages/LandingNew';
 import Split from './pages/Split';
 import SplitBox from './pages/SplitBox';
+import SplitDetails from './pages/SplitDetails';
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
           <Route path='/split' element={<Split/>}/>
           <Route path='/addExpense' element={<NewExpenses/>}/>
           <Route path='/splitBox' element={<SplitBox/>}/>
+          <Route path='/splitDetails' element={<SplitDetails/>}/>
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/notifications' element={<Notifications/>}/>
           <Route path='/expense-list' element={<TotalExpList/>}/>

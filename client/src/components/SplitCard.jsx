@@ -3,7 +3,7 @@ import { useAppContext } from '../context/AppContext'
 
 const SplitCard = ({data}) => {
 
-    const {user} = useAppContext();
+    const {user, navigate, setSelectedSplit} = useAppContext();
 
     const loggedUserId = user?._id
 
@@ -20,8 +20,16 @@ const SplitCard = ({data}) => {
         })
         : '';
 
+    const handleClick=()=>{
+        setSelectedSplit(data)
+        navigate('/splitDetails');
+    }
+
     return (
-        <div className="w-full overflow-hidden rounded-xl border border-[var(--border-color)] cursor-pointer">
+        <div 
+            onClick={handleClick}
+            className="w-full overflow-hidden rounded-xl border border-[var(--border-color)] cursor-pointer"
+        >
             <div className="flex items-center justify-between p-4">
                 <div className="flex min-w-0 items-center gap-3">
                     {
