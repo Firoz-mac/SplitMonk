@@ -31,7 +31,7 @@ const SplitBox = () => {
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row md:items-center md:justify-between">
                 
                 <div className="hidden md:flex md:flex-col">
-                    <h3 className="text-3xl font-semibold">Split Box</h3>
+                    <h3 className="text-2xl font-semibold">Split Box</h3>
                     <span className="text-sm text-[var(--text-secondary)]">
                         Easily manage your splits
                     </span>
