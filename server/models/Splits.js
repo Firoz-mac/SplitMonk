@@ -55,9 +55,17 @@ const splitSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'users'
             },
-            amount: Number
+            amount:{
+                type: Number,
+                min: 0
+            },
+            settledAt:{
+                type: Date,
+                default: Date.now
+            }
         }
     ]
+    
 },{timestamps:true});
 
 const Split = mongoose.models.splits || mongoose.model('splits', splitSchema);

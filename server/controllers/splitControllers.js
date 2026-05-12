@@ -36,16 +36,8 @@ export const addSplit = async (req, res) =>{
             })
         }
 
-        const settlements = formattedParticipants.filter((p) => p.user.toString() !== createdBy.toString()).map((p) =>(
-            {
-                from: p.user,
-                to: createdBy,
-                amount: p.amount
-            }
-        ));
-
         const data = await Split.create({
-            title, amount, category, createdBy, participants: formattedParticipants, settlements,
+            title, amount, category, createdBy, participants: formattedParticipants,
         });
 
         const createdUser = await User.findById(createdBy);

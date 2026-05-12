@@ -12,7 +12,7 @@ const SplitRequestNotify = ({notification}) => {
         const data = {value, notificationId, splitId};
 
         try {
-            const response = await axios.post('/api/notifications/statusUpdate', data);
+            const response = await axios.post('/api/settlement/update', data);
             if(response.data.success){
                 toast.success(response.data.message)
                 getNotifications();
