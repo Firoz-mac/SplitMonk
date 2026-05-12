@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { toast } from 'react-toastify';
-import { assets } from './../assets/assets';
+import { Hamburger, Handbag, CarFront  } from 'lucide-react';
 
 const NewExpenses = () => {
     const { axios, setExpenses, getMonthlyLimit } = useAppContext();
@@ -17,15 +17,15 @@ const NewExpenses = () => {
     const categories = [
         {
             title: "Food",
-            icon: assets.foodIcon
+            icon: <Hamburger/>
         },
         {
             title: "Travel",
-            icon: assets.travelIcon
+            icon: <CarFront />
         },
         {
             title: "Shopping",
-            icon: assets.shoppingIcon
+            icon: <Handbag />
         },
         {
             title: "Other",
@@ -194,7 +194,7 @@ const NewExpenses = () => {
                                                 : "border-[var(--border-color)] bg-[var(--bg-primary)]"
                                             }`}
                                     >
-                                        {cat.icon && <img className="w-5" src={cat.icon} alt="" />}
+                                        {cat.icon && cat.icon}
                                         <span>{cat.title}</span>
                                     </button>
 

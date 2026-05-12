@@ -6,7 +6,7 @@ import { assets } from '../assets/assets';
 
 const TotalExpenses = () => {
 
-    const { expenses, navigate, user, splits, axios } = useAppContext();
+    const { expenses, navigate, user, splits, axios, unreadCount } = useAppContext();
     const [selected, setSelected] = useState("This Month");
     const [youOwe, setYouOwe] = useState(0);
     const [youAreOwed, setYouAreOwed] = useState(0);
@@ -158,11 +158,16 @@ const TotalExpenses = () => {
                     justify-center cursor-pointer transition hover:scale-105 active:scale-95'
                 >
                     <div className="relative">
+
                         <IoNotificationsOutline className="text-white text-xl" />
-                        <div className='bg-red-500 w-2.5 h-2.5 ring-2 ring-[var(--primary-dark)] 
-                        rounded-full absolute -top-0.5 -right-0.5'
-                        ></div>
+                        {unreadCount > 0  && (
+                            <div className='bg-red-500 w-2.5 h-2.5 ring-2 ring-[var(--primary-dark)] 
+                            rounded-full absolute -top-0.5 -right-0.5'
+                            ></div>
+                        )}
+
                     </div>
+                    
                 </button>
             </div>
 
@@ -177,7 +182,7 @@ const TotalExpenses = () => {
                 </button>
 
                 <span className="text-5xl sm:text-6xl font-bold tracking-tight mt-2 tabular-nums">
-                    ₹{totalExpensesAmount}
+                    {totalExpensesAmount}
                 </span>
 
                 <span className={'text-xs text-white/70'}>

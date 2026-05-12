@@ -14,9 +14,9 @@ const SplitDetails = () => {
 
         <div className='w-full flex flex-col h-full'>
 
-            <SplitDetailsHeader/>
+            <SplitDetailsHeader createdUserId={selectedSplit?.createdBy?._id}/>
 
-            <div className='flex flex-col flex-1 overflow-y-scroll'>
+            <div className='flex flex-col flex-1 overflow-y-scroll no-scrollbar'>
 
                 <DetailCard/>
 

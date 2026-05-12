@@ -30,7 +30,7 @@ const DetailCard = () => {
 
 
     return (
-        <div className="w-full rounded-2xl bg-[var(--primary)]/10 px-5 py-6 flex flex-col items-center gap-4">
+        <div className="w-full bg-[var(--primary)]/10 px-5 py-6 flex flex-col items-center gap-4">
 
             {selectedSplit?.createdBy?.profileImg?
 

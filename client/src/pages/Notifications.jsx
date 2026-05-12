@@ -46,7 +46,7 @@ const Notifications = () => {
     return (
 
         <div className='w-full h-full flex md:justify-center'>
-            <div className='w-full h-full max-w-md flex flex-col'>
+            <div className='w-full h-full flex flex-col'>
                 <div className='flex justify-between py-4 px-5 border-b border-[var(--text-muted)] items-center'>
                     <h4>Notifications</h4>
                     

@@ -1,20 +1,20 @@
 import React, { useState } from 'react'
-import { assets } from '../assets/assets'
+import { Hamburger, Handbag, CarFront  } from 'lucide-react';
 
 const Categories = ({value, onChange}) => {
 
     const categoryItems = [
         {
             title: "Food",
-            icon: assets.foodIcon
+            icon: <Hamburger/>
         },
         {
             title: "Travel",
-            icon: assets.travelIcon
+            icon: <Handbag/>
         },
         {
             title: "Shopping",
-            icon: assets.shoppingIcon
+            icon: <CarFront/>
         },
         {
             title: "Other",
@@ -37,7 +37,7 @@ const Categories = ({value, onChange}) => {
                             : "border-[var(--border-color)] bg-[var(--bg-primary)]"
                         }`}
                 >
-                    {cat.icon && <img className="w-5" src={cat.icon} alt="" />}
+                    {cat.icon && cat.icon}
                     <span>{cat.title}</span>
                 </button>
             ))
