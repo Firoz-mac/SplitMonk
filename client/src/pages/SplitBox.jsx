@@ -4,23 +4,32 @@ import { useAppContext } from '../context/AppContext';
 
 const SplitBox = () => {
 
-    const { splits } = useAppContext();
+    const { splits, user } = useAppContext();
 
     const [activeBtn, setActiveBtn] = useState('Recent');
     const buttons = ['Recent', 'Pending', 'Completed'];
 
-    const filteredSplits = splits.filter((split) => {
+    const loggedUserId = user?._id
 
-        if (activeBtn === 'Recent') {
+    const filteredSplits = splits.filter((split)=> {
+
+        if(activeBtn === 'Recent'){
             return split
         }
 
-        if (activeBtn === 'Completed') {
-            return split?.paid === true
+        if(activeBtn === 'Pending'){
+
+            
+            return split.participants.some((participant)=>(
+                participant.user._id === loggedUserId && participant.paid !== true
+            ))
         }
 
-        if (activeBtn === 'Pending') {
-            return split?.paid !== true
+        if (activeBtn === 'Completed'){
+            
+            return split.participants.some((participant)=>(
+                participant.user._id === loggedUserId && participant.paid === true
+            ))
         }
     })
 
