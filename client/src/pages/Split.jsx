@@ -267,7 +267,7 @@ const Split = () => {
 
     return (
         <div className='w-full h-full flex md:justify-center'>
-            <div className='w-full h-full max-w-md flex flex-col px-5 md:py-10'>
+            <div className='w-full h-full md:max-w-md flex flex-col px-5 md:py-10'>
 
                 <div className='flex flex-col items-center gap-5 p-5'>
 

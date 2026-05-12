@@ -24,18 +24,6 @@ export const getBalance = async (req, res)=>{
                     youAreOwed += s.amount;
                 }
             });
-
-            if(!split.settlements || split.settlements.length === 0){
-                split.participants.forEach(p=>{
-                    if(p.user.toString() === userId.toString() && !p.paid){
-                        youOwe += p.amount;
-                    }
-
-                    if(split.createdBy.toString() === userId.toString() && !p.paid){
-                        youAreOwed += p.amount;
-                    }
-                });
-            }
         });
 
         return res.status(200).json({
@@ -43,6 +31,8 @@ export const getBalance = async (req, res)=>{
             youOwe,
             youAreOwed
         });
+
+
     } catch (error) {
         console.log(error.message);
         return res.status(500).json({
