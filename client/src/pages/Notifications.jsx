@@ -11,10 +11,6 @@ const Notifications = () => {
     const [filterdNotifications, setFilterdNotifications]= useState([]);
 
     useEffect(()=>{
-        console.log(notifications)
-    },[]);
-
-    useEffect(()=>{
 
         if(notifyFilter === 'all'){
             setFilterdNotifications(notifications);

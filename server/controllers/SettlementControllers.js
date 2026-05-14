@@ -1,4 +1,5 @@
 import Notifications from "../models/Notifications.js";
+import Peoples from "../models/Peoples.js";
 import Split from "../models/Splits.js";
 
 
@@ -74,7 +75,7 @@ export const handleSplitRequestAndSettlement = async (req, res)=>{
         if(value === 'accepted'){
             
             const requestedUser = split.participants.find(
-                (participant)=> participant.user.toString() === userId
+                (participant)=> participant.user.toString() === userId.toString()
             )
 
             const createrId = split.createdBy.toString();
@@ -100,6 +101,50 @@ export const handleSplitRequestAndSettlement = async (req, res)=>{
                     message: 'Something went wrong',
                 })
             }
+
+            //creator side
+
+            await Peoples.findOneAndUpdate(
+                {
+                    userId: createrId,
+                    person: userId
+                },
+                {
+                    $inc:{
+                        totalSplits: 1,
+                        totalBalance: amount
+                    },
+                    $set:{
+                        lastSplitAt: Date.now()
+                    }
+                },
+                {
+                    upsert: true,
+                    returnDocument: "after"
+                }
+            );
+
+            // Participant side
+
+            await Peoples.findOneAndUpdate(
+                {
+                    userId: userId,
+                    person: createrId
+                },
+                {
+                    $inc:{
+                        totalSplits: 1,
+                        totalBalance: -amount
+                    },
+                    $set:{
+                        lastSplitAt: new Date()
+                    }
+                },
+                {
+                    upsert: true,
+                    returnDocument: "after"
+                }
+            )
 
         }
         

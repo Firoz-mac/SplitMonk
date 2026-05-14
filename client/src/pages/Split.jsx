@@ -12,7 +12,7 @@ import SplitParticipants from '../components/SplitParticipants'
 
 const Split = () => {
 
-    const {navigate, newSplitData, setNewSplitData, axios} = useAppContext();
+    const {navigate, newSplitData, setNewSplitData, axios, getSplits} = useAppContext();
     const [pageValue, setPageValue] = useState('Create Split');
 
     //create split
@@ -204,8 +204,10 @@ const Split = () => {
                         participants: []
                     }
                 )
-
+                
+                getSplits()
                 navigate('/home');
+
             }
         } catch (error) {
             console.log(error.message);

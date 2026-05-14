@@ -88,7 +88,12 @@ export const getSplits = async (req, res)=>{
         const splits = await Split.find({
             $or: [
                 { createdBy: userId },
-                { "participants.user": userId }
+                { "participants": {
+                    $elemMatch:{
+                        user: userId,
+                        requestStatus: "accepted"
+                    }
+                } }
             ]
         })
         .populate("createdBy", "userName email profileImg")

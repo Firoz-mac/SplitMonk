@@ -1,34 +1,15 @@
 import React, { useState } from 'react'
 import { IoChevronDown } from "react-icons/io5";
+import { useAppContext } from '../context/AppContext';
 
 const People = () => {
 
+    const {peoples, navigate} = useAppContext();
+
     const [open, setOpen] = useState(false);
-    const peopleLimit = 7;
+    const peoplesLimit = 7;
 
-    const people = [
-        { name: "Aman", img: 1 },
-        { name: "Riya", img: 2 },
-        { name: "John", img: 3 },
-        { name: "Sara", img: 4 },
-        { name: "Ali", img: 5 },
-        { name: "Neo", img: 6 },
-        { name: "Max", img: 7 },
-        { name: "Max", img: 8 },
-        { name: "Max", img: 9 },
-        { name: "Max", img: 10 },
-        { name: "Max", img: 11 },
-        { name: "Max", img: 12 },
-        { name: "Max", img: 13 },
-        { name: "Max", img: 14 },
-        { name: "Max", img: 15 },
-        { name: "Max", img: 16 },
-        { name: "Max", img: 17 },
-        { name: "Max", img: 18 },
-    ];
-
-
-    const visiblePeople = open ? people : people.slice(0, peopleLimit);
+    const visiblePeople = open ? peoples : peoples.slice(0, peoplesLimit);
 
     const handleMore = () =>{
         setOpen((prev) => !prev);
@@ -41,15 +22,15 @@ const People = () => {
                     People
                 </h2>
             </div>
-            {people.length !== 0 ? 
+            {peoples.length !== 0 ? 
                 (
                     <div className="grid grid-cols-4 sm:grid-cols-5 gap-4 text-[var(--text-secondary)]">
 
-                        {visiblePeople.map((person, i) => (
+                        {visiblePeople.map((people, i) => (
                             <button 
                                 key={i}
                                 type="button"
-                                aria-label={person.name}
+                                aria-label={people.person.userName}
                                 className="flex flex-col items-center gap-1 cursor-pointer rounded-2xl py-1
                                 transition group active:scale-95 focus-visible:outline-none 
                                 focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2"
@@ -58,19 +39,19 @@ const People = () => {
                                 shadow-sm transition group-hover:ring-2 group-hover:ring-[var(--primary)] group-hover:ring-offset-2"
                                 >
                                     <img
-                                        src={`https://i.pravatar.cc/150?img=${person.img}`}
-                                        alt={person.name}
+                                        src={people.person.profileImg}
+                                        alt={people.person.userName}
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
 
                                 <span className="text-xs truncate w-14 text-center transition group-hover:text-[var(--primary)]">
-                                    {person.name}
+                                    {people.person.userName}
                                 </span>
                             </button>
                         ))}
 
-                        {people.length > peopleLimit && (
+                        {peoples.length > peoplesLimit && (
                             <button
                                 type="button"
                                 onClick={handleMore}
@@ -106,6 +87,7 @@ const People = () => {
                             </p>
 
                             <button
+                                onClick={()=>navigate('/split')}
                                 type="button" 
                                 className="mt-4 px-4 py-2 text-sm bg-[var(--primary)] text-white 
                                 rounded-full cursor-pointer transition hover:bg-[var(--primary-dark)] active:scale-95"

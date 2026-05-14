@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 const SplitRequestNotify = ({notification}) => {
 
-    const {axios, getNotifications} = useAppContext();
+    const {axios, getNotifications, getPeoples, getSplits} = useAppContext();
 
     const handleRequestStatus = async (value, notificationId, splitId)=>{
 
@@ -16,6 +16,8 @@ const SplitRequestNotify = ({notification}) => {
             if(response.data.success){
                 toast.success(response.data.message)
                 getNotifications();
+                getSplits();
+                getPeoples()
             }
         } catch (error) {
             console.log(error)

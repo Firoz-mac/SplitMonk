@@ -15,6 +15,7 @@ import { Server } from 'socket.io';
 import logRouter from './routes/logRoutes.js';
 import LimitRouter from './routes/monthlyLimitRoutes.js';
 import settlementRouter from './routes/settlementRoutes.js';
+import peopleRouter from './routes/peopleRoutes.js';
 
 const app=express();
 const port = process.env.PORT || 4000;
@@ -72,6 +73,7 @@ app.use('/api/notifications', notificationsRouter);
 app.use('/api/logs', logRouter);
 app.use('/api/limit', LimitRouter);
 app.use('/api/settlement', settlementRouter);
+app.use('/api/peoples', peopleRouter);
 
 server.listen(port, ()=>{
     console.log(`Server is running on http://localhost:${port}`)

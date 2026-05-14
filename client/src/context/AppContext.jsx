@@ -56,6 +56,8 @@ export const AppContextProvider = ({children})=>{
         Other: Dices
     };
 
+    const [peoples, setPeoples] = useState([]);
+
     useEffect(() => {
         const root = document.documentElement;
         if (theme === 'light') {
@@ -82,6 +84,17 @@ export const AppContextProvider = ({children})=>{
             const {data} = await axios.get('/api/expense/get');
             if(data.success){
                 setExpenses(data.expenses);
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    const getPeoples = async ()=>{
+        try {
+            const {data} = await axios.get('/api/peoples/get');
+            if(data.success){
+                setPeoples(data.peoplesData);
             }
         } catch (error) {
             console.log(error.message)
@@ -148,6 +161,7 @@ export const AppContextProvider = ({children})=>{
             getExpenses();
             getSplits();
             getMonthlyLimit();
+            getPeoples();
         }
 
         if(user?._id){
@@ -177,7 +191,7 @@ export const AppContextProvider = ({children})=>{
         setExpenses, newSplitData, setNewSplitData, splits,
         setSplits, getSplits, getExpenses, notifications, getNotifications,
         unreadCount, setUnreadCount, monthlyLimit, getMonthlyLimit, categoryIcons, 
-        selectedSplit, setSelectedSplit};
+        selectedSplit, setSelectedSplit, peoples, getPeoples};
     
     return <AppContext.Provider value={value}>
         {children}
