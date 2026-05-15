@@ -1,17 +1,20 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { assets } from '../assets/assets'
 import { MdLanguage } from "react-icons/md";
 import { useAppContext } from '../context/AppContext';
 import { toast } from 'react-toastify';
 import { FaUser, FaBug, FaLock } from "react-icons/fa";
 import { IoChevronDown, IoPersonAddSharp } from "react-icons/io5";
+import { MdLightMode, MdDarkMode  } from "react-icons/md";
 
 
 const Profile = () => {
-    const profileInputRef= useRef(null);
-    const [isProfileUploading, setIsProfileUploading] = useState(false);
 
     const {user, setUser, axios, handleLogout} = useAppContext();
+
+    const profileInputRef= useRef(null);
+    const [isProfileUploading, setIsProfileUploading] = useState(false);
+    const [isDark, setsetIsDark] = useState(false);
 
     const handleFileChange= async (e)=>{
         try {
@@ -49,6 +52,10 @@ const Profile = () => {
         {
             title: "Change Language",
             icon : <MdLanguage />
+        },
+        {
+            title: "Appearance",
+            icon : isDark ? <MdDarkMode /> : <MdLightMode />
         }
     ];
 
@@ -95,7 +102,7 @@ const Profile = () => {
                 </div>
 
             </div>
-            <div className='bg-[var(--bg-primary)] rounded-t-2xl px-5 py-5 md:py-10 flex justify-center min-h-[65vh]'>
+            <div className='bg-[var(--bg-primary)] px-5 py-5 md:py-10 flex justify-center min-h-[65vh]'>
 
                 <div className='max-w-md w-full flex flex-col gap-6'>
 
@@ -117,9 +124,29 @@ const Profile = () => {
                                             {option.icon}
                                         </span>
                                         <span className="text-sm font-medium">{option.title}</span>
+
+                                        
                                     </div>
 
-                                    <IoChevronDown className="-rotate-90 text-[var(--text-muted)]" />
+                                    {option.title === 'Appearance' ? (
+
+                                        <div
+                                        onClick={()=>setsetIsDark(!isDark)}
+                                        className={`w-12 h-6 rounded-full flex items-center px-1
+                                            cursor-pointer transition-colors 
+                                            ${isDark ? "bg-slate-700" : "bg-slate-300"}`}
+                                        >
+                                            <div className={`w-4 h-4 rounded-full transition-transform 
+                                                ${isDark ? "translate-x-6 bg-[var(--primary)]" : "translate-x-0 bg-white"}`}
+                                            ></div>
+                                        </div>
+
+                                    ) : (
+
+                                        <IoChevronDown className="-rotate-90 text-[var(--text-muted)]" />
+
+                                    )}
+                                    
                                 </button>
                             ))}
                         </div>
