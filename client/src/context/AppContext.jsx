@@ -33,6 +33,7 @@ export const AppContextProvider = ({children})=>{
     const [expenses, setExpenses] = useState([]);
     const [openCamera, setOpenCamera] = useState(false);
     const [selectedSplit, setSelectedSplit] = useState(null);
+    const [personalInformationPageValue, setPersonalInformationPageValue] = useState('');
     
     const [newSplitData, setNewSplitData] = useState({
         title: '',
@@ -191,7 +192,7 @@ export const AppContextProvider = ({children})=>{
         setExpenses, newSplitData, setNewSplitData, splits,
         setSplits, getSplits, getExpenses, notifications, getNotifications,
         unreadCount, setUnreadCount, monthlyLimit, getMonthlyLimit, categoryIcons, 
-        selectedSplit, setSelectedSplit, peoples, getPeoples};
+        selectedSplit, setSelectedSplit, peoples, getPeoples, personalInformationPageValue, setPersonalInformationPageValue};
     
     return <AppContext.Provider value={value}>
         {children}

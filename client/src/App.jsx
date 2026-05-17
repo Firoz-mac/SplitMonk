@@ -18,6 +18,8 @@ import LandingNew from './pages/LandingNew';
 import Split from './pages/Split';
 import SplitBox from './pages/SplitBox';
 import SplitDetails from './pages/SplitDetails';
+import PersonalInformations from './pages/profileSettings/PersonalInformations';
+import PersonalInformationsForm from './pages/profileSettings/PersonalInformationsForm';
 
 function App() {
 
@@ -41,6 +43,8 @@ function App() {
           <Route path='/search' element={<Search/>}/>
           <Route path='/log' element={<ActivityLog/>}/>
           <Route path='/add-limit' element={<AddLimit/>}/>
+          <Route path='/personal-informations' element={<PersonalInformations/>}/>
+          <Route path='/personal-informations-form' element={<PersonalInformationsForm/>}/>
         </Route>
       </Routes>
     </div>

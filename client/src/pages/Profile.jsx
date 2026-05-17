@@ -10,7 +10,7 @@ import { MdLightMode, MdDarkMode  } from "react-icons/md";
 
 const Profile = () => {
 
-    const {user, setUser, axios, handleLogout} = useAppContext();
+    const {user, setUser, axios, handleLogout, navigate} = useAppContext();
 
     const profileInputRef= useRef(null);
     const [isProfileUploading, setIsProfileUploading] = useState(false);
@@ -50,10 +50,6 @@ const Profile = () => {
             icon : <FaLock />
         },
         {
-            title: "Change Language",
-            icon : <MdLanguage />
-        },
-        {
             title: "Appearance",
             icon : isDark ? <MdDarkMode /> : <MdLightMode />
         }
@@ -69,6 +65,21 @@ const Profile = () => {
             icon : <FaBug />
         },
     ]
+
+    const handleOptions = (option)=>{
+        switch (option) {
+            case 'Personal Information' :
+                navigate('/personal-informations');
+                break;
+            
+            case 'Change Pin':
+                console.log(option)
+                break;
+
+            default:
+                break;
+        }
+    }
 
     return (
         
@@ -114,6 +125,7 @@ const Profile = () => {
                         divide-y divide-[var(--border-color)]">
                             {accountSecurity.map((option) => (
                                 <button
+                                    onClick={()=>handleOptions(option.title)}
                                     key={option.title}
                                     type="button"
                                     className="w-full p-4 flex justify-between items-center cursor-pointer 
@@ -131,7 +143,11 @@ const Profile = () => {
                                     {option.title === 'Appearance' ? (
 
                                         <div
-                                        onClick={()=>setsetIsDark(!isDark)}
+
+                                        onClick={(e)=>{
+                                            e.stopPropagation(); setsetIsDark(!isDark)
+                                        }}
+
                                         className={`w-12 h-6 rounded-full flex items-center px-1
                                             cursor-pointer transition-colors 
                                             ${isDark ? "bg-slate-700" : "bg-slate-300"}`}

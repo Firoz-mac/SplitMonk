@@ -1,6 +1,6 @@
 import React from 'react'
 
-const InputField = ({ label, type, name, value, placeholder = '', onChange, amountField = false }) => {
+const InputField = ({ label, type, name, value, placeholder = '', onChange, amountField = false, prefix = '' }) => {
 
     const inputId = name;
 
@@ -15,29 +15,15 @@ const InputField = ({ label, type, name, value, placeholder = '', onChange, amou
                 </label>
             )}
 
-            {amountField ? (
+            <div className='relative'>
 
-                <div className='relative'>
+                {prefix && (
 
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] text-sm">
-                        ₹
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2  text-sm text-[var(--primary)]">
+                        {prefix}
                     </span>
 
-                    <input
-                        id={inputId}
-                        placeholder="0.00"
-                        value={value}
-                        type='text'
-                        name={name}
-                        onChange={onChange}
-                        pattern="[0-9]*"
-                        inputMode='decimal'
-                        className='w-full pl-8 py-3 rounded-xl border border-[var(--border-color)] focus:outline-none focus:ring-2 
-                        focus:ring-primary text-sm'
-                    />
-
-                </div>
-            ) :
+                )}
 
                 <input
                     id={inputId}
@@ -46,11 +32,14 @@ const InputField = ({ label, type, name, value, placeholder = '', onChange, amou
                     type={type}
                     name={name}
                     onChange={onChange}
-                    className='w-full pl-3 py-3 rounded-xl border border-[var(--border-color)] focus:outline-none focus:ring-2 
-                    focus:ring-primary text-sm'
+                    pattern={amountField ? '[0-9]*[.]?[0-9]*' : undefined}
+                    inputMode={amountField ? 'decimal' : undefined}
+                    className={`w-full ${prefix ? 'pl-8' : 'pl-3'} py-3 rounded-xl border border-[var(--border-color)] 
+                    focus:outline-none focus:ring-2 focus:ring-primary text-sm`}
                 />
 
-            }
+            </div>
+
         </div>
     )
 }

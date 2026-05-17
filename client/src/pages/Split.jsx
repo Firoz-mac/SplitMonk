@@ -9,6 +9,7 @@ import SelectedUserChip from '../components/SelectedUserChip'
 import SelectableUserRow from '../components/SelectableUserRow'
 import RemainigSplitAmountCard from '../components/RemainigSplitAmountCard'
 import SplitParticipants from '../components/SplitParticipants'
+import { BsCurrencyRupee } from "react-icons/bs";
 
 const Split = () => {
 
@@ -299,6 +300,7 @@ const Split = () => {
                                     value={newSplitData.amount}
                                     amountField={true}
                                     onChange={handleInputChange}
+                                    prefix={<BsCurrencyRupee />}
                                 />
 
                                 <div className='flex flex-col gap-2'>
