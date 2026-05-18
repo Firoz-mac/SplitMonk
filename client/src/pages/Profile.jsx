@@ -61,7 +61,7 @@ const Profile = () => {
             icon : <IoPersonAddSharp />
         },
         {
-            title: "Help Center",
+            title: "Report Bug",
             icon : <FaBug />
         },
     ]
@@ -78,6 +78,10 @@ const Profile = () => {
             
             case 'Invite Friends':
                 navigate('/invite-friends');
+                break;
+
+            case "Report Bug":
+                window.open('https://discord.gg/qhkG35xHky', '_blank');
                 break;
 
             default:
