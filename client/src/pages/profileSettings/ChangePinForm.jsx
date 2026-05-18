@@ -1,8 +1,11 @@
 import React from 'react'
 import { IoArrowBackOutline } from "react-icons/io5";
 import PasswordInputField from '../../components/PasswordInputField';
+import { useAppContext } from '../../context/AppContext';
 
 const ChangePinForm = () => {
+
+  const {navigate} = useAppContext();
 
   const formData = [
     {
