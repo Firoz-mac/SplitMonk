@@ -75,6 +75,10 @@ const Profile = () => {
             case 'Change Pin':
                 navigate('/change-pin');
                 break;
+            
+            case 'Invite Friends':
+                navigate('/invite-friends');
+                break;
 
             default:
                 break;
@@ -177,6 +181,7 @@ const Profile = () => {
                         divide-y divide-[var(--border-color)]">
                             {moreInformation.map((option) => (
                                 <button
+                                    onClick={()=>handleOptions(option.title)}
                                     key={option.title}
                                     type="button"
                                     className="w-full p-4 flex justify-between items-center cursor-pointer 

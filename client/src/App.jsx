@@ -21,6 +21,7 @@ import SplitDetails from './pages/SplitDetails';
 import PersonalInformations from './pages/profileSettings/PersonalInformations';
 import PersonalInformationsForm from './pages/profileSettings/PersonalInformationsForm';
 import ChangePinForm from './pages/profileSettings/ChangePinForm';
+import InviteFriends from './pages/profileSettings/InviteFriends';
 
 function App() {
 
@@ -47,6 +48,7 @@ function App() {
           <Route path='/personal-informations' element={<PersonalInformations/>}/>
           <Route path='/personal-informations-form' element={<PersonalInformationsForm/>}/>
           <Route path='/change-pin' element={<ChangePinForm/>}/>
+          <Route path='/invite-friends' element={<InviteFriends/>}/>
         </Route>
       </Routes>
     </div>
