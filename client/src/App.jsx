@@ -20,6 +20,7 @@ import SplitBox from './pages/SplitBox';
 import SplitDetails from './pages/SplitDetails';
 import PersonalInformations from './pages/profileSettings/PersonalInformations';
 import PersonalInformationsForm from './pages/profileSettings/PersonalInformationsForm';
+import ChangePinForm from './pages/profileSettings/ChangePinForm';
 
 function App() {
 
@@ -45,6 +46,7 @@ function App() {
           <Route path='/add-limit' element={<AddLimit/>}/>
           <Route path='/personal-informations' element={<PersonalInformations/>}/>
           <Route path='/personal-informations-form' element={<PersonalInformationsForm/>}/>
+          <Route path='/change-pin' element={<ChangePinForm/>}/>
         </Route>
       </Routes>
     </div>

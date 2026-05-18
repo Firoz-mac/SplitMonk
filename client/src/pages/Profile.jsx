@@ -73,7 +73,7 @@ const Profile = () => {
                 break;
             
             case 'Change Pin':
-                console.log(option)
+                navigate('/change-pin');
                 break;
 
             default:
