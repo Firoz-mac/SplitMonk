@@ -135,7 +135,7 @@ const LandingNew = () => {
                                     effortlessly with SplitMonk
                                 </span>
                             </h1>
-                            <p className={`max-w-md mx-auto mt-3 ${themeStyles.subText} md:mx-0`}>
+                            <p className={`max-w-md mx-auto mt-6 ${themeStyles.subText} md:mx-0`}>
                                 Manage shared expenses, track balances, and settle up easily with friends.
                             </p>
                         </div>
@@ -218,7 +218,7 @@ const LandingNew = () => {
                                 SplitMonk helps you track expenses, split bills, and settle payments effortlessly — all in one simple platform.
                             </p>
                             <div className="flex items-center gap-2 mt-3">
-                                <a href='https://discord.gg/KnHfQp4k' aria-label="Join our Discord">
+                                <a href='https://discord.gg/sesBGZJtcP' aria-label="Join our Discord">
                                     <LiaDiscord className={`w-6 h-6 ${themeStyles.subText}`} />
                                 </a>
                             </div>

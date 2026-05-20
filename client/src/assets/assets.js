@@ -7,6 +7,17 @@ import group from './group.png'
 import speed from './speed.png'
 import mockup from './mockup.png'
 import check from './check.png'
+import card from './card.png'
+import groupIllustration from './groupIllustration.png'
+import indivi1Illustration from './indivi1Illustration.png'
+import indivi2Illustration from './indivi2Illustration.png'
+import { BsFillLightningFill } from "react-icons/bs";
+import { IoMdSettings } from "react-icons/io";
+import { GrGoogleWallet } from "react-icons/gr";
+import { FaUsers } from "react-icons/fa";
+import { TbClipboardTextFilled } from "react-icons/tb";
+import { BsShieldFill } from "react-icons/bs";
+
 
 export const assets = {
     logo,
@@ -18,6 +29,10 @@ export const assets = {
     speed,
     mockup,
     check,
+    card,
+    groupIllustration,
+    indivi1Illustration,
+    indivi2Illustration
 };
 
 export const features = [
@@ -97,3 +112,53 @@ export const mainFeatures = [
     },
 
 ];
+
+export const splitCardBenefits = [
+    {
+      label: 'Get digital card instantly',
+      icon: BsFillLightningFill
+    },
+    {
+      label: 'Easy to manage',
+      icon: IoMdSettings
+    },
+    {
+      label: 'Pay from one place',
+      icon: GrGoogleWallet
+    },
+    {
+      label: 'Spend together',
+      icon: FaUsers
+    },
+    {
+      label: 'Track every spend',
+      icon: TbClipboardTextFilled
+
+    },
+    {
+      label: 'Stress-free spending',
+      icon: BsShieldFill
+
+    }
+];
+
+export const splitCardDetails = [
+    {
+      title: 'No more asking “who paid?”',
+      description: 'Every payment and contribution is tracked automatically, so the whole group always knows who paid and when.',
+      image: groupIllustration,
+      bg: 'bg-[#f3ffd9]'
+    },
+    {
+      title: 'Avoid messy expense calculations',
+      description: 'handles shared spending clearly, helping you avoid manual calculations and payment confusion.',
+      image: indivi1Illustration,
+      bg: 'bg-[#e4ffdc]'
+    },
+    {
+      title: 'Makes expenses easier to manage',
+      description: 'Keep all group transactions, balances, and activity in one place for a smoother and more organized experience.',
+      image: indivi2Illustration,
+      bg: 'bg-[#defff7]'
+    },
+]

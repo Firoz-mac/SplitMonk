@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { FaUser, FaBug, FaLock } from "react-icons/fa";
 import { IoChevronDown, IoPersonAddSharp } from "react-icons/io5";
 import { MdLightMode, MdDarkMode  } from "react-icons/md";
+import { TbLogout } from "react-icons/tb";
 
 
 const Profile = () => {
@@ -81,7 +82,7 @@ const Profile = () => {
                 break;
 
             case "Report Bug":
-                window.open('https://discord.gg/qhkG35xHky', '_blank');
+                window.open('https://discord.gg/sesBGZJtcP', '_blank');
                 break;
 
             default:

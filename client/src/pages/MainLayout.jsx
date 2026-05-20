@@ -26,7 +26,7 @@ const MainLayout = () => {
 
     return (
         <div className='flex h-dvh bg-[var(--bg-primary)]'>
-            <aside className="hidden md:flex flex-col w-20 shrink-0 bg-[var(--bg-secondary)] border-r border-[var(--border-color)] items-center justify-center">
+            <aside className="hidden lg:flex flex-col w-20 shrink-0 bg-[var(--bg-secondary)] border-r border-[var(--border-color)] items-center justify-center">
                 <nav aria-label="Desktop navigation" className="flex flex-col gap-6 md:gap-8 items-center">
                     {menuItems.map((item) => (
                         <MenuIcon
@@ -49,7 +49,7 @@ const MainLayout = () => {
 
             <nav
                 aria-label="Mobile navigation"
-                className="md:hidden flex fixed bottom-0 left-0 w-full bg-[var(--bg-secondary)]/95 
+                className="lg:hidden flex fixed bottom-0 left-0 w-full bg-[var(--bg-secondary)]/95 
                 backdrop-blur-md border-t border-[var(--border-color)] justify-around items-center 
                 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] z-50"
             >

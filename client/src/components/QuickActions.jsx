@@ -1,5 +1,6 @@
 import React from 'react'
 import { Plus, SquareSplitHorizontal, ScanQrCode, Inbox } from 'lucide-react';
+import { FaCreditCard } from "react-icons/fa6";
 import { useAppContext } from '../context/AppContext';
 
 
@@ -8,10 +9,12 @@ const QuickActions = () => {
     const {navigate, setOpenCamera} = useAppContext();
 
     const icons = [
+        
         { icon: <Plus />, label: "Expense", action: ()=> navigate("/addExpense") },
         { icon: <SquareSplitHorizontal />, label: "Split", action: ()=> navigate("/split") },
         { icon: <ScanQrCode />, label: "Scan", action: () => setOpenCamera(true) },
         { icon: <Inbox />, label: "Split Box", action: () => navigate("/splitBox") },
+        { icon: <FaCreditCard />, label: "Split Card", action: () => navigate("/card") },
         
     ];
 

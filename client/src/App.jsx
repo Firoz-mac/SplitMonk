@@ -22,6 +22,7 @@ import PersonalInformations from './pages/profileSettings/PersonalInformations';
 import PersonalInformationsForm from './pages/profileSettings/PersonalInformationsForm';
 import ChangePinForm from './pages/profileSettings/ChangePinForm';
 import InviteFriends from './pages/profileSettings/InviteFriends';
+import Card from './pages/Card';
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
           <Route path='/personal-informations-form' element={<PersonalInformationsForm/>}/>
           <Route path='/change-pin' element={<ChangePinForm/>}/>
           <Route path='/invite-friends' element={<InviteFriends/>}/>
+          <Route path='/card' element={<Card/>}/>
         </Route>
       </Routes>
     </div>
